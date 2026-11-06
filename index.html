@@ -22,8 +22,8 @@ main{flex:1;display:flex;min-height:0}
 canvas{margin:auto;max-width:100%;max-height:100%;display:none;touch-action:none;cursor:crosshair;border:1px solid var(--line)}
 #empty{margin:auto;max-width:30ch;color:var(--mute);font-size:18px}
 aside{width:360px;max-width:46vw;display:flex;flex-direction:column;background:var(--panel);border-left:1px solid var(--line)}
-.tabs{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--line)}
-.tabs button{font-size:13px;padding-left:0;padding-right:0;border:0;border-bottom:3px solid transparent;border-radius:0;background:none;color:var(--mute);font-weight:600;padding:13px 0 10px}
+.tabs{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--line)}
+.tabs button{font-size:12px;padding-left:0;padding-right:0;border:0;border-bottom:3px solid transparent;border-radius:0;background:none;color:var(--mute);font-weight:600;padding:13px 0 10px}
 .tabs button:hover{color:var(--ink);background:none}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--acc)}
 .pn{display:none;padding:16px;overflow-y:auto;flex:1}.pn.on{display:block}
@@ -60,6 +60,7 @@ aside,#plist,.pn{scrollbar-color:var(--edge) var(--panel)}
 textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);width:100%;padding:6px;resize:vertical;margin:6px 0}#help{position:fixed;inset:0;background:rgba(5,12,31,.82);display:grid;place-items:center;z-index:20}.hbox{background:var(--panel);border:1px solid var(--edge);padding:20px 24px;max-width:480px;max-height:80vh;overflow:auto}.hbox h2{margin:0 0 10px;font-size:18px}.hbox table{border-collapse:collapse;width:100%}.hbox td{padding:4px 0;border-bottom:1px solid var(--line)}.hbox td:first-child{color:var(--mute);width:42%}.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px}.chips button{padding:5px 0;font-size:12px}.chips button.on{background:var(--ink);color:var(--panel)}
 button,select,.lrow,.ib{transition:background-color .12s,color .12s,border-color .12s}.tabs button{transition:color .12s,border-color .12s}.pn.on{animation:pin .14s ease-out}@keyframes pin{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 h3[role=button]{cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}h3[role=button]::after{content:"";width:6px;height:6px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .12s;margin-right:4px}h3[aria-expanded=false]::after{transform:rotate(-45deg)}.lrow canvas{background:conic-gradient(#aab2c8 25%,#d6dbe8 0 50%,#aab2c8 0 75%,#d6dbe8 0) 0 0/10px 10px}.sec{display:block}
+.chips7{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}.chips7 button{padding:5px 0;font-size:12px}.chips7 button.on{background:var(--ink);color:var(--panel)}#pxlist{max-height:240px;overflow-y:auto;border:1px solid var(--line);margin:6px 0}
 </style>
 </head>
 <body>
@@ -72,7 +73,7 @@ h3[role=button]{cursor:pointer;display:flex;justify-content:space-between;align-
 <main>
 <section id="stage"><p id="empty">Drop an image here, or press Open image.</p><canvas id="c" aria-label="Image preview"></canvas><div id="ring"></div></section>
 <aside>
-<div class="tabs" role="tablist"><button role="tab" class="on" data-t="tone">Tone</button><button role="tab" data-t="adjust">Adjust</button><button role="tab" data-t="colour">Colours</button><button role="tab" data-t="select">Select</button><button role="tab" data-t="warp">Warp</button><button role="tab" data-t="layers">Layers</button></div>
+<div class="tabs" role="tablist"><button role="tab" class="on" data-t="tone">Tone</button><button role="tab" data-t="adjust">Adjust</button><button role="tab" data-t="colour">Colours</button><button role="tab" data-t="select">Select</button><button role="tab" data-t="warp">Warp</button><button role="tab" data-t="layers">Layers</button><button role="tab" data-t="pixel">Pixel</button></div>
 
 <div class="pn on" id="p-tone">
 <input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="duo">Duo</button><button data-c="multi">Multi</button><button data-c="mine">Mine</button></div><div id="plist"></div>
@@ -85,7 +86,7 @@ h3[role=button]{cursor:pointer;display:flex;justify-content:space-between;align-
 <label>Highlights <input type="color" id="c3" value="#f4efe3"></label>
 </div>
 
-<div class="pn" id="p-adjust"><label>Brightness <input type="range" id="ab" min="-100" max="100" value="0"></label><label>Contrast <input type="range" id="ac" min="-100" max="100" value="0"></label><label>Saturation <input type="range" id="as" min="-100" max="100" value="0"></label><label>Hue shift <input type="range" id="ah" min="-180" max="180" value="0"></label><label>Warmth <input type="range" id="at" min="-100" max="100" value="0"></label><label>Vignette <input type="range" id="av" min="0" max="100" value="0"></label><label>Grain <input type="range" id="ag" min="0" max="100" value="0"></label><label>Posterize (0 is off) <input type="range" id="ap" min="0" max="16" value="0"></label><h3>Levels</h3><label>Black point <input type="range" id="lb" min="0" max="100" value="0"></label><label>White point <input type="range" id="lw" min="155" max="255" value="255"></label><label>Midtones (gamma) <input type="range" id="lg" min="20" max="300" value="100"></label><div class="bar"><button id="auto">Auto levels</button></div><h3>Split toning</h3><label>Amount <input type="range" id="sn" min="0" max="100" value="0"></label><label>Shadows <input type="color" id="s1" value="#0b2a7a"></label><label>Highlights <input type="color" id="s2" value="#ffd9a0"></label><h3>Pixels</h3><label>Pixel size (1 is off) <input type="range" id="apx" min="1" max="64" value="1"></label><output id="apxo" class="note">Off</output><label>Style <select id="apst"><option value="square">Square pixels</option><option value="dots">Round dots</option></select></label><label>Dither <input type="range" id="dt" min="0" max="100" value="0"></label><p class="note">Dither adds a retro texture. It shows best with Reduce to colours, a tone map or Posterize.</p><h3>Finish</h3><label><span><input type="checkbox" id="ai"> Invert</span></label><div class="bar"><button id="adjr">Reset adjustments</button></div></div>
+<div class="pn" id="p-adjust"><label>Brightness <input type="range" id="ab" min="-100" max="100" value="0"></label><label>Contrast <input type="range" id="ac" min="-100" max="100" value="0"></label><label>Saturation <input type="range" id="as" min="-100" max="100" value="0"></label><label>Hue shift <input type="range" id="ah" min="-180" max="180" value="0"></label><label>Warmth <input type="range" id="at" min="-100" max="100" value="0"></label><label>Vignette <input type="range" id="av" min="0" max="100" value="0"></label><label>Grain <input type="range" id="ag" min="0" max="100" value="0"></label><label>Posterize (0 is off) <input type="range" id="ap" min="0" max="16" value="0"></label><h3>Levels</h3><label>Black point <input type="range" id="lb" min="0" max="100" value="0"></label><label>White point <input type="range" id="lw" min="155" max="255" value="255"></label><label>Midtones (gamma) <input type="range" id="lg" min="20" max="300" value="100"></label><div class="bar"><button id="auto">Auto levels</button></div><h3>Split toning</h3><label>Amount <input type="range" id="sn" min="0" max="100" value="0"></label><label>Shadows <input type="color" id="s1" value="#0b2a7a"></label><label>Highlights <input type="color" id="s2" value="#ffd9a0"></label><h3>Dither</h3><label>Dither <input type="range" id="dt" min="0" max="100" value="0"></label><p class="note">Dither adds a retro texture. It shows best with Reduce to colours, a tone map or Posterize.</p><h3>Finish</h3><label><span><input type="checkbox" id="ai"> Invert</span></label><div class="bar"><button id="adjr">Reset adjustments</button></div></div>
 
 <div class="pn" id="p-colour">
 <p class="note">Click the image to pick a colour, or click a swatch.</p>
@@ -122,10 +123,11 @@ h3[role=button]{cursor:pointer;display:flex;justify-content:space-between;align-
 <div class="pn" id="p-warp"><label>Brush <select id="mode"></select></label><label>Size <input type="range" id="size" min="10" max="300" value="90"></label><label>Strength <input type="range" id="pow" min="1" max="100" value="40"></label><label>Hardness <input type="range" id="hard" min="0" max="100" value="50"></label><h3>Brush options</h3><label>Pixel size <input type="range" id="bpx" min="2" max="80" value="10"></label><label>Colour levels <input type="range" id="blv" min="2" max="16" value="4"></label><label>Paint colour <input type="color" id="bpc" value="#ffb347"></label><h3>Stroke</h3><label>Spacing <input type="range" id="spc" min="5" max="100" value="25"></label><label>Smoothing <input type="range" id="smo" min="0" max="100" value="0"></label><label>Apply to <select id="bt"><option value="all">Photo and layers</option><option value="layer">Selected layer</option><option value="bg">Photo only</option></select></label><label><span><input type="checkbox" id="sym"> Mirror stroke left to right</span></label><p class="note">Drag on the image. Hold still to keep applying swirl, bloat and similar brushes. Pen pressure is supported. Strokes carry across the photo and every layer. Combine brushes work between the photo and the selected layer (the top layer if none is selected): erase or dissolve it to reveal the photo, reveal only in highlights or shadows, mix colours, colourise it from the photo, or bake it into the photo. Pixel, Colour and Texture brushes paint effects onto the photo and layers.</p></div>
 
 <div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="ltxt">Add text</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><div id="ltx" hidden><h3>Text</h3><textarea id="txt" rows="2" aria-label="Text"></textarea><label>Font <select id="tfont"><option>Archivo</option><option>Georgia</option><option>Times New Roman</option><option>Courier New</option><option>Arial Black</option><option>Impact</option><option>Trebuchet MS</option><option>Verdana</option></select></label><label>Size <input type="range" id="tsz" min="12" max="400" value="100"></label><label>Colour <input type="color" id="tcol" value="#ffffff"></label><label>Weight <select id="tw"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label><label><span><input type="checkbox" id="tit"> Italic</span></label></div><div id="lctl" hidden><div class="bar"><button id="lup">Forward</button><button id="ldn">Backward</button></div><h3>Transform</h3><label>Size <input type="range" id="bs" min="3" max="400" value="100"></label><label>Rotate <input type="range" id="lr" min="-180" max="180" value="0"></label><div class="bar"><button id="lflip">Flip</button><button id="lr90">Rotate 90°</button><button id="lcrop">Crop</button><button id="lrc">Reset crop</button><button id="lfit">Fill canvas</button><button id="lcen">Centre</button></div><div class="bar"><button data-al="l">Left</button><button data-al="c">Centre</button><button data-al="r">Right</button><button data-al="t">Top</button><button data-al="m">Middle</button><button data-al="b">Bottom</button></div><h3>Effects</h3><label><span><input type="checkbox" id="fsh"> Shadow or glow</span><input type="color" id="fsc" value="#000000" aria-label="Shadow colour"></label><label>Across <input type="range" id="fsx" min="-100" max="100" value="12"></label><label>Down <input type="range" id="fsy" min="-100" max="100" value="12"></label><label>Blur <input type="range" id="fsb" min="0" max="80" value="18"></label><label>Strength <input type="range" id="fsa" min="0" max="100" value="60"></label><label><span><input type="checkbox" id="fol"> Outline</span><input type="color" id="foc" value="#ffffff" aria-label="Outline colour"></label><label>Width <input type="range" id="fow" min="1" max="60" value="6"></label><h3>Transparency</h3><div class="bar"><button id="tkp">Pick colour</button><input type="color" id="tk" value="#ffffff" aria-label="Key colour"><button id="tkr">Remove colour</button></div><label>Tolerance <input type="range" id="ttl" min="0" max="200" value="40"></label><label>Softness <input type="range" id="tsf" min="0" max="100" value="30"></label><div class="bar"><select id="tgd" aria-label="Fade direction"><option value="l">Fade in from left</option><option value="r">Fade in from right</option><option value="t">Fade in from top</option><option value="b">Fade in from bottom</option></select><button id="tgf">Fade</button></div><label>Fade length <input type="range" id="tgl" min="10" max="100" value="60"></label><label>Edge size <input type="range" id="ted" min="1" max="50" value="8"></label><div class="bar"><button id="tef">Soften edges</button><button id="tia">Invert alpha</button><button id="tra">Reset alpha</button></div><label>Brightness cut <input type="range" id="tth" min="0" max="255" value="200"></label><div class="bar"><button id="tlt">Lights to clear</button><button id="tdk">Darks to clear</button></div><label><span><input type="checkbox" id="lsolo"> View layer alone</span></label></div><label><span><input type="checkbox" id="lgrade" checked> Colour grading includes layers</span></label><p class="note">Drag to move (it snaps to the centre and edges; hold Alt to skip). Corners resize and the round handle rotates (Shift snaps). Arrow keys nudge, Delete removes. The eye shows or hides, the lock protects a layer, double-click a name to rename, drag rows to reorder.</p></div>
+<div class="pn" id="p-pixel"><label>Cell size (1 is off) <input type="range" id="apx" min="1" max="64" value="1"></label><output id="apxo" class="note">Off</output><div class="bar"><button id="pxoff">Turn off</button></div><input type="search" id="pxq" placeholder="Search 64 styles" aria-label="Search pixel styles"><div class="chips7" id="pxcat"><button class="on" data-c="all">All</button><button data-c="Blocks">Blocks</button><button data-c="Dots">Dots</button><button data-c="Lines">Lines</button><button data-c="Dither">Dither</button><button data-c="Text">Text</button><button data-c="Art">Art</button></div><div id="pxlist"></div><h3>Look</h3><label>Gap <input type="range" id="pxg" min="0" max="60" value="10"></label><label>Shape size <input type="range" id="pxz" min="20" max="150" value="100"></label><label>Contrast <input type="range" id="pxc" min="-100" max="100" value="0"></label><label>Mix with image <input type="range" id="pxm" min="0" max="100" value="100"></label><label>Colours <select id="pxcm"><option value="orig">Original on dark</option><option value="paper">Original on paper</option><option value="mono">Ink on paper</option><option value="over">Over the image</option></select></label><label>Ink <input type="color" id="pxi" value="#f4efe3"></label><label>Paper <input type="color" id="pxp" value="#0a1530"></label><label><span><input type="checkbox" id="pxinv"> Invert brightness</span></label><h3>Text</h3><label>Font <select id="pxf"><option>monospace</option><option>Courier New</option><option>Georgia</option><option>Impact</option><option>Arial Black</option><option>sans-serif</option></select></label><textarea id="pxt" rows="2" aria-label="Custom text">TOTONE</textarea><label>Ramp <input type="text" id="pxr" value=" .:-=+*#%@" style="flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:4px"></label><p class="note">Custom text repeats your words across the cells. Custom ramp uses these characters from dark to light. Styles with a cell grid also respect your selection.</p></div>
 </aside>
 </main>
 <div id="help" hidden role="dialog" aria-label="Keyboard shortcuts"><div class="hbox"><h2>Shortcuts</h2><table>
-<tr><td>1 to 6</td><td>Switch tabs</td></tr><tr><td>Ctrl+Z, Ctrl+Y</td><td>Undo, redo</td></tr><tr><td>[ and ]</td><td>Brush size</td></tr>
+<tr><td>1 to 7</td><td>Switch tabs</td></tr><tr><td>Ctrl+Z, Ctrl+Y</td><td>Undo, redo</td></tr><tr><td>[ and ]</td><td>Brush size</td></tr>
 <tr><td>Shift, Alt while selecting</td><td>Add to, subtract from selection</td></tr><tr><td>Ctrl+D, Esc</td><td>Clear selection, cancel shape</td></tr>
 <tr><td>Arrow keys</td><td>Nudge layer (Shift for 10 px)</td></tr><tr><td>Delete</td><td>Remove layer</td></tr><tr><td>Alt while dragging</td><td>Skip snapping</td></tr>
 <tr><td>Alt-click the eye</td><td>Show only that layer</td></tr><tr><td>Paste an image</td><td>Add it as a layer</td></tr><tr><td>Ctrl + wheel</td><td>Zoom at the pointer</td></tr><tr><td>Space + drag</td><td>Pan the view</td></tr><tr><td>Ctrl+0</td><td>Fit to window</td></tr></table><p class="note">Click anywhere or press Esc to close.</p></div></div>
@@ -219,7 +221,7 @@ $('rand').onclick=()=>{
 };
 function custom(){setStops($('usemid').checked?[$('c1').value,$('c2').value,$('c3').value]:[$('c1').value,$('c3').value])}
 ['c1','c2','c3','usemid'].forEach(i=>$(i).oninput=custom);
-['dt','apx','apst','lb','lw','lg','sn','s1','s2','spl','spr','str','sov','reduce','ab','ac','as','ah','at','av','ag','ap','ai'].forEach(i=>$(i).oninput=()=>draw(true));
+['dt','apx','pxg','pxz','pxc','pxm','pxcm','pxi','pxp','pxinv','pxf','pxr','pxt','lb','lw','lg','sn','s1','s2','spl','spr','str','sov','reduce','ab','ac','as','ah','at','av','ag','ap','ai'].forEach(i=>$(i).oninput=()=>draw(true));
 $('k').oninput=()=>{$('kv').textContent=$('k').value;extract();draw()};
 
 function render(ov=true,rect){
@@ -253,7 +255,7 @@ function render(ov=true,rect){
     o[i]=r;o[i+1]=g;o[i+2]=b;o[i+3]=255;
   }
   if(st>1)fillStride(o,st);
-  {const P_=N('apx');if(P_>1&&!showOrig&&maskIdx<0)pixelPass(o,P_,$('apst').value==='dots',spl,spx,X0,Y0,X1,Y1)}
+  {const P_=N('apx');if(P_>1&&!showOrig&&maskIdx<0)pixelFx(o,P_,spl,spx,X0,Y0,X1,Y1)}
   const SV=$('sov').value;if(ov&&sel&&SV!=='off')for(let y=Y0;y<Y1;y++)for(let x=X0;x<X1;x++){const j=y*W+x,i=j*4,m=sel[j]/255;
     if(SV==='bw'){o[i]=o[i+1]=o[i+2]=sel[j];continue}
     if(SV==='mask'){const t=(1-m)*.55;o[i]+=(255-o[i])*t;o[i+1]+=(40-o[i+1])*t;o[i+2]+=(60-o[i+2])*t;continue}
@@ -268,7 +270,7 @@ function render(ov=true,rect){
 }
 let stride=1,lastMs=0,idleT=0;
 let DR=null,needFull=true,frameOK=false,bud2=0;
-function frame(){raf=0;const part=!needFull&&DR&&frameOK&&tab==='warp'&&!showOrig&&!lasso.length&&(DR[2]-DR[0])*(DR[3]-DR[1])<.4*W*H;
+function frame(){raf=0;const part=!needFull&&DR&&frameOK&&tab==='warp'&&!showOrig&&!lasso.length&&!pxFull()&&(DR[2]-DR[0])*(DR[3]-DR[1])<.4*W*H;
   if(part){const r=DR;DR=null;render(true,r);return}
   needFull=false;DR=null;stride=lastMs>26?2:1;const t0=performance.now();render();const ms=performance.now()-t0;lastMs=stride>1?ms*3:ms;clearTimeout(idleT);if(stride>1)idleT=setTimeout(()=>{stride=1;idleT=0;render()},160)}
 function draw(keep){needFull=true;if(!keep)cdirty=true;if(!base||raf)return;raf=requestAnimationFrame(frame)}
@@ -304,14 +306,6 @@ function makeOp(kind,src,ob,w,h,d){
       case'sh':{const bl=blur(x,y);T=[r+(r-bl[0])*2.5,g+(g-bl[1])*2.5,b+(b-bl[2])*2.5];break}
       default:return}
     for(let k=0;k<3;k++)d[p+k]+=(T[k]-d[p+k])*a}}
-function pixelPass(o,P,dots,spl,spx,X0,Y0,X1,Y1){
-  for(let by=Y0;by<Y1;by+=P)for(let bx=X0;bx<X1;bx+=P){
-    const x1=Math.min(W,bx+P),y1=Math.min(H,by+P);let r=0,g=0,b=0,n=0;
-    for(let y=by;y<y1;y++)for(let x=bx;x<x1;x++){const i=(y*W+x)*4;r+=o[i];g+=o[i+1];b+=o[i+2];n++}
-    r/=n;g/=n;b/=n;const lum=(r*.299+g*.587+b*.114)/255,cx=bx+(x1-bx)/2,cy=by+(y1-by)/2,rad=P*.5*(.45+.55*Math.sqrt(lum));
-    for(let y=by;y<y1;y++)for(let x=bx;x<x1;x++){const j=y*W+x,i=j*4,m=sel?sel[j]/255:1;if(!m||(spl&&x<spx))continue;
-      let R=r,G=g,B=b;if(dots&&hyp(x+.5-cx,y+.5-cy)>rad){R=r*.08;G=g*.08;B=b*.08}
-      o[i]+=(R-o[i])*m;o[i+1]+=(G-o[i+1])*m;o[i+2]+=(B-o[i+2])*m}}}
 const pxo=()=>{const P=+$('apx').value;$('apxo').textContent=P>1&&W?`About ${Math.ceil(W/P)} \u00d7 ${Math.ceil(H/P)} pixels`:'Off'};
 $('apx').addEventListener('input',pxo);
 const SCR=new Map();
@@ -426,7 +420,7 @@ if(window.claude&&claude.use)claude.use('downloads').then(m=>{dl=m;$('save').hid
 $('save').onclick=()=>{if(!base||!dl)return;const e=$('fmt').value;render(false);c.toBlob(async b=>{try{await dl.save({filename:'totone.'+e,data:b})}catch(x){}draw()},'image/'+(e==='jpg'?'jpeg':e),.95)};
 $('psv').onclick=async()=>{try{await dl.save({filename:'totone-palette.txt',data:palette.map(q=>hex(...q)).join('\n')})}catch(x){}};
 
-$('adjr').onclick=()=>{['ab','ac','as','ah','at','av','ag','ap','lb','sn'].forEach(i=>$(i).value=0);$('lw').value=255;$('lg').value=100;$('apx').value=1;$('dt').value=0;pxo();$('ai').checked=false;draw()};
+$('adjr').onclick=()=>{['ab','ac','as','ah','at','av','ag','ap','lb','sn'].forEach(i=>$(i).value=0);$('lw').value=255;$('lg').value=100;$('dt').value=0;$('ai').checked=false;draw()};
 $('flip').onclick=()=>{if(stops)setStops([...stops].reverse())};
 function blurMask(m,r){const t=new Float32Array(W*H),o=new Uint8Array(W*H),n=2*r+1,cl=(v,M)=>v<0?0:v>M?M:v;
   for(let y=0;y<H;y++){let a=0;for(let x=-r;x<=r;x++)a+=m[y*W+cl(x,W-1)];for(let x=0;x<W;x++){t[y*W+x]=a/n;a+=m[y*W+cl(x+r+1,W-1)]-m[y*W+cl(x-r,W-1)]}}
@@ -443,7 +437,7 @@ let cc=0;$('addp').onclick=()=>{if(!stops)return;P.push({n:'Mine '+(++cc),s:stop
 $('auto').onclick=()=>{if(!base)return;const h=new Uint32Array(256),d=base.data;for(let i=0;i<d.length;i+=4)h[(d[i]*.299+d[i+1]*.587+d[i+2]*.114)|0]++;const n=W*H;let a=0,lo=0,hi=255;for(let i=0;i<256;i++){a+=h[i];if(a>=n*.01){lo=i;break}}a=0;for(let i=255;i>=0;i--){a+=h[i];if(a>=n*.01){hi=i;break}}$('lb').value=Math.min(100,lo);$('lw').value=Math.max(155,hi);draw()};
 document.addEventListener('keydown',e=>{if(e.target.matches&&e.target.matches('input[type=search],input.rn,textarea'))return;const k=e.key.toLowerCase();
   if((e.ctrlKey||e.metaKey)&&(k==='y'||(k==='z'&&e.shiftKey))){e.preventDefault();$('redo').click()}
-  else if(!e.ctrlKey&&!e.metaKey&&/^[1-6]$/.test(k))document.querySelectorAll('.tabs button')[k-1].click();
+  else if(!e.ctrlKey&&!e.metaKey&&/^[1-7]$/.test(k))document.querySelectorAll('.tabs button')[k-1].click();
   else if(k==='['||k===']'){$('size').value=+$('size').value+(k==='['?-10:10)}});
 
 let layers=[],active=null,cropMode=false,ls=null,fcv=null;
@@ -604,7 +598,7 @@ refreshLayers();
 
 const B4=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
 document.querySelectorAll('#pcat button').forEach(b=>b.onclick=()=>{pcat=b.dataset.c;document.querySelectorAll('#pcat button').forEach(x=>x.classList.toggle('on',x===b));showP($('q').value.toLowerCase());$('plist').scrollTop=0});
-$('rlook').onclick=()=>{if(!base)return;edits=[];maskIdx=-1;drawEdits();cur=-1;$('str').value=100;$('reduce').checked=false;$('spl').checked=false;$('adjr').click();setStops(null);showP($('q').value.toLowerCase())};
+$('rlook').onclick=()=>{if(!base)return;edits=[];maskIdx=-1;drawEdits();cur=-1;$('str').value=100;$('reduce').checked=false;$('spl').checked=false;$('adjr').click();$('apx').value=1;pxo();setStops(null);showP($('q').value.toLowerCase())};
 const help=$('help');$('helpb').onclick=()=>help.hidden=false;help.onclick=()=>help.hidden=true;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!help.hidden)help.hidden=true});
 let textT=0;
@@ -655,6 +649,101 @@ function beginStroke(){const K=MODES[$('mode').value][2]||'',comb=K[0]==='c',t=$
   if(comb){if(layers.length){snaps.push(tileSnap(base.data,W,H,null));addL(active||layers[layers.length-1])}}
   else{if(t!=='layer'||!active)snaps.push(tileSnap(base.data,W,H,null));if(t==='all')layers.forEach(addL);else if(t==='layer'&&active)addL(active)}
   const fn=()=>{for(const s of snaps){s.swap();if(s.layer)syncL(s.layer)}return fn};pushU(fn);SS=snaps}
+
+const PXS=[];let curPx=0,pxcat='all',PP=8,jit=null;
+const ps=(n,c,f,o)=>PXS.push(Object.assign({n,c,f},o)),sdv=Math.abs,frc=x=>x-Math.floor(x),hsh=(a,b,t)=>frc(Math.sin(a*127.1+b*311.7+t*74.7)*43758.5453);
+const AA=(r,d)=>{const t=(r-d)*PP*.5+.5;return t<0?0:t>1?1:t},mx2=(u,v)=>Math.max(sdv(u),sdv(v));
+const bay=n=>{if(n===1)return[0];const m=bay(n/2),N=n/2,o=Array(n*n);for(let y=0;y<N;y++)for(let x=0;x<N;x++){const v=m[y*N+x]*4;o[y*n+x]=v;o[y*n+x+N]=v+2;o[(y+N)*n+x]=v+3;o[(y+N)*n+x+N]=v+1}return o};
+const BY2=bay(2),BY4=bay(4),BY8=bay(8),CLU=[12,5,6,13,4,0,1,7,11,3,2,8,15,10,9,14],dth=(a,n)=>(u,v,l,k)=>l>(a[(k.j%n)*n+(k.i%n)]+.5)/(n*n)?1:0;
+ps('Square pixels','Blocks',()=>1);
+ps('Gapped tiles','Blocks',(u,v,l,k)=>AA(1-k.g,mx2(u,v)));
+ps('Rounded tiles','Blocks',(u,v,l,k)=>{const a=1-k.g,r=.4,qx=sdv(u)-(a-r),qy=sdv(v)-(a-r);return AA(0,Math.sqrt(Math.max(qx,0)**2+Math.max(qy,0)**2)+Math.min(Math.max(qx,qy),0)-r)});
+ps('Bevel tiles','Blocks',(u,v,l,k)=>{const m=mx2(u,v);if(m>.72)k.sh=u+v<0?1.35:.6;return AA(1-k.g,m)});
+ps('Bricks','Blocks',(u,v,l,k)=>AA(1-k.g,mx2(v<0?u:(u<0?u+1:u-1),(v<0?v+.5:v-.5)*2)));
+ps('Diamonds','Blocks',(u,v,l,k)=>AA(1-k.g,sdv(u)+sdv(v)));
+ps('Hexagons','Blocks',(u,v,l,k)=>{const x=sdv(u),y=sdv(v);return AA(1-k.g,Math.max(x*.866+y*.5,y))});
+ps('Triangles','Blocks',(u,v,l,k)=>{const w=(k.i+k.j)&1?-v:v;return AA(0,(sdv(u)-(w+1)/2*(1-k.g*.5))*.8)*(w<1-k.g?1:AA(1,w))});
+ps('Circles','Dots',(u,v,l,k)=>AA((1-k.g)*k.s,hyp(u,v)));
+ps('Dots by brightness','Dots',(u,v,l,k)=>AA(1.1*k.s*Math.sqrt(l),hyp(u,v)));
+ps('Halftone (dark dots)','Dots',(u,v,l,k)=>AA(1.1*k.s*Math.sqrt(1-l),hyp(u,v)));
+ps('Rings','Dots',(u,v,l,k)=>{const d=hyp(u,v),r1=.95*k.s,w=.12+.6*l;return Math.max(0,AA(r1,d)-AA(r1*(1-w),d))});
+ps('Squares by brightness','Dots',(u,v,l,k)=>AA(k.s*Math.sqrt(l),mx2(u,v)));
+ps('Diamonds by brightness','Dots',(u,v,l,k)=>AA(1.25*k.s*Math.sqrt(l),sdv(u)+sdv(v)));
+ps('Plus signs','Dots',(u,v,l,k)=>{const t=.3*k.s+.1,a=1-k.g;return Math.max(AA(t,sdv(u))*AA(a,sdv(v)),AA(t,sdv(v))*AA(a,sdv(u)))});
+ps('Crosses','Dots',(u,v,l,k)=>{const t=.28*k.s+.08;return Math.max(AA(t,sdv(u-v)*.707),AA(t,sdv(u+v)*.707))*AA(1-k.g,mx2(u,v))});
+ps('Stars','Dots',(u,v,l,k)=>AA(.95*k.s*(.4+.6*l)*(.45+.55*sdv(Math.cos(2.5*Math.atan2(v,u)))),hyp(u,v)));
+ps('Horizontal bars','Lines',(u,v,l,k)=>AA(Math.max(.1,l)*k.s,sdv(v))*AA(1-k.g*.5,sdv(u)));
+ps('Vertical bars','Lines',(u,v,l,k)=>AA(Math.max(.1,l)*k.s,sdv(u))*AA(1-k.g*.5,sdv(v)));
+ps('Scanlines','Lines',(u,v,l,k)=>AA(1-k.g*1.5,sdv(v)));
+ps('Vertical lines','Lines',(u,v,l,k)=>AA(1-k.g*1.5,sdv(u)));
+ps('Diagonal hatch','Lines',(u,v,l,k)=>AA((1-l)*.4*k.s+.04,sdv(frc(u+v)-.5)*.7));
+ps('Cross hatch','Lines',(u,v,l,k)=>Math.max(AA((1-l)*.4*k.s+.04,sdv(frc(u+v)-.5)*.7),l<.55?AA((.55-l)*.5*k.s+.03,sdv(frc(u-v)-.5)*.7):0));
+ps('Slashes','Lines',(u,v,l,k)=>AA(.15+.45*(1-l)*k.s,sdv(u+v)*.707));
+ps('Backslashes','Lines',(u,v,l,k)=>AA(.15+.45*(1-l)*k.s,sdv(u-v)*.707));
+ps('Waves','Lines',(u,v,l,k)=>AA(Math.max(.12,l)*.6*k.s,sdv(v-.6*Math.sin(u*Math.PI))));
+ps('Zigzag','Lines',(u,v,l,k)=>AA(Math.max(.12,l)*.6*k.s,sdv(v-.6*(sdv(frc(u*.5+.25)*4-2)-1))));
+ps('Concentric rings','Lines',(u,v,l,k)=>AA(.22*k.s+.05,sdv(frc(hyp(u,v)*(1+3*l))-.5)));
+ps('Grid mesh','Lines',(u,v,l,k)=>1-AA(1-(.08+.45*(1-l)*k.s),mx2(u,v)));
+ps('Bayer 2x2','Dither',dth(BY2,2));ps('Bayer 4x4','Dither',dth(BY4,4));ps('Bayer 8x8','Dither',dth(BY8,8));ps('Clustered dots','Dither',dth(CLU,4));
+ps('Random dither','Dither',(u,v,l,k)=>l>hsh(k.i,k.j,1)?1:0);
+ps('Interleaved noise','Dither',(u,v,l,k)=>l>frc(52.9829189*frc(.06711056*k.i+.00583715*k.j))?1:0);
+ps('Line dither','Dither',(u,v,l,k)=>l>((k.j%4)+.5)/4?1:0);
+ps('Checker dither','Dither',(u,v,l,k)=>l>((k.i+k.j)&1?.7:.3)?1:0);
+for(const[n,e]of[['Floyd-Steinberg','fs'],['Atkinson','at'],['Sierra lite','sl']])ps(n,'Dither',(u,v,l,k)=>k.edg[k.j*k.cols+k.i],{ed:e,full:true});
+const tr=(n,r,o)=>ps(n,'Text',null,Object.assign({ramp:r},o));
+tr('ASCII classic',' .:-=+*#%@');tr('ASCII dense',' .\'`^",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$');tr('ASCII blocks',' \u2591\u2592\u2593\u2588');tr('ASCII minimal',' \u00b7:+#');
+tr('Binary','01');tr('Digits','0123456789');tr('Letters',' .ilxoOXMW');tr('Symbols',' \u00b7+\u00d7*#%&@');tr('Hash and slash',' ._-/\\|+#');tr('Math symbols',' .+-=\u00d7\u00f7\u2248\u2260');tr('Shapes',' \u00b7\u2022\u25cf\u25c9');tr('Bar blocks',' \u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588');
+const KAT='\uff86\uff97\uff98\uff9c\uff66\uff71\uff73\uff74\uff75\uff76\uff77\uff79\uff7a\uff7b\uff7c\uff7d\uff7e\uff7f\uff80\uff82\uff83\uff85\uff87\uff88\uff8a\uff8b\uff8e\uff8f\uff90\uff91\uff92\uff93\uff94\uff95';
+tr('Katakana',KAT,{hash:true});tr('Matrix rain',KAT+'0123456789',{hash:true,ink:'#2bff6a',paper:'#020a04'});
+ps('Custom text','Text',null,{seq:true});ps('Custom ramp','Text',null,{custom:true});
+ps('LED panel','Art',(u,v,l,k)=>{k.ch=u<-.33?0:u<.33?1:2;return AA(1-k.g,mx2(u,v))});
+ps('Lego studs','Art',(u,v,l,k)=>{const r=hyp(u,v);k.sh=r<.55?(r>.45?.7:1.18):1;return AA(1-k.g,mx2(u,v))});
+ps('Cubes','Art',(u,v,l,k)=>{k.sh=v<-sdv(u)*.577?1.2:u<0?.8:.5;const x=sdv(u),y=sdv(v);return AA(1-k.g,Math.max(x*.866+y*.5,y))});
+ps('Cross-stitch','Art',(u,v,l,k)=>{k.sh=.85+.3*hsh(k.x,k.y,3);const t=.3*k.s+.06;return Math.max(AA(t,sdv(u-v)*.707),AA(t,sdv(u+v)*.707))*AA(.95,mx2(u,v))});
+for(const[n,e]of[['Voronoi mosaic','vor'],['Stained glass','glass'],['Pointillism','stip'],['Glitch blocks','glitch']])ps(n,'Art',null,{e,full:true});
+const pxFull=()=>+$('apx').value>1&&!!(PXS[curPx].full||PXS[curPx].e);
+const atl=new Map();
+function atlas(chars,P,font){const key=chars.join('')+'|'+P+'|'+font;let a=atl.get(key);if(a)return a;if(atl.size>6)atl.clear();
+  const cv=document.createElement('canvas');cv.width=cv.height=P;const g=cv.getContext('2d',{willReadFrequently:true});
+  a=chars.map(ch=>{g.clearRect(0,0,P,P);g.font=`${Math.max(4,Math.round(P*.95))}px ${font}`;g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(ch,P/2,P/2+P*.06);const d=g.getImageData(0,0,P,P).data,m=new Uint8Array(P*P);for(let i=0;i<m.length;i++)m[i]=d[i*4+3];return m});atl.set(key,a);return a}
+function errDiff(lm,cols,rows,kind){const e=Float32Array.from(lm),out=new Uint8Array(cols*rows),K={fs:[[1,0,7/16],[-1,1,3/16],[0,1,5/16],[1,1,1/16]],at:[[1,0,.125],[2,0,.125],[-1,1,.125],[0,1,.125],[1,1,.125],[0,2,.125]],sl:[[1,0,.5],[-1,1,.25],[0,1,.25]]}[kind];
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const i=y*cols+x,o=e[i]>.5?1:0;out[i]=o;const er=e[i]-o;for(const[dx,dy,w]of K){const xx=x+dx,yy=y+dy;if(xx>=0&&xx<cols&&yy<rows)e[yy*cols+xx]+=er*w}}return out}
+function pixelFx(o,P,spl,spx,X0,Y0,X1,Y1){
+  const S=PXS[curPx],cols=Math.ceil(W/P),rows=Math.ceil(H/P),k={g:+$('pxg').value/100,s:+$('pxz').value/100,i:0,j:0,sh:1,ch:-1,x:0,y:0,edg:null,cols};PP=P;
+  const cm=$('pxcm').value,inv=$('pxinv').checked,ct=+$('pxc').value/100*2,mixv=+$('pxm').value/100,font=$('pxf').value;
+  let ink=rgb($('pxi').value),paper=rgb($('pxp').value);if(S.ink){ink=rgb(S.ink);paper=rgb(S.paper)}
+  const mono=cm==='mono'||!!S.ink,pap=cm==='paper'||mono,over=cm==='over'&&!S.ink,adj=l=>{l=Math.min(1,Math.max(0,(l-.5)*(1+ct)+.5));return inv?1-l:l};
+  let chars=null,at=null,idxOf=null;
+  if(S.ramp||S.seq||S.custom){const raw=Array.from(S.seq?($('pxt').value||' '):S.custom?($('pxr').value||' .:-=+*#%@'):S.ramp);if(S.seq){chars=[...new Set(raw)];idxOf=new Map(chars.map((c,i)=>[c,i]));at=atlas(chars,P,font);k.raw=raw}else{chars=raw;at=atlas(chars,P,font)}}
+  const cp=S.e?o.slice():null;
+  if(S.e&&(!jit||jit.cols!==cols||jit.rows!==rows||jit.P!==P)){const a=new Float32Array(cols*rows*2);for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){a[(j*cols+i)*2]=(i+.5+(hsh(i,j,1)-.5)*.8)*P;a[(j*cols+i)*2+1]=(j+.5+(hsh(i,j,2)-.5)*.8)*P}jit={cols,rows,P,a}}
+  if(S.ed){const lm=new Float32Array(cols*rows);for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){let t=0,n=0;for(let y=j*P;y<Math.min(H,j*P+P);y++)for(let x=i*P;x<Math.min(W,i*P+P);x++){const q=(y*W+x)*4;t+=o[q]*.299+o[q+1]*.587+o[q+2]*.114;n++}lm[j*cols+i]=adj(t/n/255)}k.edg=errDiff(lm,cols,rows,S.ed)}
+  for(let by=Y0;by<Y1;by+=P){const j=by/P|0;for(let bx=X0;bx<X1;bx+=P){const i=bx/P|0,x1=Math.min(W,bx+P),y1=Math.min(H,by+P);
+    let r=0,g=0,b=0,n=0;for(let y=by;y<y1;y++)for(let x=bx;x<x1;x++){const q=(y*W+x)*4;r+=o[q];g+=o[q+1];b+=o[q+2];n++}r/=n;g/=n;b/=n;
+    const l=adj((r*.299+g*.587+b*.114)/255);k.i=i;k.j=j;let mask=null;
+    if(at){const idx=S.seq?idxOf.get(k.raw[(j*cols+i)%k.raw.length]):S.hash?(hsh(i,j,4)*chars.length|0):Math.min(chars.length-1,Math.floor(l*chars.length));mask=at[idx]}
+    const ink0=mono?ink:[r,g,b],pap0=pap?paper:[r*.08,g*.08,b*.08];
+    for(let y=by;y<y1;y++)for(let x=bx;x<x1;x++){const jj=y*W+x,q=jj*4,m=sel?sel[jj]/255:1;if(!m||(spl&&x<spx))continue;
+      let c=1,R,G,B;
+      if(S.e){const e=S.e;
+        if(e==='glitch'){const sh=hsh(j,1,5)>.7?Math.round((hsh(j,2,6)-.5)*8)*P:0,xs=Math.min(W-1,Math.max(0,x+sh)),qs=(y*W+xs)*4;R=cp[qs];G=cp[qs+1];B=cp[qs+2]}
+        else if(e==='stip'){const a=jit.a,ci=(j*cols+i)*2,d=hyp(x+.5-a[ci],y+.5-a[ci+1]),rad=P*(.18+.34*Math.sqrt(l))*k.s;c=Math.min(1,Math.max(0,rad-d+.5));R=ink0[0];G=ink0[1];B=ink0[2]}
+        else{let b1=1e9,b2=1e9,bi=0,bj=0;for(let dj=-1;dj<=1;dj++)for(let di=-1;di<=1;di++){const ii=i+di,jj2=j+dj;if(ii<0||jj2<0||ii>=cols||jj2>=rows)continue;const a=jit.a,ci=(jj2*cols+ii)*2,d=hyp(x+.5-a[ci],y+.5-a[ci+1]);if(d<b1){b2=b1;b1=d;bi=ii;bj=jj2}else if(d<b2)b2=d}
+          const ci=(bj*cols+bi)*2,sx=Math.min(W-1,Math.max(0,jit.a[ci]|0)),sy=Math.min(H-1,Math.max(0,jit.a[ci+1]|0)),qs=(sy*W+sx)*4;R=cp[qs];G=cp[qs+1];B=cp[qs+2];
+          if(e==='glass'&&b2-b1<1.6+P*.04){R*=.1;G*=.1;B*=.12}else if(mono){const t=(R*.299+G*.587+B*.114)/255;R=paper[0]+(ink[0]-paper[0])*t;G=paper[1]+(ink[1]-paper[1])*t;B=paper[2]+(ink[2]-paper[2])*t}}}
+      else{
+        if(mask){c=mask[(y-by)*P+(x-bx)]/255;if(S.hash||S.seq)c*=.3+.7*l}
+        else{k.x=x;k.y=y;k.sh=1;k.ch=-1;c=S.f((x-bx+.5)/P*2-1,(y-by+.5)/P*2-1,l,k)}
+        let sh=mask?1:k.sh;R=ink0[0]*sh;G=ink0[1]*sh;B=ink0[2]*sh;if(!mask&&k.ch>=0){if(k.ch!==0)R*=.12;if(k.ch!==1)G*=.12;if(k.ch!==2)B*=.12}}
+      const pr=over?o[q]:pap0[0],pg=over?o[q+1]:pap0[1],pb=over?o[q+2]:pap0[2],w=m*mixv;
+      const fr0=S.e&&S.e!=='stip'?R:pr+(R-pr)*c,fg=S.e&&S.e!=='stip'?G:pg+(G-pg)*c,fb=S.e&&S.e!=='stip'?B:pb+(B-pb)*c;
+      o[q]+=(fr0-o[q])*w;o[q+1]+=(fg-o[q+1])*w;o[q+2]+=(fb-o[q+2])*w}}}}
+function showPx(){const q=$('pxq').value.toLowerCase();$('pxlist').innerHTML=PXS.map((s,i)=>[s,i]).filter(([s])=>(pxcat==='all'||s.c===pxcat)&&s.n.toLowerCase().includes(q)).map(([s,i])=>`<button class="p${i===curPx?' on':''}" data-i="${i}">${esc(s.n)}</button>`).join('')}
+$('pxq').oninput=showPx;
+$('pxlist').onclick=e=>{const b=e.target.closest('.p');if(!b)return;curPx=+b.dataset.i;if(+$('apx').value<=1)$('apx').value=8;pxo();showPx();draw(true)};
+document.querySelectorAll('#pxcat button').forEach(b=>b.onclick=()=>{pxcat=b.dataset.c;document.querySelectorAll('#pxcat button').forEach(x=>x.classList.toggle('on',x===b));showPx();$('pxlist').scrollTop=0});
+$('pxoff').onclick=()=>{$('apx').value=1;pxo();draw(true)};
+showPx();
 </script>
 </body>
 </html>
