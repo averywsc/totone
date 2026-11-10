@@ -61,13 +61,14 @@ textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var
 button,select,.lrow,.ib{transition:background-color .12s,color .12s,border-color .12s}.tabs button{transition:color .12s,border-color .12s}.pn.on{animation:pin .14s ease-out}@keyframes pin{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 h3[role=button]{cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}h3[role=button]::after{content:"";width:6px;height:6px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .12s;margin-right:4px}h3[aria-expanded=false]::after{transform:rotate(-45deg)}.lrow canvas{background:conic-gradient(#aab2c8 25%,#d6dbe8 0 50%,#aab2c8 0 75%,#d6dbe8 0) 0 0/10px 10px}.sec{display:block}
 .chips7{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}.chips7 button{padding:5px 0;font-size:12px}.chips7 button.on{background:var(--ink);color:var(--panel)}#pxlist{max-height:240px;overflow-y:auto;border:1px solid var(--line);margin:6px 0}
+#exp{position:fixed;inset:0;background:rgba(5,12,31,.82);display:grid;place-items:center;z-index:21}#exp .hbox{width:min(440px,92vw)}#exprev{max-width:100%;border:1px solid var(--edge);margin-top:8px}#exp input[type=text]{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:4px 6px}
 </style>
 </head>
 <body>
 <header>
 <h1>Totone</h1><span class="sp"></span>
 <button id="cmp">Hold to compare</button><button id="undo">Undo</button><button id="redo">Redo</button><button id="reset">Reset warp</button>
-<label class="hd"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label><select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select><select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option></select><button id="open">Open image</button><button id="rlook">Reset look</button><button id="helpb">Keys</button><select id="fmt" hidden aria-label="Format"><option value="png">PNG</option><option value="jpg">JPG</option><option value="webp">WEBP</option></select><button class="pri" id="save" hidden>Save</button>
+<label class="hd"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label><select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select><select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option></select><button id="open">Open image</button><button id="rlook">Reset look</button><button id="helpb">Keys</button><button class="pri" id="export">Export</button>
 <input type="file" id="file" accept="image/*" hidden><input type="file" id="file2" accept="image/*" multiple hidden>
 </header>
 <main>
@@ -126,11 +127,20 @@ h3[role=button]{cursor:pointer;display:flex;justify-content:space-between;align-
 <div class="pn" id="p-pixel"><label>Cell size (1 is off) <input type="range" id="apx" min="1" max="64" value="1"></label><output id="apxo" class="note">Off</output><div class="bar"><button id="pxoff">Turn off</button></div><input type="search" id="pxq" placeholder="Search 64 styles" aria-label="Search pixel styles"><div class="chips7" id="pxcat"><button class="on" data-c="all">All</button><button data-c="Blocks">Blocks</button><button data-c="Dots">Dots</button><button data-c="Lines">Lines</button><button data-c="Dither">Dither</button><button data-c="Text">Text</button><button data-c="Art">Art</button></div><div id="pxlist"></div><h3>Look</h3><label>Gap <input type="range" id="pxg" min="0" max="60" value="10"></label><label>Shape size <input type="range" id="pxz" min="20" max="150" value="100"></label><label>Contrast <input type="range" id="pxc" min="-100" max="100" value="0"></label><label>Mix with image <input type="range" id="pxm" min="0" max="100" value="100"></label><label>Colours <select id="pxcm"><option value="orig">Original on dark</option><option value="paper">Original on paper</option><option value="mono">Ink on paper</option><option value="over">Over the image</option></select></label><label>Ink <input type="color" id="pxi" value="#f4efe3"></label><label>Paper <input type="color" id="pxp" value="#0a1530"></label><label><span><input type="checkbox" id="pxinv"> Invert brightness</span></label><h3>Text</h3><div class="tgrid" id="pxtm" style="grid-template-columns:repeat(2,1fr)"><button data-s="Custom text">Custom text</button><button data-s="Custom ramp">Custom ramp</button></div><p class="note" id="pxth"></p><div id="pxtx" hidden><textarea id="pxt" rows="3" aria-label="Your text">TOTONE</textarea><label>Samples <select id="pxsam"><option value="">Choose a sample</option><option>TOTONE</option><option>HELLO WORLD</option><option>I ♥ PIXELS</option><option>LOREM IPSUM DOLOR SIT AMET</option><option>0123456789</option><option>ABCDEFGHIJKLMNOPQRSTUVWXYZ</option><option>♥ ★ ● ■ ▲</option></select></label><label>Layout <select id="pxl"><option value="flow">Repeat across rows</option><option value="rows">Restart each row</option><option value="cols">Run down columns</option><option value="rand">Random letters</option><option value="lum">By brightness (typed order, dark to light)</option></select></label><label>Case <select id="pxk"><option value="as">As typed</option><option value="up">UPPERCASE</option><option value="low">lowercase</option></select></label><label><span><input type="checkbox" id="pxsp"> Skip spaces</span></label><div class="bar"><button id="pxsh">Shuffle random</button></div></div><div id="pxrx" hidden><label>Ramp <input type="text" id="pxr" value=" .:-=+*#%@" style="flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:4px"></label><label>Samples <select id="pxrsam"><option value="">Choose a sample</option><option value=" .:-=+*#%@">Classic</option><option value=" ░▒▓█">Shade blocks</option><option value=" .oO0@">Rounds</option><option value=" ▁▂▃▄▅▆▇█">Bars</option><option value="01">Binary</option><option value=" ·•●">Dots</option><option value=" ._-/\|+#">Hash and slash</option></select></label><div class="bar"><button id="pxrev">Reverse ramp</button></div></div><label>Font <select id="pxf"><option>monospace</option><option>Courier New</option><option>Georgia</option><option>Impact</option><option>Arial Black</option><option>sans-serif</option></select></label><label>Letter size <input type="range" id="pxls" min="40" max="160" value="100"></label><label>Fade dark cells <input type="range" id="pxfd" min="0" max="100" value="70"></label><label><span><input type="checkbox" id="pxb"> Bold</span></label><label><span><input type="checkbox" id="pxit"> Italic</span></label><p class="note">Letter size, fade, font and style apply to every text style. Gap and shape size do not.</p></div>
 </aside>
 </main>
+<div id="exp" hidden role="dialog" aria-label="Export"><div class="hbox"><h2>Export</h2>
+<label>What <select id="exw"><option value="all">Whole image</option><option value="layer">Selected layer (transparent)</option><option value="sel">Selection only (cut out)</option></select></label>
+<label>Format <select id="exf"><option value="png">PNG</option><option value="jpg">JPG</option><option value="webp">WEBP</option></select></label>
+<label>Size <select id="exs"><option value="0.5">50%</option><option value="1" selected>100%</option><option value="2">200%</option><option value="3">300%</option></select></label>
+<label>Quality <input type="range" id="exq" min="40" max="100" value="92"><output id="exqo">92</output></label>
+<label>File name <input type="text" id="exn" value="totone" aria-label="File name"></label>
+<p class="note" id="exinfo"></p>
+<div class="bar"><button class="pri" id="exgo">Save file</button><button id="excp">Copy to clipboard</button><button id="exx">Close</button></div>
+<p class="note" id="exmsg" role="status"></p><img id="exprev" alt="Exported image" hidden></div></div>
 <div id="help" hidden role="dialog" aria-label="Keyboard shortcuts"><div class="hbox"><h2>Shortcuts</h2><table>
 <tr><td>1 to 7</td><td>Switch tabs</td></tr><tr><td>Ctrl+Z, Ctrl+Y</td><td>Undo, redo</td></tr><tr><td>[ and ]</td><td>Brush size</td></tr>
 <tr><td>Shift, Alt while selecting</td><td>Add to, subtract from selection</td></tr><tr><td>Ctrl+D, Esc</td><td>Clear selection, cancel shape</td></tr>
 <tr><td>Arrow keys</td><td>Nudge layer (Shift for 10 px)</td></tr><tr><td>Delete</td><td>Remove layer</td></tr><tr><td>Alt while dragging</td><td>Skip snapping</td></tr>
-<tr><td>Alt-click the eye</td><td>Show only that layer</td></tr><tr><td>Paste an image</td><td>Add it as a layer</td></tr><tr><td>Ctrl + wheel</td><td>Zoom at the pointer</td></tr><tr><td>Space + drag</td><td>Pan the view</td></tr><tr><td>Ctrl+0</td><td>Fit to window</td></tr></table><p class="note">Click anywhere or press Esc to close.</p></div></div>
+<tr><td>Alt-click the eye</td><td>Show only that layer</td></tr><tr><td>Ctrl+S</td><td>Export</td></tr><tr><td>Paste an image</td><td>Add it as a layer</td></tr><tr><td>Ctrl + wheel</td><td>Zoom at the pointer</td></tr><tr><td>Space + drag</td><td>Pan the view</td></tr><tr><td>Ctrl+0</td><td>Fit to window</td></tr></table><p class="note">Click anywhere or press Esc to close.</p></div></div>
 <script>
 const $=id=>document.getElementById(id);
 const c=$('c'),ctx=c.getContext('2d'),hyp=(a,b)=>Math.sqrt(a*a+b*b);
@@ -416,8 +426,7 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.pn').forEach(x=>x.classList.toggle('on',x.id==='p-'+tab));lasso=[];c.style.cursor=tab==='layers'?'default':'crosshair';draw()});
 const cmp=$('cmp');cmp.onpointerdown=()=>{showOrig=true;draw()};['pointerup','pointerleave','pointercancel'].forEach(t=>cmp.addEventListener(t,()=>{if(showOrig){showOrig=false;draw()}}));
 let dl=null;
-if(window.claude&&claude.use)claude.use('downloads').then(m=>{dl=m;$('save').hidden=$('fmt').hidden=$('psv').hidden=!m}).catch(()=>{});
-$('save').onclick=()=>{if(!base||!dl)return;const e=$('fmt').value;render(false);c.toBlob(async b=>{try{await dl.save({filename:'totone.'+e,data:b})}catch(x){}draw()},'image/'+(e==='jpg'?'jpeg':e),.95)};
+if(window.claude&&claude.use)claude.use('downloads').then(m=>{dl=m;$('psv').hidden=!m;if(typeof syncExp==='function')syncExp()}).catch(()=>{});
 $('psv').onclick=async()=>{try{await dl.save({filename:'totone-palette.txt',data:palette.map(q=>hex(...q)).join('\n')})}catch(x){}};
 
 $('adjr').onclick=()=>{['ab','ac','as','ah','at','av','ag','ap','lb','sn'].forEach(i=>$(i).value=0);$('lw').value=255;$('lg').value=100;$('dt').value=0;$('ai').checked=false;draw()};
@@ -757,6 +766,41 @@ $('pxrsam').onchange=()=>{if($('pxrsam').value){$('pxr').value=$('pxrsam').value
 $('pxrev').onclick=()=>{$('pxr').value=Array.from($('pxr').value).reverse().join('');draw(true)};
 $('pxsh').onclick=()=>{pxSeed=Math.random()*1000;$('pxl').value='rand';draw(true)};
 syncPxUI();
+
+const exp=$('exp');
+function selBox(){let x0=W,y0=H,x1=-1,y1=-1;for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(sel[y*W+x]>127){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}return x1<0?null:[x0,y0,x1-x0+1,y1-y0+1]}
+function exportDims(){const sc=+$('exs').value,wt=$('exw').value;let a=W,b=H;
+  if(wt==='layer'&&active){a=Math.round(active.cv.width*(1-active.cl-active.cr));b=Math.round(active.cv.height*(1-active.ct-active.cb))}
+  else if(wt==='sel'&&sel){const bb=selBox();if(bb){a=bb[2];b=bb[3]}}
+  return[Math.max(1,Math.round(a*sc)),Math.max(1,Math.round(b*sc))]}
+function syncExp(){const o=$('exw').options;o[1].disabled=!active;o[2].disabled=!sel;if(o[$('exw').selectedIndex].disabled)$('exw').value='all';
+  const fmt=$('exf').value;$('exq').disabled=fmt==='png';$('exqo').textContent=$('exq').value;const[w,h]=exportDims();
+  $('exinfo').textContent=`${w} \u00d7 ${h} px \u00b7 ${fmt.toUpperCase()}${fmt==='jpg'?' (no transparency)':''}`;
+  $('exgo').textContent=dl?'Save file':'Create image'}
+function openExp(){if(!base)return;$('exmsg').textContent='';$('exprev').hidden=true;syncExp();exp.hidden=false}
+function buildExport(){const wt=$('exw').value,sc=+$('exs').value,fmt=$('exf').value;let src,sx=0,sy=0,sw=W,sh=H,cut=false;
+  if(wt==='layer'&&active){const l=active;sw=Math.round(l.cv.width*(1-l.cl-l.cr));sh=Math.round(l.cv.height*(1-l.ct-l.cb));src=document.createElement('canvas');src.width=sw;src.height=sh;const g=src.getContext('2d');if(l.fl){g.translate(sw,0);g.scale(-1,1)}g.drawImage(l.cv,Math.round(l.cl*l.cv.width),Math.round(l.ct*l.cv.height),sw,sh,0,0,sw,sh)}
+  else{render(false);src=document.createElement('canvas');src.width=W;src.height=H;src.getContext('2d').drawImage(c,0,0);draw();
+    if(wt==='sel'&&sel){const bb=selBox();if(bb){[sx,sy,sw,sh]=bb;cut=true}}}
+  const out=document.createElement('canvas');out.width=Math.max(1,Math.round(sw*sc));out.height=Math.max(1,Math.round(sh*sc));const g=out.getContext('2d');g.imageSmoothingQuality='high';
+  if(fmt==='jpg'){g.fillStyle='#fff';g.fillRect(0,0,out.width,out.height)}
+  if(cut){const t=document.createElement('canvas');t.width=sw;t.height=sh;const tg=t.getContext('2d');tg.drawImage(src,sx,sy,sw,sh,0,0,sw,sh);const im=tg.getImageData(0,0,sw,sh);
+    for(let y=0;y<sh;y++)for(let x=0;x<sw;x++)im.data[(y*sw+x)*4+3]=sel[(sy+y)*W+sx+x];tg.putImageData(im,0,0);g.drawImage(t,0,0,sw,sh,0,0,out.width,out.height)}
+  else g.drawImage(src,sx,sy,sw,sh,0,0,out.width,out.height);
+  return out}
+const toBlob=(cv,type,q)=>new Promise(r=>cv.toBlob(r,type,q));
+async function doExport(copy){const msg=t=>$('exmsg').textContent=t;msg('Working\u2026');
+  try{const fmt=$('exf').value,mime=fmt==='jpg'?'image/jpeg':'image/'+fmt,out=buildExport();
+    const name=(($('exn').value||'totone').replace(/[^\w.\- ]+/g,'_').trim()||'totone')+($('exw').value==='layer'?'-layer':$('exw').value==='sel'?'-cutout':'')+'.'+fmt;
+    if(copy){const png=await toBlob(out,'image/png');try{await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);msg('Copied to the clipboard.')}catch(e){msg('Copying is blocked here. Use Save file instead.')}return}
+    const blob=await toBlob(out,mime,$('exq').value/100);if(!blob){msg('Could not create the image.');return}
+    if(dl){try{await dl.save({filename:name,data:blob});msg('Saved '+name+'.')}catch(e){msg('Saving was cancelled or blocked.')}}
+    else{const p=$('exprev');if(p.dataset.u)URL.revokeObjectURL(p.dataset.u);p.dataset.u=URL.createObjectURL(blob);p.src=p.dataset.u;p.hidden=false;msg('Downloads are not available here. Press and hold or right-click the image below to save it.')}
+  }catch(e){msg('Export failed: '+e.message)}}
+$('export').onclick=openExp;$('exx').onclick=()=>{exp.hidden=true};$('exgo').onclick=()=>doExport(false);$('excp').onclick=()=>doExport(true);
+exp.addEventListener('click',e=>{if(e.target===exp)exp.hidden=true});
+['exw','exf','exs','exq'].forEach(i=>$(i).addEventListener('input',syncExp));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!exp.hidden)exp.hidden=true;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();openExp()}});
 </script>
 </body>
 </html>
