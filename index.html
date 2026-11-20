@@ -84,6 +84,15 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 #type-editor .bar{justify-content:flex-end;margin-bottom:0}
 #type-draw[aria-pressed=true],#type-draw-side[aria-pressed=true]{background:var(--ink);color:var(--panel)}
 #type-hint{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:6;background:var(--panel);border:1px solid var(--edge);padding:5px 10px;pointer-events:none}
+.gradient-editor{margin:12px 12px 2px}
+#ramp{height:42px;border:1px solid var(--edge);border-radius:4px;cursor:crosshair}
+#gradient-handles{position:relative;height:26px}
+#gradient-handles button{position:absolute;top:4px;transform:translateX(-50%);width:20px;height:19px;padding:0;border:2px solid var(--edge);background:var(--stop);touch-action:none;cursor:ew-resize}
+#gradient-handles button::before{content:"";position:absolute;bottom:100%;left:4px;border:4px solid transparent;border-bottom-color:var(--edge)}
+#gradient-handles button[aria-pressed=true]{border-color:var(--ink);z-index:1}
+.gradient-labels,.gradient-controls{display:flex;align-items:center;justify-content:space-between;gap:6px;color:var(--mute)}
+.gradient-controls{flex-wrap:wrap;justify-content:flex-start}
+#gradient-location{width:4em} .gradient-controls button{padding:4px 8px}
 </style>
 </head>
 <body>
@@ -99,22 +108,34 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <div class="tabs" role="tablist"><button role="tab" class="on" data-t="tone">Tone</button><button role="tab" data-t="adjust">Adjust</button><button role="tab" data-t="colour">Colours</button><button role="tab" data-t="select">Select</button><button role="tab" data-t="warp">Warp</button><button role="tab" data-t="layers">Layers</button><button role="tab" data-t="pixel">Pixel</button><button role="tab" data-t="crop">Crop</button></div>
 
 <div class="pn on" id="p-tone">
-<input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="duo">Duo</button><button data-c="trio">Trio</button><button data-c="multi">Multi</button><button data-c="mine">Mine</button></div><div id="plist"></div>
 <h3>Gradient map</h3>
-<div class="ramp" id="ramp" role="img" aria-label="Gradient map preview"></div>
+<div class="gradient-editor">
+<div id="ramp" role="img" aria-label="Gradient stops from shadows to highlights"></div>
+<div id="gradient-handles" role="group" aria-label="Gradient colour stops"></div>
+</div>
+<div class="gradient-labels"><span>Shadows</span><span>Highlights</span></div>
+<p class="note">Click the ramp to add a stop. Drag a stop to move it.</p>
+<div class="gradient-controls">
+<label>Colour <input type="color" id="gradient-colour"></label>
+<label>Location <input type="number" id="gradient-location" min="0" max="100" step="1" aria-label="Stop location in percent">%</label>
+<button id="gradient-delete">Remove stop</button>
+</div>
+<label><span><input type="checkbox" id="gradient-enabled"> Apply gradient map</span></label>
 <div class="bar"><button id="rand">Random palette</button><button id="none">No tone map</button><button id="flip">Flip</button><button id="addp">Save as preset</button><button id="rst">Reset</button></div>
 <label>Strength <input type="range" id="str" min="0" max="100" value="100"></label>
 <label>Map by <select id="gm-source"><option value="luma">Brightness</option><option value="light">Lightness</option><option value="red">Red channel</option><option value="green">Green channel</option><option value="blue">Blue channel</option></select></label>
 <label>Interpolation <select id="gm-curve"><option value="rgb">RGB</option><option value="smooth">Smooth stops</option><option value="linear">Linear light</option><option value="steps">Hard stops</option></select></label>
 <label>Midpoint <input type="range" id="gm-mid" min="10" max="90" value="50"><output id="gm-value">50%</output></label>
-<div class="bar"><button id="gm-edit">Edit active stops</button><button id="gm-reset">Reset mapping</button></div>
+<div class="bar"><button id="gm-reset">Reset mapping</button></div>
+<h3>Presets</h3>
+<input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="duo">Duo</button><button data-c="trio">Trio</button><button data-c="multi">Multi</button><button data-c="mine">Mine</button></div><div id="plist"></div>
 <h3>Custom stops</h3>
 <div class="chips" id="ctn" style="grid-template-columns:repeat(3,1fr)"><button data-n="2">Duo</button><button data-n="3" class="on">Trio</button><button data-n="4">Four</button><button data-n="5">Five</button><button data-n="6">Six</button><button data-n="8">Eight</button></div>
-<div id="cstops"></div>
+
 <div class="bar"><button id="cimg2">Duo from image</button><button id="cimg3">Trio from image</button></div>
 <label>Harmony from <input type="color" id="hc" value="#e8467c"></label>
 <div class="chips" id="hrm" style="grid-template-columns:repeat(3,1fr)"><button data-h="comp">Complement</button><button data-h="tri">Triad</button><button data-h="ana">Analogous</button><button data-h="split">Split</button><button data-h="tet">Tetrad</button><button data-h="mono">Shades</button></div>
-<p class="note">Drag the sliders to move each colour along the shadows to highlights range. Save as preset keeps it.</p>
+
 </div>
 
 <div class="pn" id="p-adjust"><label>Brightness <input type="range" id="ab" min="-100" max="100" value="0"></label><label>Contrast <input type="range" id="ac" min="-100" max="100" value="0"></label><label>Saturation <input type="range" id="as" min="-100" max="100" value="0"></label><label>Hue shift <input type="range" id="ah" min="-180" max="180" value="0"></label><label>Warmth <input type="range" id="at" min="-100" max="100" value="0"></label><label>Vignette <input type="range" id="av" min="0" max="100" value="0"></label><label>Grain <input type="range" id="ag" min="0" max="100" value="0"></label><label>Posterize (0 is off) <input type="range" id="ap" min="0" max="16" value="0"></label><h3>Levels</h3><label>Black point <input type="range" id="lb" min="0" max="100" value="0"></label><label>White point <input type="range" id="lw" min="155" max="255" value="255"></label><label>Midtones (gamma) <input type="range" id="lg" min="20" max="300" value="100"></label><div class="bar"><button id="auto">Auto levels</button></div><h3>Split toning</h3><label>Amount <input type="range" id="sn" min="0" max="100" value="0"></label><label>Shadows <input type="color" id="s1" value="#0b2a7a"></label><label>Highlights <input type="color" id="s2" value="#ffd9a0"></label><h3>Dither</h3><label>Dither <input type="range" id="dt" min="0" max="100" value="0"></label><p class="note">Dither adds a retro texture. It shows best with Reduce to colours, a tone map or Posterize.</p><h3>Glow</h3><label>Soft glow <input type="range" id="gl" min="0" max="100" value="0"></label><label>Glow size <input type="range" id="gls" min="2" max="40" value="12"></label><label>Highlights only <input type="range" id="glt" min="0" max="100" value="35"></label><label><span><input type="checkbox" id="glo" checked> Keep original colours</span><input type="color" id="glc" value="#ffb36b" aria-label="Glow colour"></label><h3>Finish</h3><label><span><input type="checkbox" id="ai"> Invert</span></label><div class="bar"><button id="adjr">Reset adjustments</button></div></div>
@@ -151,7 +172,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <p class="note">Object picks a region using the palette, so more colours in the Colours tab give smaller objects. Polygon: click points, then double-click or click the first point to close. Esc cancels, Ctrl+D clears.</p>
 </div>
 
-<div class="pn" id="p-warp"><label>Brush <select id="mode"></select></label><label>Size <input type="range" id="size" min="10" max="300" value="90"></label><label>Strength <input type="range" id="pow" min="1" max="100" value="40"></label><label>Hardness <input type="range" id="hard" min="0" max="100" value="50"></label><h3>Brush options</h3><label>Pixel size <input type="range" id="bpx" min="2" max="80" value="10"></label><label>Colour levels <input type="range" id="blv" min="2" max="16" value="4"></label><label>Paint colour <input type="color" id="bpc" value="#ffb347"></label><h3>Stroke</h3><label>Spacing <input type="range" id="spc" min="5" max="100" value="25"></label><label>Smoothing <input type="range" id="smo" min="0" max="100" value="0"></label><label>Apply to <select id="bt"><option value="all">Photo and layers</option><option value="layer">Selected layer</option><option value="bg">Photo only</option></select></label><label><span><input type="checkbox" id="sym"> Mirror stroke left to right</span></label><p class="note">Drag on the image. Hold still to keep applying swirl, bloat and similar brushes. Pen pressure is supported. Strokes carry across the photo and every layer. Combine brushes work between the photo and the selected layer (the top layer if none is selected): erase or dissolve it to reveal the photo, reveal only in highlights or shadows, mix colours, colourise it from the photo, or bake it into the photo. Pixel, Colour and Texture brushes paint effects onto the photo and layers.</p></div>
+<div class="pn" id="p-warp"><label>Brush <select id="mode"></select></label><label>Size <input type="range" id="size" min="10" max="300" value="90"></label><label>Strength <input type="range" id="pow" min="1" max="100" value="40"></label><label>Hardness <input type="range" id="hard" min="0" max="100" value="50"></label><h3>Brush options</h3><label>Pixel size <input type="range" id="bpx" min="2" max="80" value="10"></label><label>Colour levels <input type="range" id="blv" min="2" max="16" value="4"></label><label>Paint colour <input type="color" id="bpc" value="#ffb347"></label><h3>Stroke</h3><label>Spacing <input type="range" id="spc" min="5" max="100" value="25"></label><label>Smoothing <input type="range" id="smo" min="0" max="100" value="0"></label><label>Apply to <select id="bt"><option value="all">Photo and layers</option><option value="layer">Selected layer</option><option value="bg">Photo only</option></select></label><label><span><input type="checkbox" id="warp-extend" checked> Warp past layer edges</span></label><p class="note">Warp can pull pixels past a layer edge within the canvas.</p><label><span><input type="checkbox" id="sym"> Mirror stroke left to right</span></label><p class="note">Drag on the image. Hold still to keep applying swirl, bloat and similar brushes. Pen pressure is supported. Strokes carry across the photo and every layer. Combine brushes work between the photo and the selected layer (the top layer if none is selected): erase or dissolve it to reveal the photo, reveal only in highlights or shadows, mix colours, colourise it from the photo, or bake it into the photo. Pixel, Colour and Texture brushes paint effects onto the photo and layers.</p></div>
 
 <div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="ltxt">Add text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><div id="ltx" hidden><h3>Text</h3><textarea id="txt" rows="2" aria-label="Text"></textarea><div class="bar"><button id="type-edit">Edit on canvas</button></div><input type="search" id="fq" placeholder="Search fonts" aria-label="Search fonts"><div class="chips7" id="fcat"><button class="on" data-c="all">All</button><button data-c="Sans">Sans</button><button data-c="Serif">Serif</button><button data-c="Display">Display</button><button data-c="Script">Script</button><button data-c="Mono">Mono</button><button data-c="Fun">Fun</button></div><div id="flist" role="listbox" aria-label="Fonts"></div><select id="tfont" hidden aria-label="Font"></select><label>Size <input type="range" id="tsz" min="6" max="800" value="100" aria-label="Text size slider"><input type="number" id="type-size" min="6" max="800" value="100" aria-label="Text size in pixels"></label><label>Colour <input type="color" id="tcol" value="#ffffff"></label><label>Weight <select id="tw"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label><label><span><input type="checkbox" id="tit"> Italic</span></label><div class="chips" id="tal" style="grid-template-columns:repeat(4,1fr)"><button data-a="left">Left</button><button data-a="center">Centre</button><button data-a="right">Right</button><button data-a="justify">Justify</button></div><label>Letter spacing <input type="range" id="tls" min="-10" max="60" value="0"></label><label>Line spacing <input type="range" id="tlh" min="70" max="220" value="120"></label><h3>Text layout</h3>
 <label>Width stretch <input type="range" id="tx-width" min="25" max="300" value="100"><output id="tx-width-value">100%</output></label>
@@ -312,9 +333,14 @@ function setMapSettings(settings={}){
 }
 const toLinear=v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4;
 const toSRGB=v=>v<=.0031308?v*12.92:1.055*v**(1/2.4)-.055;
-function setStops(s,pos){
-  stops=s;stopPos=pos||null;$('gm-edit').disabled=!s;
-  if(!s){LUT=null;$('ramp').style.background='none';draw(true);return}
+function setStops(s,pos,sync=true){
+  stops=s;stopPos=pos||null;
+  if(sync&&s){
+    $('gradient-enabled').checked=true;
+    cs=s.map((c,i)=>({c,p:pos?.[i]??Math.round(i/(s.length-1)*100)}));
+    selectedStop=0;buildC();
+  }
+  if(!s){LUT=null;$('gradient-enabled').checked=false;draw(true);return}
   const r=s.map(rgb),n=r.length,ps=pos&&pos.length===n?pos.map(v=>v/100):r.map((_,i)=>i/(n-1));
   const {curve,mid}=mapSettings(),gamma=Math.log(.5)/Math.log(mid/100);
   const colors=curve==='linear'?r.map(c=>c.map(v=>toLinear(v/255))):r;
@@ -331,22 +357,13 @@ function setStops(s,pos){
       LUT[i*3+k]=curve==='linear'?Math.round(toSRGB(v)*255):v;
     }
   }
-  const preview=[];
-  for(let i=0;i<256;i++){
-    if(curve!=='steps'&&i%4&&i!==255)continue;
-    const j=i*3,color=hex(LUT[j],LUT[j+1],LUT[j+2]);
-    if(curve==='steps'&&i&&i!==255&&color===preview.at(-1).split(' ')[0])continue;
-    if(curve==='steps'&&i)preview.push(preview.at(-1).split(' ')[0]+' '+(i/255*100)+'%');
-    preview.push(color+' '+(i/255*100)+'%');
-  }
-  $('ramp').style.background='linear-gradient(90deg,'+preview.join(',')+')';
   draw(true);
 }
-function rebuildMap(){mapValue.textContent=mapMid.value+'%';if(stops)setStops(stops,stopPos)}
+function rebuildMap(){mapValue.textContent=mapMid.value+'%';if(stops)setStops(stops,stopPos,false)}
 mapCurve.oninput=mapMid.oninput=rebuildMap;
 mapSource.oninput=()=>draw(true);
 $('gm-reset').onclick=()=>{setMapSettings();rebuildMap()};
-$('gm-edit').disabled=true;
+$('gradient-enabled').onchange=()=>{if($('gradient-enabled').checked&&!LUT)applyC();else draw(true)};
 function mapSampler(){
   switch(mapSource.value){
     case 'light':return (r,g,b)=>(Math.max(r,g,b)+Math.min(r,g,b))*.5;
@@ -370,7 +387,7 @@ function render(ov=true,rect){
   let X0=0,Y0=0,X1=W,Y1=H;if(rect){const P0=Math.max(1,+$('apx').value);X0=Math.max(0,Math.floor(rect[0]/P0)*P0);Y0=Math.max(0,Math.floor(rect[1]/P0)*P0);X1=Math.min(W,Math.ceil(rect[2]/P0)*P0);Y1=Math.min(H,Math.ceil(rect[3]/P0)*P0)}
   const original=ov&&showOrig,mask=ov?maskIdx:-1,spl=ov&&$('spl').checked;
   const ident=isIdent(original,mask,spl),st=rect?1:ov?stride:1,LG=$('lgrade').checked&&layers.length>0&&!original&&!ident,s=(original?orig:LG?flat(rect?[X0,Y0,X1,Y1]:undefined):base).data,out=getOut(),o=out.data,str=$('str').value/100,red=$('reduce').checked&&palette.length;
-  const mapTone=LUT&&str?mapSampler():null;
+  const mapTone=LUT&&str&&$('gradient-enabled').checked?mapSampler():null;
   const E=edits.map(e=>({f:e.f,d:[e.t[0]-e.f[0],e.t[1]-e.f[1],e.t[2]-e.f[2]],tol:e.tol,t2:e.tol*e.tol}));
   const N=id=>+$(id).value,br=N('ab')*2.55,ct=1+N('ac')/100,sa=1+N('as')/100,hu=N('ah')*Math.PI/180,tp=N('at')*.6,vg=N('av')/100,gr=N('ag')/100,po=N('ap'),inv=$('ai').checked,hc=Math.cos(hu),hs=Math.sin(hu),lvl=N('lb')>0||N('lw')<255||N('lg')!==100,bp=N('lb'),wp=N('lw'),gm=N('lg')/100,stn=N('sn')/100,dt=N('dt')/100,S1=rgb($('s1').value),S2=rgb($('s2').value),spx=W*N('spr')/100,adj=br||ct!==1||sa!==1||hu||tp||lvl;
   if(ident){if(rect)ctx.putImageData(base,0,0,X0,Y0,X1-X0,Y1-Y0);else ctx.putImageData(base,0,0)}else{
@@ -433,7 +450,7 @@ function makeOp(kind,src,ob,w,h,d){
   const blk=(bx,by)=>{const key=bx*100003+by;let v=cache.get(key);if(!v){v=[0,0,0];let n=0;for(let yy=by*PX;yy<Math.min(h,(by+1)*PX);yy++)for(let xx=bx*PX;xx<Math.min(w,(bx+1)*PX);xx++){const q=(yy*w+xx)*4;v[0]+=src[q];v[1]+=src[q+1];v[2]+=src[q+2];n++}v=[v[0]/n,v[1]/n,v[2]/n];v[3]=(v[0]*.299+v[1]*.587+v[2]*.114)/255;cache.set(key,v)}return v};
   return(x,y,f)=>{const p=(y*w+x)*4,a=Math.min(1,f*2),r=src[p],g=src[p+1],b=src[p+2],lum=r*.299+g*.587+b*.114;let T;
     switch(kind){
-      case'r':T=[ob.data[p],ob.data[p+1],ob.data[p+2]];break;
+      case'r':T=[ob.data[p],ob.data[p+1],ob.data[p+2]];d[p+3]+=(ob.data[p+3]-d[p+3])*a;break;
       case'b':T=blur(x,y);break;
       case'px':T=blk(x/PX|0,y/PX|0);break;
       case'po':{const q=LV-1;T=[r,g,b].map(v=>Math.round(v/255*q)/q*255);break}
@@ -463,14 +480,14 @@ function warpOn(B,w,h,cx,cy,dx,dy,R,mask,ob){
   if(x0>x1||y0>y1)return;lastBox=[x0,y0,x1-x0+1,y1-y0+1];snapTouch(d,x0,y0,x1,y1);
   const xa=Math.max(0,Math.floor(cx-pad)),xb=Math.min(w,Math.ceil(cx+pad)+1),ya=Math.max(0,Math.floor(cy-pad)),yb=Math.min(h,Math.ceil(cy+pad)+1),src=snapReg(d,w,h,xa,xb,ya,yb),
     cop=kind?makeOp(kind,src,ob,w,h,d):null,fall=new Float32Array(257);for(let i=0;i<=256;i++)fall[i]=(1-i/256)**E*pw;
-  const P={x:0,y:0,ox:0,oy:0,cx,cy,dx,dy,f:0,d:0},mx=xb-1.001,my=yb-1.001;
+  const P={x:0,y:0,ox:0,oy:0,cx,cy,dx,dy,f:0,d:0},mx=xb-1,my=yb-1;
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
     const ox=x-cx,oy=y-cy,dist=Math.sqrt(ox*ox+oy*oy);if(dist>=R||(mask&&mask[y*w+x]<128))continue;
     const f=fall[(dist/R*256)|0];if(f<.004)continue;
     if(cop){cop(x,y,f);continue}
     P.x=x;P.y=y;P.ox=ox;P.oy=oy;P.f=f;P.d=dist;const[sx,sy]=fn(P);
-    const ix=sx<xa?xa:sx>mx?mx:sx,iy=sy<ya?ya:sy>my?my:sy,a=ix|0,b=iy|0,fx=ix-a,fy=iy-b,p=(b*w+a)*4,q=p+w*4,o=(y*w+x)*4,g0=(1-fx)*(1-fy),g1=fx*(1-fy),g2=(1-fx)*fy,g3=fx*fy;
-    d[o]=src[p]*g0+src[p+4]*g1+src[q]*g2+src[q+4]*g3;d[o+1]=src[p+1]*g0+src[p+5]*g1+src[q+1]*g2+src[q+5]*g3;d[o+2]=src[p+2]*g0+src[p+6]*g1+src[q+2]*g2+src[q+6]*g3;d[o+3]=src[p+3]*g0+src[p+7]*g1+src[q+3]*g2+src[q+7]*g3;
+    const ix=sx<xa?xa:sx>mx?mx:sx,iy=sy<ya?ya:sy>my?my:sy,a=ix|0,b=iy|0,fx=ix-a,fy=iy-b,p=(b*w+a)*4,q=p+(b<my?w*4:0),right=a<mx?4:0,o=(y*w+x)*4,g0=(1-fx)*(1-fy),g1=fx*(1-fy),g2=(1-fx)*fy,g3=fx*fy;
+    d[o]=src[p]*g0+src[p+right]*g1+src[q]*g2+src[q+right]*g3;d[o+1]=src[p+1]*g0+src[p+right+1]*g1+src[q+1]*g2+src[q+right+1]*g3;d[o+2]=src[p+2]*g0+src[p+right+2]*g1+src[q+2]*g2+src[q+right+2]*g3;d[o+3]=src[p+3]*g0+src[p+right+3]*g1+src[q+3]*g2+src[q+right+3]*g3;
   }
 }
 function warp(cx,cy,dx,dy){
@@ -478,11 +495,20 @@ function warp(cx,cy,dx,dy){
   const R=+$('size').value,t=$('bt').value,A=active;
   if(t!=='layer'||!A)warpOn(base,W,H,cx,cy,dx,dy,R,sel,orig);
   for(const l of t==='bg'?[]:t==='layer'?(A?[A]:[]):layers){if(!l.vis||l.lk)continue;
-    const c0=Math.cos(l.r),s0=Math.sin(l.r),iw=l.cv.width,ih=l.cv.height,sw=iw*(1-l.cl-l.cr),sh=ih*(1-l.ct-l.cb),
+    const c0=Math.cos(l.r),s0=Math.sin(l.r),
       T=(a,b)=>{let u=(a*c0+b*s0)/l.s;const v=(-a*s0+b*c0)/l.s;if(l.fl)u=-u;return[u,v]},
       [lx,ly]=T(cx-l.x,cy-l.y),Rl=R/l.s;
-    if(Math.abs(lx)>sw/2+Rl||Math.abs(ly)>sh/2+Rl)continue;
-    const[vx,vy]=T(dx,dy);ensureO(l);warpOn(l.d,iw,ih,lx+l.cl*iw+sw/2,ly+l.ct*ih+sh/2,vx,vy,Rl,null,l.o);syncL(l,lastBox)}
+    if(Math.abs(lx)>l.cv.width*(1-l.cl-l.cr)/2+Rl||Math.abs(ly)>l.cv.height*(1-l.ct-l.cb)/2+Rl)continue;
+    if(strokeLayers&&!strokeLayers.has(l)){
+      strokeLayers.add(l);
+      if(!expandWarpLayer(l,Rl)&&SS)SS.push(tileSnap(l.d.data,l.cv.width,l.cv.height,l));
+    }
+    const iw=l.cv.width,ih=l.cv.height,sw=iw*(1-l.cl-l.cr),sh=ih*(1-l.ct-l.cb);
+    const [vx,vy]=T(dx,dy);
+    ensureO(l);lastBox=null;
+    warpOn(l.d,iw,ih,lx+l.cl*iw+sw/2,ly+l.ct*ih+sh/2,vx,vy,Rl,null,l.o);
+    if(lastBox)syncL(l,lastBox);
+  }
   drawPart(cx-R-4,cy-R-4,cx+R+4,cy+R+4);
 }
 function combine(k,cx,cy){
@@ -519,7 +545,7 @@ c.addEventListener('pointermove',e0=>{if(typeBox?.pointer===e0.pointerId){typeBo
   pres=e.pointerType==='pen'?Math.max(.1,e.pressure*1.6):1;const k=1-(+$('smo').value)/110;sm=[sm[0]+(p[0]-sm[0])*k,sm[1]+(p[1]-sm[1])*k];p=sm;
   const dx=p[0]-last[0],dy=p[1]-last[1],dist=hyp(dx,dy),step=Math.max(2,+$('size').value*$('spc').value/100)*bud,n=Math.min(24,Math.max(1,Math.floor(dist/step)));
   if(dist>.5){const t0=performance.now();for(let i=1;i<=n;i++)stamp(last[0]+dx*i/n,last[1]+dy*i/n,dx/n,dy/n);const ms=performance.now()-t0;bud=ms>10?Math.min(3,bud*1.3):Math.max(1,bud*.95);last=p;moved=true}}});
-const up=()=>{if(!down)return;down=false;if(tab==='layers'){ls=null;guides=[];refreshLayers();draw();return}if(tab==='select'){endLasso();return}clearInterval(tick);SS=null;extract();refreshLayers();draw()};
+const up=()=>{if(!down)return;down=false;if(tab==='layers'){ls=null;guides=[];refreshLayers();draw();return}if(tab==='select'){endLasso();return}clearInterval(tick);SS=null;strokeLayers=null;extract();refreshLayers();draw()};
 c.addEventListener('pointerup',e=>{if(typeBox?.pointer===e.pointerId)finishTypeBox(pos(e));else up()});
 c.addEventListener('pointercancel',e=>{if(typeBox?.pointer===e.pointerId)setTypeDrawing(false);else up()});
 
@@ -581,7 +607,7 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='z'&&
 $('p2t').onclick=()=>{if(palette.length>1){cur=-1;setStops(palette.map(q=>hex(...q)));showP($('q').value.toLowerCase())}};
 let cc=0;$('addp').onclick=()=>{if(!stops)return;P.push({n:(stops.length===2?'My duo ':stops.length===3?'My trio ':'My tone ')+(++cc),s:stops.slice(),pos:stopPos?stopPos.slice():null,map:mapSettings()});try{localStorage.setItem('totone:mine',JSON.stringify(P.slice(BASEN)))}catch(e){}cur=P.length-1;$('q').value='';showP();$('plist').scrollTop=1e6};
 $('auto').onclick=()=>{if(!base)return;const h=new Uint32Array(256),d=base.data;for(let i=0;i<d.length;i+=4)h[(d[i]*.299+d[i+1]*.587+d[i+2]*.114)|0]++;const n=W*H;let a=0,lo=0,hi=255;for(let i=0;i<256;i++){a+=h[i];if(a>=n*.01){lo=i;break}}a=0;for(let i=255;i>=0;i--){a+=h[i];if(a>=n*.01){hi=i;break}}$('lb').value=Math.min(100,lo);$('lw').value=Math.max(155,hi);draw()};
-document.addEventListener('keydown',e=>{if(e.target.matches&&e.target.matches('input[type=search],input.rn,textarea'))return;const k=e.key.toLowerCase();
+document.addEventListener('keydown',e=>{if(e.target.matches&&e.target.matches('input,select,textarea'))return;const k=e.key.toLowerCase();
   if((e.ctrlKey||e.metaKey)&&(k==='y'||(k==='z'&&e.shiftKey))){e.preventDefault();$('redo').click()}
   else if(!e.ctrlKey&&!e.metaKey&&/^[1-8]$/.test(k))document.querySelectorAll('.tabs button')[k-1].click();
   else if(k==='['||k===']'){$('size').value=+$('size').value+(k==='['?-10:10)}});
@@ -705,7 +731,7 @@ const HINT={wand:'Wand selects touching colours of similar tone.',range:'Colour 
 document.querySelectorAll('#stools button').forEach(b=>b.onclick=()=>{$('stool').value=b.dataset.tool;lasso=[];$('shint').textContent=HINT[b.dataset.tool]+' Hold Shift to add, Alt to subtract.';document.querySelectorAll('#stools button').forEach(x=>x.classList.toggle('on',x===b));draw()});
 document.querySelectorAll('#smg button').forEach(b=>b.onclick=()=>{$('sm').value=b.dataset.m;document.querySelectorAll('#smg button').forEach(x=>x.classList.toggle('on',x===b))});
 c.addEventListener('dblclick',()=>{if(tab==='select'&&$('stool').value==='poly'&&lasso.length>2)endLasso()});
-document.addEventListener('keydown',e=>{if(e.target.matches&&e.target.matches('input[type=search],input.rn,textarea'))return;if(e.key==='Escape'&&lasso.length){lasso=[];draw()}if(e.key==='Enter'&&tab==='select'&&lasso.length>2)endLasso();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();$('clr').click()}});
+document.addEventListener('keydown',e=>{if(e.target.matches&&e.target.matches('input,select,textarea'))return;if(e.key==='Escape'&&lasso.length){lasso=[];draw()}if(e.key==='Enter'&&tab==='select'&&lasso.length>2)endLasso();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();$('clr').click()}});
 $('rst').onclick=()=>{P.length=BASEN;try{localStorage.removeItem('totone:mine')}catch(e){}cur=-1;cc=0;$('q').value='';$('str').value=100;resetCustom();setMapSettings();setStops(null);showP();$('plist').scrollTop=0};
 
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -713,7 +739,7 @@ const svg=b=>`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"
 const ICON={eye:svg(EYE),eyeoff:svg(EYE+'<path d="M3 3l18 18"/>'),lock:svg('<rect x="5" y="11" width="14" height="10" rx="1" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),unlock:svg('<rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 7-2.6"/>')};
 const ensureO=l=>{if(!l.o)l.o=new ImageData(new Uint8ClampedArray(l.d.data),l.cv.width,l.cv.height)};
 function getOut(){if(!outIm||outIm.width!==W||outIm.height!==H)outIm=new ImageData(W,H);return outIm}
-function isIdent(original,mask,split){const N=id=>+$(id).value;return!edits.length&&(!LUT||!N('str'))&&!($('reduce').checked&&palette.length)&&!N('ab')&&!N('ac')&&!N('as')&&!N('ah')&&!N('at')&&N('lb')===0&&N('lw')===255&&N('lg')===100&&!N('sn')&&!N('dt')&&!N('av')&&!N('ag')&&N('ap')<=1&&!$('ai').checked&&N('apx')<=1&&!sel&&mask<0&&!split&&!original}
+function isIdent(original,mask,split){const N=id=>+$(id).value;return!edits.length&&(!LUT||!N('str')||!$('gradient-enabled').checked)&&!($('reduce').checked&&palette.length)&&!N('ab')&&!N('ac')&&!N('as')&&!N('ah')&&!N('at')&&N('lb')===0&&N('lw')===255&&N('lg')===100&&!N('sn')&&!N('dt')&&!N('av')&&!N('ag')&&N('ap')<=1&&!$('ai').checked&&N('apx')<=1&&!sel&&mask<0&&!split&&!original}
 let chk=null;
 function soloDraw(){ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;if(!chk){chk=document.createElement('canvas');chk.width=chk.height=24;const g=chk.getContext('2d');g.fillStyle='#cfd5e4';g.fillRect(0,0,24,24);g.fillStyle='#9aa3bd';g.fillRect(0,0,12,12);g.fillRect(12,12,12,12)}
   ctx.fillStyle=ctx.createPattern(chk,'repeat');ctx.fillRect(0,0,W,H);drawLayers(ctx,[{...active,op:1,bm:'source-over',vis:true}]);drawHandles()}
@@ -852,7 +878,7 @@ function retext(ch,group=null){
     const dx=(cv.width-l.cv.width)*(1-l.cl-l.cr)*l.s/2,dy=(cv.height-l.cv.height)*(1-l.ct-l.cb)*l.s/2;
     l.x+=dx*Math.cos(l.r)-dy*Math.sin(l.r);l.y+=dx*Math.sin(l.r)+dy*Math.cos(l.r);
   }
-  l.tx=tx;l.cv=cv;l.sil=null;l.gc=null;l.tnc=null;l.d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height);l.o=null;
+  l.tx=tx;l.cv=cv;l.brushPadding=0;l.sil=null;l.gc=null;l.tnc=null;l.d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height);l.o=null;
   if(ch.t!==undefined)l.name=textLayerName(tx.t);
   const row=group&&$('llist').querySelector('.lrow.on');
   if(row){
@@ -900,10 +926,52 @@ function tileSnap(buf,w,h,layer){const t=new Map();return{buf,layer,
       for(let y=0;y<th;y++){const o=((ys+y)*w+xs)*4;a.set(buf.subarray(o,o+tw*4),y*tw*4)}t.set(k,{xs,ys,tw,th,a})}},
   swap(){for(const T of t.values()){const tmp=new Uint8ClampedArray(T.a.length);for(let y=0;y<T.th;y++){const o=((T.ys+y)*w+T.xs)*4,r=y*T.tw*4;tmp.set(buf.subarray(o,o+T.tw*4),r);buf.set(T.a.subarray(r,r+T.tw*4),o)}T.a=tmp}}}}
 const snapTouch=(buf,x0,y0,x1,y1)=>{if(SS)for(const s of SS)if(s.buf===buf){s.touch(x0,y0,x1,y1);return}};
-function beginStroke(){const K=MODES[$('mode').value][2]||'',comb=K[0]==='c',t=$('bt').value,snaps=[],addL=l=>snaps.push(tileSnap(l.d.data,l.cv.width,l.cv.height,l));
-  if(comb){if(layers.length){snaps.push(tileSnap(base.data,W,H,null));addL(active||layers[layers.length-1])}}
-  else{if(t!=='layer'||!active)snaps.push(tileSnap(base.data,W,H,null));if(t==='all')layers.forEach(addL);else if(t==='layer'&&active)addL(active)}
-  const fn=()=>{for(const s of snaps){s.swap();if(s.layer)syncL(s.layer)}return fn};pushU(fn);SS=snaps}
+let strokeLayers=null;
+function expandWarpLayer(layer,radius){
+  const {cv,cl,ct,cr,cb}=layer,sw=cv.width*(1-cl-cr),sh=cv.height*(1-ct-cb);
+  const cropped=cl||ct||cr||cb,existing=cropped?0:layer.brushPadding||0;
+  const requested=Math.max(0,Math.ceil(radius+4)-existing);
+  const maxPad=Math.min((4000-sw)/2,(4000-sh)/2,(Math.sqrt((sw-sh)**2+24000000)-sw-sh)/4);
+  const pad=Math.max(0,Math.floor(Math.min(requested,maxPad-1)));
+  if(!pad)return false;
+  const w=Math.max(1,Math.round(sw))+pad*2,h=Math.max(1,Math.round(sh))+pad*2;
+  const padded=bc(w,h),g=padded.getContext('2d');
+  g.drawImage(cv,cl*cv.width,ct*cv.height,sw,sh,pad,pad,w-2*pad,h-2*pad);
+  const d=g.getImageData(0,0,w,h);
+  let original=null;
+  if(layer.o){
+    const source=bc(cv.width,cv.height),canvas=bc(w,h);
+    source.getContext('2d').putImageData(layer.o,0,0);
+    const context=canvas.getContext('2d');
+    context.drawImage(source,cl*cv.width,ct*cv.height,sw,sh,pad,pad,w-2*pad,h-2*pad);
+    original=context.getImageData(0,0,w,h);
+  }
+  Object.assign(layer,{cv:padded,d,o:original,cl:0,ct:0,cr:0,cb:0,brushPadding:existing+pad,sil:null,gc:null,tnc:null});
+  draw();
+  return true;
+}
+function beginStroke(){
+  const kind=MODES[$('mode').value][2]||'',combineMode=kind[0]==='c',target=$('bt').value,snaps=[];
+  const addLayer=l=>snaps.push(tileSnap(l.d.data,l.cv.width,l.cv.height,l));
+  const extend=!kind&&$('warp-extend').checked&&target!=='bg';
+  strokeLayers=extend?new Set():null;
+  let swapLayers=extend?mkSnap('p'):null;
+  if(combineMode){
+    if(layers.length){snaps.push(tileSnap(base.data,W,H,null));addLayer(active||layers[layers.length-1])}
+  }else{
+    if(target!=='layer'||!active)snaps.push(tileSnap(base.data,W,H,null));
+    if(!extend){
+      if(target==='all')layers.forEach(addLayer);
+      else if(target==='layer'&&active)addLayer(active);
+    }
+  }
+  const swap=()=>{
+    if(swapLayers)swapLayers=swapLayers();
+    for(const snap of snaps){snap.swap();if(snap.layer)syncL(snap.layer)}
+    return swap;
+  };
+  pushU(swap);SS=snaps;
+}
 
 const PXS=[];let curPx=0,pxcat='all',PP=8,jit=null;
 const ps=(n,c,f,o)=>PXS.push(Object.assign({n,c,f},o)),sdv=Math.abs,frc=x=>x-Math.floor(x),hsh=(a,b,t)=>frc(Math.sin(a*127.1+b*311.7+t*74.7)*43758.5453);
@@ -1220,18 +1288,98 @@ document.addEventListener('keydown',event=>{
 /* ---------- Custom tones ---------- */
 let cs=[{c:'#101820',p:0},{c:'#d23c2c',p:50},{c:'#f4efe3',p:100}];
 const colAt=t=>{let i=0;while(i<cs.length-2&&t>cs[i+1].p)i++;const a=cs[i],b=cs[i+1],f=b.p>a.p?Math.min(1,Math.max(0,(t-a.p)/(b.p-a.p))):1,x=rgb(a.c),y=rgb(b.c);return hex(...x.map((v,k)=>v+(y[k]-v)*f))};
-function buildC(){$('cstops').innerHTML=cs.map((s,i)=>{const mid=i>0&&i<cs.length-1;return`<div class="stp"><input type="color" value="${s.c}" data-i="${i}" aria-label="Colour ${i+1}">${mid?`<input type="range" min="1" max="99" value="${s.p}" data-i="${i}" aria-label="Position of colour ${i+1}">`:`<span class="note">${i?'Highlights':'Shadows'}</span>`}<output>${mid?s.p+'%':''}</output></div>`}).join('');document.querySelectorAll('#ctn button').forEach(b=>b.classList.toggle('on',+b.dataset.n===cs.length))}
-$('gm-edit').onclick=()=>{
-  if(!stops)return;
-  cs=stops.map((c,i)=>({c,p:stopPos?.[i]??Math.round(i/(stops.length-1)*100)}));
-  buildC();
-  $('cstops').querySelector('input').focus();
+let selectedStop=0,stopDrag=null;
+const gradientBar=$('ramp'),stopHandles=$('gradient-handles'),stopColour=$('gradient-colour'),stopLocation=$('gradient-location');
+function updateStopControls(){
+  const stop=cs[selectedStop],fixed=selectedStop===0||selectedStop===cs.length-1;
+  stopColour.value=stop.c;stopLocation.value=stop.p;
+  stopLocation.disabled=$('gradient-delete').disabled=fixed;
+  if(!fixed){stopLocation.min=cs[selectedStop-1].p+1;stopLocation.max=cs[selectedStop+1].p-1}
+  gradientBar.style.background='linear-gradient(90deg,'+cs.map(({c,p})=>c+' '+p+'%').join(',')+')';
+  [...stopHandles.children].forEach((handle,i)=>{
+    const {p,c}=cs[i];
+    handle.style.left=p+'%';handle.style.setProperty('--stop',c);
+    handle.setAttribute('aria-label','Colour stop at '+p+'%');
+    handle.setAttribute('aria-pressed',String(i===selectedStop));
+  });
+}
+function buildC(){
+  stopHandles.replaceChildren(...cs.map((_,i)=>{
+    const button=document.createElement('button');
+    button.type='button';button.dataset.stop=i;return button;
+  }));
+  updateStopControls();
+  document.querySelectorAll('#ctn button').forEach(b=>b.classList.toggle('on',+b.dataset.n===cs.length));
+}
+function applyC(){
+  if(cur!==-1){cur=-1;showP($('q').value.toLowerCase())}
+  $('gradient-enabled').checked=true;
+  setStops(cs.map(s=>s.c),cs.map(s=>s.p),false);
+}
+const setCs=cols=>{
+  cs=cols.map((c,i)=>({c,p:Math.round(i/(cols.length-1)*100)}));
+  selectedStop=0;buildC();applyC();
 };
-const applyC=()=>{cur=-1;showP($('q').value.toLowerCase());setStops(cs.map(s=>s.c),cs.map(s=>s.p))};
-const setCs=cols=>{cs=cols.map((c,i)=>({c,p:Math.round(i/(cols.length-1)*100)}));buildC();applyC()};
-function resetCustom(){cs=[{c:'#101820',p:0},{c:'#d23c2c',p:50},{c:'#f4efe3',p:100}];buildC()}
-$('ctn').onclick=e=>{const b=e.target.closest('button');if(!b)return;const n=+b.dataset.n,cols=[];for(let i=0;i<n;i++)cols.push(colAt(i/(n-1)*100));setCs(cols)};
-$('cstops').addEventListener('input',e=>{const i=+e.target.dataset.i;if(e.target.type==='color')cs[i].c=e.target.value;else{const v=Math.min(Math.max(+e.target.value,cs[i-1].p+1),cs[i+1].p-1);cs[i].p=v;e.target.value=v;e.target.nextElementSibling.textContent=v+'%'}applyC()});
+function resetCustom(){
+  cs=[{c:'#101820',p:0},{c:'#d23c2c',p:50},{c:'#f4efe3',p:100}];
+  selectedStop=0;buildC();
+}
+function rampPosition(event){
+  const rect=gradientBar.getBoundingClientRect();
+  return Math.min(100,Math.max(0,Math.round((event.clientX-rect.left)/rect.width*100)));
+}
+function moveStop(value){
+  if(stopLocation.disabled||!Number.isFinite(value))return;
+  const p=Math.min(+stopLocation.max,Math.max(+stopLocation.min,Math.round(value)));
+  if(p===cs[selectedStop].p){stopLocation.value=p;return}
+  cs[selectedStop].p=p;updateStopControls();applyC();
+}
+gradientBar.onclick=event=>{
+  const p=rampPosition(event),existing=cs.findIndex(stop=>stop.p===p);
+  if(existing>=0){selectedStop=existing;updateStopControls()}
+  else{
+    selectedStop=cs.findIndex(stop=>stop.p>p);
+    cs.splice(selectedStop,0,{p,c:colAt(p)});buildC();applyC();
+  }
+  stopHandles.children[selectedStop].focus();
+};
+function selectHandle(event){
+  const handle=event.target.closest('button');
+  if(!handle)return null;
+  selectedStop=+handle.dataset.stop;updateStopControls();return handle;
+}
+stopHandles.onclick=selectHandle;
+stopHandles.ondblclick=()=>stopColour.click();
+stopHandles.onpointerdown=event=>{
+  if(event.button!==0)return;
+  const handle=selectHandle(event);
+  if(!handle||stopLocation.disabled)return;
+  const rect=gradientBar.getBoundingClientRect();
+  stopDrag={id:event.pointerId,x:event.clientX,p:cs[selectedStop].p,width:rect.width};
+  handle.setPointerCapture(event.pointerId);
+};
+stopHandles.onpointermove=event=>{
+  if(stopDrag?.id===event.pointerId)moveStop(stopDrag.p+(event.clientX-stopDrag.x)/stopDrag.width*100);
+};
+stopHandles.onlostpointercapture=()=>{stopDrag=null};
+stopHandles.onkeydown=event=>{
+  if(!['ArrowLeft','ArrowRight','Delete','Backspace'].includes(event.key)||!selectHandle(event))return;
+  event.preventDefault();event.stopPropagation();
+  if(event.key==='Delete'||event.key==='Backspace')$('gradient-delete').click();
+  else moveStop(cs[selectedStop].p+(event.key==='ArrowLeft'?-1:1)*(event.shiftKey?5:1));
+};
+stopColour.oninput=()=>{cs[selectedStop].c=stopColour.value;updateStopControls();applyC()};
+stopLocation.onchange=()=>moveStop(+stopLocation.value);
+$('gradient-delete').onclick=()=>{
+  if(stopLocation.disabled)return;
+  cs.splice(selectedStop,1);selectedStop--;buildC();applyC();
+  stopHandles.children[selectedStop].focus();
+};
+$('ctn').onclick=e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const n=+b.dataset.n;
+  setCs(Array.from({length:n},(_,i)=>colAt(i/(n-1)*100)));
+};
 const imgTone=n=>{if(!palette.length)return;const p=palette,cols=[hex(...p[0])];if(n===3){let b=1,bs=-1;for(let i=1;i<p.length-1;i++){const m=Math.max(...p[i])-Math.min(...p[i]);if(m>bs){bs=m;b=i}}cols.push(hex(...p[Math.min(b,p.length-1)]))}cols.push(hex(...p[p.length-1]));setCs(cols)};
 $('cimg2').onclick=()=>imgTone(2);$('cimg3').onclick=()=>imgTone(3);
 const hueOf=h=>{const[r,g,b]=rgb(h).map(v=>v/255),M=Math.max(r,g,b),m=Math.min(r,g,b),d=M-m;if(!d)return 0;const H=M===r?((g-b)/d)%6:M===g?(b-r)/d+2:(r-g)/d+4;return((H*60)+360)%360};
