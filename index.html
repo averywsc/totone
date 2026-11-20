@@ -108,6 +108,8 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <div class="tabs" role="tablist"><button role="tab" class="on" data-t="tone">Tone</button><button role="tab" data-t="adjust">Adjust</button><button role="tab" data-t="colour">Colours</button><button role="tab" data-t="select">Select</button><button role="tab" data-t="warp">Warp</button><button role="tab" data-t="layers">Layers</button><button role="tab" data-t="pixel">Pixel</button><button role="tab" data-t="crop">Crop</button></div>
 
 <div class="pn on" id="p-tone">
+<h3>Presets</h3>
+<input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="duo">Duo</button><button data-c="trio">Trio</button><button data-c="multi">Multi</button><button data-c="mine">Mine</button></div><div id="plist"></div>
 <h3>Gradient map</h3>
 <div class="gradient-editor">
 <div id="ramp" role="img" aria-label="Gradient stops from shadows to highlights"></div>
@@ -127,8 +129,6 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <label>Interpolation <select id="gm-curve"><option value="rgb">RGB</option><option value="smooth">Smooth stops</option><option value="linear">Linear light</option><option value="steps">Hard stops</option></select></label>
 <label>Midpoint <input type="range" id="gm-mid" min="10" max="90" value="50"><output id="gm-value">50%</output></label>
 <div class="bar"><button id="gm-reset">Reset mapping</button></div>
-<h3>Presets</h3>
-<input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="duo">Duo</button><button data-c="trio">Trio</button><button data-c="multi">Multi</button><button data-c="mine">Mine</button></div><div id="plist"></div>
 <h3>Custom stops</h3>
 <div class="chips" id="ctn" style="grid-template-columns:repeat(3,1fr)"><button data-n="2">Duo</button><button data-n="3" class="on">Trio</button><button data-n="4">Four</button><button data-n="5">Five</button><button data-n="6">Six</button><button data-n="8">Eight</button></div>
 
