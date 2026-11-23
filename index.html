@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Totone</title>
+<meta name="description" content="Grade and retouch photos with cinematic presets, film-stock-inspired looks, adjustable strength and grain, and gradient maps, then build layered designs with precise selections, masks, warp brushes, text on paths, photo-filled lettering, custom borders, overlays, and highlight glints—all in a browser-based editor with side-by-side version comparison and editable project files.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050c1f'/%3E%3Cpath d='M14 16h36v10H37v26H27V26H14z' fill='%23ffffff'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Lobster&family=Pacifico&family=Permanent+Marker&family=Bangers&family=Abril+Fatface&family=Righteous&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -99,7 +100,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 #gradient-location{width:4em} .gradient-controls button{padding:4px 8px}
 .film-card{display:flex;align-items:stretch;gap:4px;margin:3px 0}.film-card .p{flex:1;display:flex;align-items:center;gap:8px;text-align:left}.film-card img{border-radius:2px;object-fit:cover}.film-filter{display:inline-flex;align-items:center;gap:5px;margin:2px}#film-search{width:100%}#film-controls input[type=range]{min-width:0}#outside-frame input[type=number]{width:6em}#p-film .bar{flex-wrap:wrap}#film-list{max-height:40vh;overflow:auto}
 #panel-height{display:none}@media(max-width:760px){#panel-height{display:block;align-self:center;font-size:11px;padding:2px 10px;border:0;color:var(--mute)}}
-#p-text .bar{flex-wrap:wrap}#type-design details{border-top:1px solid var(--line);margin-top:6px;padding:6px 0}#type-design summary{font-weight:600;cursor:pointer}
+#mask-panel,#retouch-panel{border-block-start:1px solid var(--line);padding:7px 0}#mask-panel summary,#retouch-panel summary{cursor:pointer;font-weight:650}#p-text .bar{flex-wrap:wrap}#type-design details{border-top:1px solid var(--line);margin-top:6px;padding:6px 0}#type-design summary{font-weight:600;cursor:pointer}
 #type-shapes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:8px 0;max-height:183px;overflow:auto}
 #type-shapes button{min-width:0;padding:4px;font-size:11px;line-height:1.2}#type-shapes img{display:block;width:100%;height:25px;object-fit:contain;background:#101a32;border-radius:2px;margin-bottom:2px}
 #type-shapes [aria-pressed=true]{outline:2px solid var(--acc);outline-offset:-2px}#mesh-tools input[type=number]{width:6em}
@@ -107,17 +108,20 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 #scope-plot,#curve-plot,#grade-wheel{display:block;max-width:100%;max-height:none;margin:8px auto;border-radius:4px}#scope-plot,#curve-plot{width:100%;height:auto}#curve-plot,#grade-wheel{touch-action:none;cursor:crosshair}#grade-wheel{width:150px;height:150px;border:0}.curve-values{display:flex;gap:12px}.curve-values input{width:5em}.grade-zones{display:flex}.grade-zones button{flex:1}.grade-zones [aria-pressed=true]{background:var(--ink);color:var(--panel)}#p-grade input[type=range]{min-width:0}
 .studio-dialog{background:var(--panel);color:var(--ink);border:1px solid var(--edge);border-radius:5px;padding:16px;max-width:94vw;max-height:90vh}.studio-dialog::backdrop{background:#050a18ae}.studio-dialog h2{margin:0 0 10px}.studio-dialog .bar{flex-wrap:wrap}.studio-dialog input:not([type=range]){font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:3px;padding:6px;min-width:0}
 #version-dialog{width:min(960px,93vw)}#version-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.version-card{min-width:0}.version-card canvas{display:block;background:var(--bg);width:100%;height:min(26vh,260px);max-height:none;margin:0;cursor:grab;touch-action:none}.version-card input{width:7em;flex:1}#p-grade details{padding:8px 0;border-bottom:1px solid var(--line)}#p-grade summary{font-weight:650;cursor:pointer}button[aria-pressed=true]#path-draw,button[aria-pressed=true]#hsl-pick,button[aria-pressed=true]#mask-place{background:var(--acc);color:var(--accink)}
+#tool-dialog{width:min(420px,94vw)}#tool-results{display:grid;gap:3px;max-height:48vh;overflow:auto;margin:8px 0}#tool-results button{text-align:left}
+#fx-controls,#batch-setup{border:0;padding:0;margin:0;min-width:0}#batch-items{max-height:32vh;overflow:auto}#batch-items label{display:flex;align-items:center;gap:6px;overflow-wrap:anywhere}#batch-items canvas{width:48px;max-height:52px;object-fit:contain}#batch-items input{width:4.2em;margin-left:auto}
+#fx-list{display:grid;gap:3px}#fx-list button{text-align:left}#fx-list [aria-pressed=true]{border-color:var(--ink)}#tool-finder kbd{opacity:.7}#recover-empty{display:block;margin-top:10px}#recover-empty[hidden]{display:none}#ref-controls[hidden],#fx-controls[hidden]{display:none}
 </style>
 </head>
 <body>
 <header>
 <h1>Totone</h1><span class="sp"></span>
 <button id="cmp">Hold to compare</button><button id="undo">Undo</button><button id="redo">Redo</button><button id="reset">Reset warp</button>
-<label class="hd"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label><select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select><select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option><option value="4096">4096 px</option><option value="8192">Original · up to 8192 px / 18 MP</option></select><button id="open">Open image</button><button id="project-menu">Project</button><button id="version-open">Versions</button><button id="toolbar-border" title="Add or edit an image border">Border</button><button id="htxt">Add text</button><button id="type-draw" aria-pressed="false">Draw text box</button><button id="rlook">Reset look</button><button id="helpb">Keys</button><button class="pri" id="export">Export</button>
+<label class="hd"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label><select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select><select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option><option value="4096">4096 px</option><option value="8192">Original · up to 8192 px / 18 MP</option></select><button id="open">Open image</button><button id="project-menu">Project</button><button id="version-open">Versions</button><button id="toolbar-border" title="Add or edit an image border">Border</button><button id="htxt">Add text</button><button id="type-draw" aria-pressed="false">Draw text box</button><button id="rlook">Reset look</button><button id="tool-finder">Find tool <kbd>/</kbd></button><button id="helpb">Keys</button><button class="pri" id="export">Export</button>
 <input type="file" id="file" accept="image/*,.totone" hidden><input type="file" id="glint-image" accept="image/*" hidden><input type="file" id="border-image" accept="image/*" hidden><input type="file" id="file2" accept="image/*" multiple hidden>
 </header>
 <main>
-<section id="stage"><p id="empty">Drop an image here, or press Open image.</p><canvas id="c" aria-label="Image preview"></canvas><div id="ring"></div></section>
+<section id="stage"><p id="empty">Drop an image here, or press Open image. <button id="recover-empty" hidden>Recover last session</button></p><canvas id="c" aria-label="Image preview"></canvas><div id="ring"></div></section>
 <aside>
 <button id="panel-height" aria-label="Change editing panel height">Panel height</button><div class="tabs" role="tablist"><button role="tab" class="on" data-t="tone">Tone</button><button role="tab" data-t="adjust">Adjust</button><button role="tab" data-t="colour">Colours</button><button role="tab" data-t="select">Select</button><button role="tab" data-t="warp">Warp</button><button role="tab" data-t="layers">Layers</button><button role="tab" data-t="pixel">Pixel</button><button role="tab" data-t="crop">Crop</button><button role="tab" data-t="glints">Glints</button><button role="tab" data-t="film">Film</button><button role="tab" data-t="text">Text</button><button role="tab" data-t="grade">Grade</button></div>
 
@@ -154,7 +158,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 
 <div class="pn" id="p-text"><div class="bar"><button id="text-add" class="pri">Add text</button><button id="text-draw" aria-pressed="false">Draw text box</button><button id="type-blank">Blank canvas</button></div>
 <label>Text layer <select id="text-layer"></select></label><button id="text-in-layers">Show in Layers</button><p id="text-empty" class="note"></p>
-<div id="ltx" hidden><h3>Text</h3><textarea id="txt" rows="2" aria-label="Text"></textarea><div class="bar"><button id="type-edit">Edit on canvas</button><button id="type-copy-style" title="Copy this text layer’s formatting">Copy style</button><button id="type-paste-style" title="Apply the copied formatting to this text layer">Paste style</button></div><details id="type-path-section"><summary>Text on a path</summary><label>Baseline <select id="path-mode"><option value="off">Straight</option><option value="arc">Arc</option><option value="circle">Circle</option><option value="drawn">Drawn path</option></select></label><button id="path-draw" aria-pressed="false">Draw path on canvas</button><p class="note" id="path-msg"></p><div id="path-options"><label id="path-start-row">Start <input id="path-start" type="range" min="0" max="98" step="1"><output></output></label><label id="path-end-row">End <input id="path-end" type="range" min="2" max="100" step="1"><output></output></label></div></details><div id="type-design">
+<div id="ltx" hidden><h3>Text</h3><textarea id="txt" rows="2" aria-label="Text"></textarea><div class="bar"><button id="fill-import">Fill text with image…</button><button id="type-edit">Edit on canvas</button><button id="type-copy-style" title="Copy this text layer’s formatting">Copy style</button><button id="type-paste-style" title="Apply the copied formatting to this text layer">Paste style</button></div><span class="note" id="text-fill-status" role="status"></span><label>Text blend mode <select id="text-blend"></select></label><details id="type-path-section"><summary>Text on a path</summary><label>Baseline <select id="path-mode"><option value="off">Straight</option><option value="arc">Arc</option><option value="circle">Circle</option><option value="drawn">Drawn path</option></select></label><button id="path-draw" aria-pressed="false">Draw path on canvas</button><p class="note" id="path-msg"></p><div id="path-options"><label id="path-start-row">Start <input id="path-start" type="range" min="0" max="98" step="1"><output></output></label><label id="path-end-row">End <input id="path-end" type="range" min="2" max="100" step="1"><output></output></label></div></details><div id="type-design">
 <div class="bar"><button id="letter-reset">Reset lettering effects</button></div>
 <details open><summary>Lettering presets</summary><div class="sty" id="letter-looks"></div></details>
 <details open><summary>Warp shape</summary><button id="custom-warp" data-shape="custom" aria-pressed="false">Custom warp</button>
@@ -181,7 +185,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <label>Letter case <select id="tx-case"><option value="typed">As typed</option><option value="upper">UPPERCASE</option><option value="lower">lowercase</option></select></label>
 <h3>Text fill and stroke</h3>
 <label>Fill <select id="tx-fill"><option value="solid">Solid colour</option><option value="photo">Photo or texture</option><option value="vertical">Vertical gradient</option><option value="horizontal">Horizontal gradient</option><option value="angled">Angled gradient</option><option value="radial">Radial gradient</option></select></label>
-<div id="photo-options" hidden><div class="bar"><button id="fill-import">Choose photo</button><button id="fill-base">Base photo</button><button id="fill-water">Water texture</button></div><input type="file" id="fill-file" accept="image/*" hidden><label>Use layer <select id="fill-layer"></select></label><label>Move fill on canvas <input type="checkbox" id="fill-move"></label><label id="photo-x-row">Horizontal position <input id="photo-x" type="range" min="-100" max="100" step="1"><output></output></label><label id="photo-y-row">Vertical position <input id="photo-y" type="range" min="-100" max="100" step="1"><output></output></label><label id="photo-scale-row">Texture zoom <input id="photo-scale" type="range" min="100" max="400" step="1"><output></output></label><p class="note" id="fill-msg" role="status">Drop an image here to fill the letters.</p></div>
+<div id="photo-options" hidden><div class="bar"><button id="fill-base">Base photo</button><button id="fill-water">Water texture</button></div><input type="file" id="fill-file" accept="image/*" hidden><label>Use layer <select id="fill-layer"></select></label><label>Move fill on canvas <input type="checkbox" id="fill-move"></label><label id="photo-x-row">Horizontal position <input id="photo-x" type="range" min="-100" max="100" step="1"><output></output></label><label id="photo-y-row">Vertical position <input id="photo-y" type="range" min="-100" max="100" step="1"><output></output></label><label id="photo-scale-row">Texture zoom <input id="photo-scale" type="range" min="100" max="400" step="1"><output></output></label><p class="note" id="fill-msg" role="status">Drop an image here to fill the letters.</p></div>
 <label id="tx-angle-row" hidden>Fill angle <input type="range" id="tx-angle" min="-180" max="180"><output id="tx-angle-value"></output></label>
 <label id="tx-end-row" hidden>Gradient end <input type="color" id="tx-end" value="#ff628c"></label>
 <label>Stroke <input type="color" id="tx-stroke" value="#000000"></label>
@@ -197,6 +201,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <h3>Quick styles</h3><div class="sty" id="tsty"></div></div>
 </div>
 <div class="pn" id="p-grade">
+<details id="reference-panel"><summary>Match a reference photo</summary><button id="ref-choose">Choose reference photo…</button><input type="file" accept="image/*" id="ref-file" hidden><p class="note" role="status" id="ref-status"></p><div id="ref-controls" hidden><label>Shadows <input id="ref-zone-0" type="range" data-ref-zone="0" min="0" max="100"><output></output></label><label>Midtones <input id="ref-zone-1" type="range" data-ref-zone="1" min="0" max="100"><output></output></label><label>Highlights <input id="ref-zone-2" type="range" data-ref-zone="2" min="0" max="100"><output></output></label><label>Protect skin tones <input id="ref-skin" type="checkbox" ></label><button id="ref-clear">Remove match</button></div></details>
 <details id="local-tools"><summary>Local grading masks</summary><div class="bar"><button id="mask-linear">Add linear</button><button id="mask-radial">Add radial</button></div><label>Mask <select id="local-list"></select></label><div id="local-edit" hidden>
 <label>Name <input id="mask-name" maxlength="80"></label><div class="bar"><button id="mask-place" aria-pressed="false">Place on canvas</button><button id="mask-remove">Remove mask</button></div><p class="note">Drag to place a mask. Drag its center to move it or its end to resize.</p><label>Enabled <input type="checkbox" id="mask-on"></label><label>Invert <input type="checkbox" id="mask-invert"></label><label id="mask-feather-row">Feather <input id="mask-feather" type="range" min="0" max="100" step="1"><output></output></label><label id="mask-aspect-row">Ellipse height <input id="mask-aspect" type="range" min="20" max="300" step="1"><output></output></label><label id="mask-exposure-row">Exposure <input id="mask-exposure" type="range" min="-2" max="2" step="0.05"><output></output></label><label id="mask-warmth-row">Warmth <input id="mask-warmth" type="range" min="-100" max="100" step="1"><output></output></label><label id="mask-tint-row">Tint <input id="mask-tint" type="range" min="-100" max="100" step="1"><output></output></label><label id="mask-saturation-row">Saturation <input id="mask-saturation" type="range" min="-100" max="100" step="1"><output></output></label></div></details>
 <details id="hsl-tools"><summary>HSL color mixer</summary><label>Color band <select id="hsl-band"></select></label><div class="bar"><button id="hsl-pick" aria-pressed="false">Pick from image</button><button id="hsl-reset">Reset band</button></div><p class="note" id="hsl-msg"></p><label id="hsl-center-row">Target hue <input id="hsl-center" type="range" min="0" max="359" step="1"><output></output></label><label id="hsl-width-row">Hue range <input id="hsl-width" type="range" min="5" max="120" step="1"><output></output></label><label id="hsl-h-row">Hue shift <input id="hsl-h" type="range" min="-180" max="180" step="1"><output></output></label><label id="hsl-s-row">Saturation <input id="hsl-s" type="range" min="-100" max="100" step="1"><output></output></label><label id="hsl-l-row">Lightness <input id="hsl-l" type="range" min="-100" max="100" step="1"><output></output></label></details><h3>Light graph</h3>
@@ -226,29 +231,35 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 </div>
 
 <div class="pn" id="p-film">
-<label>Film tools <select id="film-section"><option value="presets">Film presets</option><option value="grade">Light and color</option><option value="finish">Grain and glow</option><option value="double">Double exposure</option></select></label>
+<label>Film tools <select id="film-section"><option value="presets">Film presets</option><option value="grade">Light and color</option><option value="detail">Photo detail &amp; white balance</option><option value="finish">Grain and glow</option><option value="double">Double exposure</option></select></label>
+<details id="batch-panel"><summary>Saved looks and batch export</summary><label>Look name <input id="look-name" type="text" maxlength="64" placeholder="My film look"></label><button id="look-save">Save current film and glints</button><fieldset id="batch-setup"><label>Saved look <select id="look-list"></select></label><button id="look-apply">Apply to this photo</button><label>Batch photos <input id="batch-files" type="file" accept="image/*" multiple></label><div id="batch-items"></div><button id="batch-export" disabled>Export PNG set (.zip)</button></fieldset><p class="note" role="status" id="look-status"></p></details>
 <button id="film-grading">Curves and color grading</button><p class="note" id="film-status" aria-live="polite"></p><div id="film-controls"></div>
 <div class="bar"><button id="film-off">Reset film look</button><button id="film-sample">Try a sample photo</button></div>
 <input type="file" accept="image/*" id="film-file" hidden>
+<input type="file" accept="image/*" id="exposure-files" multiple hidden>
 </div>
 <div class="pn" id="p-glints">
 <h3>Highlight glints</h3>
 <div class="bar"><button class="pri" id="glint-toggle">Add glints</button><button id="glint-reset">Reset settings</button></div>
 <p class="note" id="glint-status" role="status"></p>
-<label>Look <select id="glint-look"><option value="">Custom</option><option value="chrome">Chrome reflections</option><option value="filter">Six-point star filter</option><option value="cinema">Anamorphic blue</option><option value="prism">Prism burst</option><option value="motion">Motion halation</option><option value="mist">Soft diffusion</option></select></label>
-<label>Ray shape <select id="glint-mode"><option value="cross">Four-point cross</option><option value="six">Six-point star</option><option value="eight">Eight-point burst</option><option value="streak">Anamorphic streak</option><option value="soft">Glow only</option></select></label>
+<label>Look <select id="glint-look"><option value="">Custom</option><option value="chrome">Chrome reflections</option><option value="filter">Six-point star filter</option><option value="cinema">Anamorphic blue</option><option value="prism">Prism burst</option><option value="motion">Motion halation</option><option value="mist">Soft diffusion</option><option value="sunstar">Stopped-down sunstar</option><option value="jewelry">Jewellery sparkle</option><option value="glass">Window reflection</option></select></label>
+<label>Ray shape <select id="glint-mode"><option value="cross">Four-point cross</option><option value="six">Six-point star</option><option value="eight">Eight-point burst</option><option value="ten">Ten-point sunstar</option><option value="streak">Anamorphic streak</option><option value="soft">Glow only</option></select></label>
 <label>Placement <select id="glint-placement"><option value="auto">Detect highlights</option><option value="both">Detect and place</option><option value="manual">Place on canvas</option></select></label>
 <div class="bar" id="glint-clear-row" hidden><button id="glint-clear">Clear placed glints</button></div>
 <div id="glint-detect">
 <label>Highlight cutoff <input type="range" id="glint-cut" min="30" max="99"><output></output></label>
 <label>Maximum glints <input type="range" id="glint-count" min="1" max="40"><output></output></label>
 </div>
+<label>Layer opacity <input type="range" id="glint-opacity" min="0" max="100"><output></output></label>
 <label>Intensity <input type="range" id="glint-power" min="0" max="100"><output></output></label>
 <div id="glint-rays">
+<label>Ray width <input type="range" id="glint-width" min="10" max="240"><output></output></label>
+<label>Diffraction fringe <input type="range" id="glint-fringe" min="0" max="100"><output></output></label>
 <label>Ray length <input type="range" id="glint-length" min="2" max="55"><output></output></label>
 <label>Ray angle <input type="range" id="glint-angle" min="-90" max="90"><output></output></label>
 </div>
 <h3>Light colour</h3>
+<label>Core size <input type="range" id="glint-core" min="10" max="240"><output></output></label>
 <label>Colour source <select id="glint-colour-mode"><option value="white">White light</option><option value="source">Sample highlight</option><option value="custom">Custom colours</option><option value="prism">Spectral fringe</option></select></label>
 <label>Temperature <input type="range" id="glint-temp" min="2200" max="10000" step="100"><output></output></label>
 <div id="glint-custom"><label>Ray colour <input type="color" id="glint-ink"></label><label>Glow colour <input type="color" id="glint-halo"></label></div>
@@ -263,7 +274,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <label>Trail direction <input type="range" id="glint-direction" min="-180" max="180"><output></output></label>
 </div>
 </div>
-<div class="pn" id="p-adjust"><button id="adjust-grading">Curves and color grading</button><label>Brightness <input type="range" id="ab" min="-100" max="100" value="0"></label><label>Contrast <input type="range" id="ac" min="-100" max="100" value="0"></label><label>Saturation <input type="range" id="as" min="-100" max="100" value="0"></label><label>Hue shift <input type="range" id="ah" min="-180" max="180" value="0"></label><label>Warmth <input type="range" id="at" min="-100" max="100" value="0"></label><label>Vignette <input type="range" id="av" min="0" max="100" value="0"></label><label>Grain <input type="range" id="ag" min="0" max="100" value="0"></label><label>Posterize (0 is off) <input type="range" id="ap" min="0" max="16" value="0"></label><h3>Levels</h3><label>Black point <input type="range" id="lb" min="0" max="100" value="0"></label><label>White point <input type="range" id="lw" min="155" max="255" value="255"></label><label>Midtones (gamma) <input type="range" id="lg" min="20" max="300" value="100"></label><div class="bar"><button id="auto">Auto levels</button></div><h3>Split toning</h3><label>Amount <input type="range" id="sn" min="0" max="100" value="0"></label><label>Shadows <input type="color" id="s1" value="#0b2a7a"></label><label>Highlights <input type="color" id="s2" value="#ffd9a0"></label><h3>Dither</h3><label>Dither <input type="range" id="dt" min="0" max="100" value="0"></label><p class="note">Dither adds a retro texture. It shows best with Reduce to colours, a tone map or Posterize.</p><h3>Glow</h3><label>Soft glow <input type="range" id="gl" min="0" max="100" value="0"></label><label>Glow size <input type="range" id="gls" min="2" max="40" value="12"></label><label>Highlights only <input type="range" id="glt" min="0" max="100" value="35"></label><label><span><input type="checkbox" id="glo" checked> Keep original colours</span><input type="color" id="glc" value="#ffb36b" aria-label="Glow colour"></label><h3>Finish</h3><label><span><input type="checkbox" id="ai"> Invert</span></label><div class="bar"><button id="adjr">Reset adjustments</button></div></div>
+<div class="pn" id="p-adjust"><button id="adjust-grading">Curves and color grading</button><button id="adjust-detail">Photo detail &amp; white balance</button><label>Brightness <input type="range" id="ab" min="-100" max="100" value="0"></label><label>Contrast <input type="range" id="ac" min="-100" max="100" value="0"></label><label>Saturation <input type="range" id="as" min="-100" max="100" value="0"></label><label>Hue shift <input type="range" id="ah" min="-180" max="180" value="0"></label><label>Warmth <input type="range" id="at" min="-100" max="100" value="0"></label><label>Vignette <input type="range" id="av" min="0" max="100" value="0"></label><label>Grain <input type="range" id="ag" min="0" max="100" value="0"></label><label>Posterize (0 is off) <input type="range" id="ap" min="0" max="16" value="0"></label><h3>Levels</h3><label>Black point <input type="range" id="lb" min="0" max="100" value="0"></label><label>White point <input type="range" id="lw" min="155" max="255" value="255"></label><label>Midtones (gamma) <input type="range" id="lg" min="20" max="300" value="100"></label><div class="bar"><button id="auto">Auto levels</button></div><h3>Split toning</h3><label>Amount <input type="range" id="sn" min="0" max="100" value="0"></label><label>Shadows <input type="color" id="s1" value="#0b2a7a"></label><label>Highlights <input type="color" id="s2" value="#ffd9a0"></label><h3>Dither</h3><label>Dither <input type="range" id="dt" min="0" max="100" value="0"></label><p class="note">Dither adds a retro texture. It shows best with Reduce to colours, a tone map or Posterize.</p><h3>Glow</h3><label>Soft glow <input type="range" id="gl" min="0" max="100" value="0"></label><label>Glow size <input type="range" id="gls" min="2" max="40" value="12"></label><label>Highlights only <input type="range" id="glt" min="0" max="100" value="35"></label><label><span><input type="checkbox" id="glo" checked> Keep original colours</span><input type="color" id="glc" value="#ffb36b" aria-label="Glow colour"></label><h3>Finish</h3><label><span><input type="checkbox" id="ai"> Invert</span></label><div class="bar"><button id="adjr">Reset adjustments</button></div></div>
 
 <div class="pn" id="p-colour">
 <p class="note">Click the image to pick a colour, or click a swatch.</p>
@@ -287,6 +298,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <h3>Quick select</h3>
 <div class="bar"><button id="sall">All</button><button id="inv">Invert</button><button id="clr">Clear</button></div>
 <div class="bar"><button id="ssh">Shadows</button><button id="smd">Midtones</button><button id="shi">Highlights</button></div>
+<details id="saved-masks"><summary>Saved masks</summary><label>Name <input id="saved-mask-name" type="text" maxlength="64" placeholder="Subject"></label><div class="bar"><button id="save-selection-mask">Save selection</button><button id="save-layer-mask">Save layer silhouette</button></div><label>Saved mask <select id="saved-mask-list"></select></label><div class="bar"><button id="mask-recall">Load selection</button><button id="mask-to-layer">Use on active layer</button><button id="mask-to-grade">Grade this area</button><button id="mask-to-fill">Fill with second photo</button></div><p class="note" role="status" id="saved-mask-note"></p></details>
 <div class="bar"><button id="auto2">Auto subject</button></div>
 <h3>Edges</h3>
 <label>Radius <input type="range" id="fe" min="1" max="40" value="8"></label>
@@ -299,7 +311,23 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 
 <div class="pn" id="p-warp"><label>Brush <select id="mode"></select></label><label>Size <input type="range" id="size" min="10" max="300" value="90"></label><label>Strength <input type="range" id="pow" min="1" max="100" value="40"></label><label>Hardness <input type="range" id="hard" min="0" max="100" value="50"></label><h3>Brush options</h3><label>Pixel size <input type="range" id="bpx" min="2" max="80" value="10"></label><label>Colour levels <input type="range" id="blv" min="2" max="16" value="4"></label><label>Paint colour <input type="color" id="bpc" value="#ffb347"></label><h3>Stroke</h3><label>Spacing <input type="range" id="spc" min="5" max="100" value="25"></label><label>Smoothing <input type="range" id="smo" min="0" max="100" value="0"></label><label>Apply to <select id="bt"><option value="all">Photo and layers</option><option value="layer">Selected layer</option><option value="bg">Photo only</option></select></label><label><span><input type="checkbox" id="warp-extend" checked> Warp past layer edges</span></label><p class="note">Warp can pull pixels past a layer edge within the canvas.</p><label><span><input type="checkbox" id="sym"> Mirror stroke left to right</span></label><p class="note">Drag on the image. Hold still to keep applying swirl, bloat and similar brushes. Pen pressure is supported. Strokes carry across the photo and every layer. Combine brushes work between the photo and the selected layer (the top layer if none is selected): erase or dissolve it to reveal the photo, reveal only in highlights or shadows, mix colours, colourise it from the photo, or bake it into the photo. Pixel, Colour and Texture brushes paint effects onto the photo and layers.</p></div>
 
-<div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="add-border">Add border</button><button id="edit-glints" hidden>Edit glints</button><button id="ltxt">Add text</button><button id="edit-text-layer" hidden>Edit text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><div id="ov-edit" hidden>
+<div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="add-border">Add border</button><button id="edit-glints" hidden>Edit glints</button><button id="ltxt">Add text</button><button id="edit-text-layer" hidden>Edit text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="edge-start">Smooth edges</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><details id="fx-panel"><summary>Layer effects stack</summary><label>Effect <select id="fx-kind"><option value="curve">Tone curve</option><option value="film">Film look</option><option value="grain">Film grain</option><option value="halation">Halation</option></select></label><button id="fx-add">Add effect</button><div id="fx-list" aria-label="Effects in rendering order"></div><fieldset id="fx-controls"><label>Enabled <input id="fx-on" type="checkbox" ></label><label>Strength <input id="fx-amount" type="range" min="0" max="100"><output></output></label><label id="fx-param-row"><span id="fx-param-name"></span> <input type="range" min="1" max="254" id="fx-param"><output></output></label><label id="fx-film-row">Film recipe <select id="fx-film"></select></label><label>Effect mask <select id="fx-mask"></select></label><div class="bar"><button id="fx-up">Earlier</button><button id="fx-down">Later</button><button id="fx-remove">Remove</button></div></fieldset></details>
+<details id="mask-panel"><summary>Layer mask</summary><button id="mask-lift">Make base photo a layer</button>
+<label>Start mask from <select id="layer-mask-kind"><option value="white">Reveal all</option><option value="black">Hide all</option><option value="selection">Current selection</option><option value="luma">Luminance range</option><option value="depth">Imported depth range</option></select></label>
+<div id="mask-depth-options" hidden><button id="depth-choose">Upload depth map…</button><input type="file" accept="image/*" id="depth-file" hidden><p class="note" id="depth-status" role="status">Use a grayscale depth image aligned with this layer.</p></div><div id="mask-luma-options" hidden><label>Dark limit <input id="mask-low" type="range" min="0" max="255" value="128"><output>128</output></label><label>Light limit <input id="mask-high" type="range" min="0" max="255" value="255"><output>255</output></label><label>Range feather <input id="mask-soft" type="range" min="0" max="100" value="24"><output>24</output></label></div>
+<div class="bar"><button id="layer-mask-add">Add mask</button><button id="layer-mask-invert">Invert</button><button id="layer-mask-remove">Remove</button></div>
+<label>Mask density <input type="range" id="mask-density" min="0" max="100" value="100"><output>100%</output></label><label>Mask feather <input type="range" id="mask-feather" min="0" max="80" value="0"><output>0 px</output></label><label>Enable mask <input id="layer-mask-on" type="checkbox"></label><label>Clip to layer below <input id="layer-clip" type="checkbox"></label>
+<label>Mask brush <select id="mask-paint"><option value="">Off</option><option value="hide">Hide</option><option value="show">Reveal</option><option value="edge">Smooth edge</option><option value="refine">Refine fine detail</option></select></label>
+<div id="edge-options" hidden><label>Edge width <input id="edge-width" type="range" min="1" max="50" value="6"><output></output></label><label>Brush flow <input id="edge-flow" type="range" min="1" max="100" value="70"><output></output></label><label>Inspect against <select id="edge-back"><option value="image">Composition</option><option value="light">Light</option><option value="dark">Dark</option></select></label></div><label>Brush radius <input id="mask-brush-radius" type="range" min="1" max="180" value="32"><output>32 px</output></label><label>Hardness <input id="mask-hardness" type="range" min="0" max="100" value="45"><output>45%</output></label>
+<label>Vector mask <select id="vector-kind"><option value="rect">Rectangle</option><option value="ellipse">Ellipse</option><option value="path">Custom path</option></select></label>
+<div class="bar"><button id="vector-add">Add vector mask</button><button id="vector-remove">Remove vector mask</button></div>
+<label>Edit anchors on canvas <input type="checkbox" id="vector-edit"></label><div class="bar" id="vector-anchors" hidden><button id="vector-insert">Insert point</button><button id="vector-delete">Delete point</button><button id="vector-curve">Corner / curve</button></div>
+</details>
+<details id="retouch-panel"><summary>Retouch</summary><label>Brush <select id="repair-mode"><option value="">Off</option><option value="spot">Spot healing</option><option value="heal">Healing brush</option><option value="clone">Clone stamp</option><option value="patch">Patch selection</option><option value="redeye">Red eye</option><option value="dodge">Dodge</option><option value="burn">Burn</option><option value="sponge">Desaturate</option><option value="blur">Soften</option><option value="sharp">Sharpen</option></select></label>
+<button id="repair-source" hidden>Pick source on canvas</button>
+<label>Brush radius <input id="repair-radius" type="range" min="2" max="100" value="18"><output>18 px</output></label><label>Strength <input id="repair-opacity" type="range" min="1" max="100" value="85"><output>85%</output></label>
+<p class="note" id="repair-note" role="status">Paint corrections onto a separate retouch layer.</p></details>
+<div id="ov-edit" hidden>
 <h3 id="overlay-settings-heading">Overlay settings</h3>
 <label><span id="overlay-colour-a">Colour A</span> <input type="color" id="ova" value="#ff7a1a"></label>
 <label id="ovb-row"><span id="overlay-colour-b">Colour B</span> <input type="color" id="ovb" value="#7b2cbf"></label>
@@ -360,8 +388,9 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <tr><td>Arrow keys</td><td>Nudge layer (Shift for 10 px)</td></tr><tr><td>Delete</td><td>Remove layer</td></tr><tr><td>Alt while dragging</td><td>Skip snapping</td></tr>
 <tr><td>Alt-click the eye</td><td>Show only that layer</td></tr><tr><td>Ctrl+S</td><td>Export</td></tr><tr><td>Paste an image</td><td>Add it as a layer</td></tr><tr><td>Ctrl + wheel</td><td>Zoom at the pointer</td></tr><tr><td>Space + drag</td><td>Pan the view</td></tr><tr><td>Ctrl+0</td><td>Fit to window</td></tr></table><p class="note">Click anywhere or press Esc to close.</p></div></div>
 <p id="type-hint" role="status" hidden>Drag on the image to draw a text box. Press Esc to cancel.</p>
+<dialog class="studio-dialog" aria-label="Find a tool" id="tool-dialog"><label>Find a tool <input id="tool-query" type="search" placeholder="Try heal, mask hair, or curve text"></label><div id="tool-results"></div><button id="tool-close">Close</button></dialog>
 <dialog aria-label="Project" id="project-dialog" class="studio-dialog"><h2>Project</h2><label>Name <input id="project-name" value="Totone"></label>
-<div class="bar"><button id="project-save" class="pri">Save .totone</button><button id="project-open">Open project</button><button id="project-close">Close</button></div><p class="note" id="project-message" role="status"></p><input id="project-file" type="file" accept=".totone" hidden></dialog>
+<div class="bar"><button id="project-save" class="pri">Save .totone</button><button id="project-open">Open project</button><button id="project-close">Close</button></div><button id="recover-project" hidden>Recover previous session</button><p class="note" id="draft-status" role="status">Local autosave is on.</p><p class="note" id="project-message" role="status"></p><input id="project-file" type="file" accept=".totone" hidden></dialog>
 <dialog id="version-dialog" class="studio-dialog" aria-label="Compare versions"><h2>Compare versions</h2><div class="bar"><input id="version-name" aria-label="Name for current version" placeholder="Version name"><button id="pin-current">Pin current edit</button><button id="version-close">Close</button></div>
 <label>Linked zoom <input type="range" id="version-zoom" min="100" max="800" value="100" step="5"><output id="version-scale">100%</output></label><button id="version-fit">Fit all</button><p class="note" id="version-status" role="status"></p><div id="version-grid"></div></dialog>
 <dialog id="type-editor" aria-label="Edit text on canvas">
@@ -373,7 +402,7 @@ input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px
 <script>
 const $=id=>document.getElementById(id);
 const c=$('c'),ctx=c.getContext('2d'),hyp=(a,b)=>Math.sqrt(a*a+b*b);
-let film=null;
+let film=null,suiteReady=false;
 let cdirty=true,fcache=null,outIm=null,pickKey=false,ren=-1,guides=[],nudgeT=0,sel=null,tab="tone",showOrig=false,lasso=[],W=0,H=0,base=null,orig=null,edits=[],LUT=null,palette=[],blendImg=null,undoStack=[],maskIdx=-1,raf=0,stops=null;
 const wd2=(r,g,b,f)=>{const m=(r+f[0])/2,x=r-f[0],y=g-f[1],z=b-f[2];return((2+m/256)*x*x+4*y*y+(2+(255-m)/256)*z*z)/3};
 const wd=(r,g,b,f)=>{const m=(r+f[0])/2,x=r-f[0],y=g-f[1],z=b-f[2];return Math.sqrt(((2+m/256)*x*x+4*y*y+(2+(255-m)/256)*z*z)/3)};
@@ -502,6 +531,7 @@ const BM=['source-over','multiply','screen','overlay','soft-light','hard-light',
 $('bm').innerHTML=BM.map(m=>`<option value="${m}">${BML[m]||m}</option>`).join('');
 
 let imageRequest=0;
+function workingScale(w,h){return Math.min(1,+$('mx').value/Math.max(w,h),Math.sqrt(18000000/(w*h)))}
 async function load(f){
   if(/\.totone$/i.test(f?.name||''))return openProject(f);
   const firstPhoto=!base,request=++imageRequest;
@@ -511,10 +541,10 @@ async function load(f){
     return;
   }
   if(request!==imageRequest){bmp.close();return}
-  const s=Math.min(1,+$('mx').value/Math.max(bmp.width,bmp.height),Math.sqrt(18000000/(bmp.width*bmp.height)));
+  const s=workingScale(bmp.width,bmp.height);
   W=Math.max(1,Math.round(bmp.width*s));H=Math.max(1,Math.round(bmp.height*s));c.width=W;c.height=H;
   ctx.drawImage(bmp,0,0,W,H);bmp.close();base=ctx.getImageData(0,0,W,H);orig=new ImageData(new Uint8ClampedArray(base.data),W,H);
-  versions=[];projectTitle=(f.name||'Totone').replace(/\.[^.]+$/,'');cancelPathInput();film?.reset(true,firstPhoto);$('zoom').value='0';$('zoom').onchange();
+  versions=[];resetCorrectionTools();projectTitle=(f.name||'Totone').replace(/\.[^.]+$/,'');cancelPathInput();film?.reset(true,firstPhoto);$('zoom').value='0';$('zoom').onchange();
   lasso=[];CR=tab==='crop'?cropInit():null;if(CR)cropInfo();
   setTypeDrawing(false);undoStack=[];redoS=[];edits=[];maskIdx=-1;sel=null;layers=[];active=null;refreshLayers();drawEdits();updInfo();c.style.display='block';$('empty').style.display='none';extract();film?.afterOpen();draw();return true;
 }
@@ -688,9 +718,13 @@ $('rand').onclick=()=>{
 $('k').oninput=()=>{$('kv').textContent=$('k').value;extract();draw()};
 
 function render(ov=true,rect,printTable=null){
-  if(ov&&$('lsolo').checked&&active&&tab==='layers'){soloDraw();frameOK=false;return}
+  if(ov&&($('lsolo').checked||edgeInspect())&&active&&tab==='layers'){soloDraw();frameOK=false;return}
   let X0=0,Y0=0,X1=W,Y1=H;if(rect){const P0=Math.max(1,+$('apx').value);X0=Math.max(0,Math.floor(rect[0]/P0)*P0);Y0=Math.max(0,Math.floor(rect[1]/P0)*P0);X1=Math.min(W,Math.ceil(rect[2]/P0)*P0);Y1=Math.min(H,Math.ceil(rect[3]/P0)*P0)}
   const original=ov&&showOrig,mask=ov?maskIdx:-1,spl=ov&&$('spl').checked;
+  if(ov&&tab==='film'&&!original&&mask<0&&film?.showSubjectMask()){
+   if(spl){const cut=Math.floor(W*(+$('spr').value)/100);ctx.putImageData(orig,0,0,0,0,cut,H);ctx.fillStyle='#fff';ctx.fillRect(cut-1,0,2,H)}
+   frameOK=false;return;
+  }
   const useFilm=!original&&mask<0&&film?.enabled();
   const ident=!useFilm&&!printTable&&isIdent(original,mask,spl),st=rect?1:ov?stride:1,LG=$('lgrade').checked&&layers.length>0&&!original&&!ident,input=original?orig:LG?flat(rect?[X0,Y0,X1,Y1]:undefined):base,s=(useFilm?film.image(input):input).data,raw=input.data,out=getOut(),o=out.data,str=$('str').value/100,red=$('reduce').checked&&palette.length;
   const toneTable=printTable||LUT, mapTone=toneTable&&str&&(printTable||$('gradient-enabled').checked)?mapSampler():null;
@@ -735,8 +769,9 @@ function render(ov=true,rect,printTable=null){
   if(ov&&tab==='grade')film?.updateScopes();
   if(spl&&!original){ctx.putImageData(orig,0,0,0,0,Math.floor(spx),H);ctx.fillStyle='#fff';ctx.fillRect(spx-1,0,2,H)}
   if(ov&&lasso.length>1){ctx.beginPath();const T=$('stool').value,A=lasso[0],B=lasso[lasso.length-1];if(T==='rect')ctx.rect(A[0],A[1],B[0]-A[0],B[1]-A[1]);else if(T==='ellipse')ctx.ellipse((A[0]+B[0])/2,(A[1]+B[1])/2,Math.abs(B[0]-A[0])/2||1,Math.abs(B[1]-A[1])/2||1,0,0,7);else lasso.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.lineWidth=Math.max(1.5,W/500);ctx.strokeStyle='#ffffff';ctx.stroke()}
-  if(ov&&(tab==='layers'||tab==='text')){if(typeBox)drawTypeBox();else if(hasMesh())drawEnvelope();else if(active?.vis&&!typeDrawing)drawHandles()}
+  if(ov&&(tab==='layers'||tab==='text')){if(typeBox)drawTypeBox();else if(hasMesh())drawEnvelope();else if(active?.vis&&!typeDrawing&&!brushKind()&&!editingVector())drawHandles()}
   if(ov&&tab==='text')textGuides();if(ov&&tab==='grade')film.maskGuides();
+  if(ov&&tab==='layers'){drawRepairSource();drawVectorGuides()}
   if(ov&&tab==='crop'&&CR)drawCrop();
   if(!rect)frameOK=ov&&st===1;
 }
@@ -859,15 +894,15 @@ const up=()=>{if(!down)return;down=false;if(tab==='text'||tab==='layers'){ls=nul
 c.addEventListener('pointerup',e=>{if(typeBox?.pointer===e.pointerId)finishTypeBox(pos(e));else up()});
 c.addEventListener('pointercancel',e=>{if(typeBox?.pointer===e.pointerId)setTypeDrawing(false);else up()});
 
-let redoS=[];const pushU=f=>{undoStack.push(f);if(undoStack.length>10)undoStack.shift();redoS=[]};
-$('undo').onclick=()=>{textEdit=null;const u=undoStack.pop();if(u){redoS.push(u());extract();refreshLayers();draw()}};
-$('redo').onclick=()=>{textEdit=null;const u=redoS.pop();if(u){undoStack.push(u());extract();refreshLayers();draw()}};
+let redoS=[];const pushU=f=>{if(suiteReady)queueDraft();undoStack.push(f);if(undoStack.length>10)undoStack.shift();redoS=[]};
+$('undo').onclick=()=>{textEdit=null;const u=undoStack.pop();if(u){redoS.push(u());queueDraft();extract();refreshLayers();draw()}};
+$('redo').onclick=()=>{textEdit=null;const u=redoS.pop();if(u){undoStack.push(u());queueDraft();extract();refreshLayers();draw()}};
 $('reset').onclick=()=>{if(base){undoStack=[];base.data.set(orig.data);layers.forEach(l=>{if(l.o){l.d.data.set(l.o.data);syncL(l)}});extract();draw()}};
 $('open').onclick=()=>$('file').click();
 $('file').onchange=e=>{const file=e.target.files[0];e.target.value='';if(file)load(file)};
 $('open2').onclick=()=>$('file2').click();
 $('stage').addEventListener('dragover',e=>e.preventDefault());
-$('stage').addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(/\.totone$/i.test(f?.name||'')){openProject(f);return}if(f&&f.type.startsWith('image/'))(film?.isDouble()?film.loadSecond(f):base?addLayer(f):load(f))});
+$('stage').addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(/\.totone$/i.test(f?.name||'')){openProject(f);return}if(film?.inDouble()){film.openExposureFiles(e.dataTransfer.files);return}importLayerFiles(e.dataTransfer.files)});
 
 const px=p=>{const i=(Math.floor(p[1])*W+Math.floor(p[0]))*4,d=base.data;return[d[i],d[i+1],d[i+2]]};
 function setSel(m,md){md=md||$('sm').value;if(!sel&&md==='sub')return;pushU(selSnap());
@@ -910,7 +945,7 @@ function blurMask(m,r){const t=new Float32Array(W*H),o=new Uint8Array(W*H),n=2*r
 const selOp=k=>{if(!sel)return;pushU(selSnap());const m=blurMask(sel,+$('fe').value);sel=k==='f'?m:k==='m'?m.map(v=>v>127?255:0):m.map(v=>k==='g'?(v>3?255:0):(v>252?255:0));updInfo();draw(true)};
 $('feat').onclick=()=>selOp('f');$('grow').onclick=()=>selOp('g');$('shrk').onclick=()=>selOp('s');
 const ring=$('ring');
-c.addEventListener('pointermove',e=>{const rs=tab==='warp'?+$('size').value:(tab==='select'&&$('stool').value==='paint')?+$('ssz').value:0;if(!rs){ring.style.display='none';return}const r=c.getBoundingClientRect(),d=2*rs*r.width/W;Object.assign(ring.style,{display:'block',width:d+'px',height:d+'px',left:e.clientX-d/2+'px',top:e.clientY-d/2+'px'})});
+c.addEventListener('pointermove',e=>{const kind=brushKind(),rs=kind?+$(kind==='show'||kind==='hide'?'mask-brush-radius':'repair-radius').value:tab==='warp'?+$('size').value:(tab==='select'&&$('stool').value==='paint')?+$('ssz').value:0;if(!rs){ring.style.display='none';return}const r=c.getBoundingClientRect(),d=2*rs*r.width/W;Object.assign(ring.style,{display:'block',width:d+'px',height:d+'px',left:e.clientX-d/2+'px',top:e.clientY-d/2+'px'})});
 c.addEventListener('pointerleave',()=>ring.style.display='none');
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.shiftKey&&!e.target.matches('textarea,input[type=text],input[type=search],[contenteditable=true]')){e.preventDefault();$('undo').click()}});
 
@@ -927,13 +962,55 @@ const syncL=(l,b)=>{l.ver=(l.ver||0)+1;const g=l.cv.getContext('2d');b?g.putImag
 function mkSnap(k,l){
   if(k==='base'){const d=new Uint8ClampedArray(base.data);return()=>{const cur=mkSnap('base');base.data.set(d);return cur}}
   if(k==='layer'){const d=new Uint8ClampedArray(l.d.data);return()=>{const cur=mkSnap('layer',l);l.d.data.set(d);syncL(l);return cur}}
-  const L=layers.slice(),Q=L.map(x=>({...x})),a=active;
+  const L=layers.slice(),Q=L.map(x=>({...x,fxStack:x.fxStack,mask:x.mask,maskEnabled:x.maskEnabled,maskDensity:x.maskDensity,maskFeather:x.maskFeather,depthMap:x.depthMap,clipBelow:x.clipBelow,vectorMask:x.vectorMask})),a=active;
   if(k==='p')return()=>{const cur=mkSnap('p');layers=L;L.forEach((x,i)=>Object.assign(x,Q[i]));active=a;return cur};
   const b=new Uint8ClampedArray(base.data),ds=L.map(x=>new Uint8ClampedArray(x.d.data));
   return()=>{const cur=mkSnap('all');base.data.set(b);layers=L;L.forEach((x,i)=>{Object.assign(x,Q[i]);x.d.data.set(ds[i]);syncL(x)});active=a;return cur}}
 const rgba=(h,a)=>{const c=rgb(h);return`rgba(${c[0]},${c[1]},${c[2]},${a})`};
 function silOf(l){const k=(l.ver||0)+'|'+l.ol.c;if(l.sil&&l.sil.k===k)return l.sil.cv;const s=document.createElement('canvas');s.width=l.cv.width;s.height=l.cv.height;const g=s.getContext('2d');g.drawImage(l.cv,0,0);g.globalCompositeOperation='source-in';g.fillStyle=l.ol.c;g.fillRect(0,0,s.width,s.height);l.sil={k,cv:s};return s}
-function drawLayers(g,list=layers){g.imageSmoothingQuality=down?'low':'high';for(const l of list){if(!l.vis||l.op<=0)continue;
+// Local masks use the same cropped, rotated coordinate system as their editable layer.
+const maskViews=new WeakMap();
+function layerMatrix(l){
+ const mx=l.cv.width*(1+l.cl-l.cr)/2,my=l.cv.height*(1+l.ct-l.cb)/2;
+ return new DOMMatrix().translate(l.x,l.y).rotate(l.r*180/Math.PI).scale(l.s*(l.fl?-1:1),l.s).translate(-mx,-my);
+}
+function visibleLayer(l){
+ const mask=l.maskEnabled!==false&&l.mask,below=l.clipBelow?layers[layers.indexOf(l)-1]:null;
+ const vector=l.vectorMask;
+ if(!mask&&!below&&!vector&&!l.fxStack?.length)return l;
+ const source=below&&visibleLayer(below),placement=below&&layerMatrix(l).inverse().multiply(layerMatrix(below));
+ const clipKey=below&&[placement.a,placement.b,placement.c,placement.d,placement.e,placement.f,below.cl,below.cr,below.ct,below.cb,below.vis,below.op,source.ver].join(',');
+ let cache=maskViews.get(l);
+ if(!cache||cache.stack!==l.fxStack||cache.density!==l.maskDensity||cache.feather!==l.maskFeather||cache.vector!==vector||cache.mask!==mask||cache.cv!==l.cv||cache.ver!==l.ver||cache.clip!==source?.cv||cache.clipKey!==clipKey){
+  const cv=bc(l.cv.width,l.cv.height),g=cv.getContext('2d');
+  const surface=l.fxStack?.length?layerEffects(l.cv,l.fxStack):l.cv;
+  if(vector){g.save();g.clip(vectorPath(vector,cv.width,cv.height));g.drawImage(surface,0,0);g.restore()}else g.drawImage(surface,0,0);
+  g.globalCompositeOperation='destination-in';
+  if(mask){
+   let stencil=mask;
+   if(l.maskFeather||l.maskDensity!=null&&l.maskDensity!==100){
+    stencil=bc(cv.width,cv.height);const sg=stencil.getContext('2d');
+    if(l.maskFeather)sg.filter='blur('+l.maskFeather+'px)';
+    sg.drawImage(mask,0,0,cv.width,cv.height);sg.filter='none';
+    sg.globalCompositeOperation='destination-over';sg.globalAlpha=1-(l.maskDensity??100)/100;sg.fillRect(0,0,cv.width,cv.height);
+   }
+   g.drawImage(stencil,0,0,cv.width,cv.height);
+  }
+  if(below){
+   const stencil=bc(cv.width,cv.height),sg=stencil.getContext('2d'),w=source.cv.width,h=source.cv.height;
+   if(below.vis){sg.globalAlpha=below.op;sg.setTransform(placement);
+    const rect=[w*below.cl,h*below.ct,w*(1-below.cl-below.cr),h*(1-below.ct-below.cb)];
+    sg.drawImage(source.cv,...rect,...rect)}
+   g.drawImage(stencil,0,0);
+  }
+  cache={mask,vector,stack:l.fxStack,density:l.maskDensity,feather:l.maskFeather,cv:l.cv,ver:l.ver,clip:source?.cv,clipKey,view:{cv}};maskViews.set(l,cache);
+ }
+ const view=cache.view;
+ // Effect renderers cache by colour and size on the composited view.
+ return Object.assign(view,l,{cv:view.cv,sil:view.sil,gc:view.gc,tnc:view.tnc});
+}
+function drawLayers(g,list=layers){g.imageSmoothingQuality=down?'low':'high';for(const original of list){if(!original.vis||original.op<=0)continue;
+  const l=visibleLayer(original);
   const iw=l.cv.width,ih=l.cv.height,sw=iw*(1-l.cl-l.cr),sh=ih*(1-l.ct-l.cb),fxr=(l.sh?l.sh.b+Math.max(Math.abs(l.sh.x),Math.abs(l.sh.y)):0)+(l.ol?l.ol.w*l.s:0)+(l.gl?l.gl.r*1.7+l.gl.sp+4:0),rr=hyp(sw,sh)*l.s/2+fxr;if(l.x+rr<0||l.y+rr<0||l.x-rr>W||l.y-rr>H)continue;
   g.save();g.globalAlpha=l.op;g.globalCompositeOperation=l.bm;g.translate(l.x,l.y);g.rotate(l.r);g.scale(l.s*(l.fl?-1:1),l.s);
   if(l.gl){const gc=glowOf(l),p=gc.pad;g.globalCompositeOperation=l.gl.m==='source-over'?l.bm:l.gl.m;g.drawImage(gc.cv,l.cl*iw,l.ct*ih,sw+2*p,sh+2*p,-sw/2-p,-sh/2-p,sw+2*p,sh+2*p);g.globalCompositeOperation=l.bm}
@@ -984,32 +1061,48 @@ function layerMove(e,p){const l=active;if(!l||!ls)return;if(!ls.started){
 async function addLayer(f){
   if(!base){await load(f);return}
   const request=imageRequest,bmp=await createImageBitmap(f);if(request!==imageRequest){bmp.close();return}
-  const sc=Math.min(1,1000/Math.max(bmp.width,bmp.height)),w=Math.max(1,Math.round(bmp.width*sc)),h=Math.max(1,Math.round(bmp.height*sc)),cv=document.createElement('canvas');cv.width=w;cv.height=h;
+  const sc=workingScale(bmp.width,bmp.height),w=Math.max(1,Math.round(bmp.width*sc)),h=Math.max(1,Math.round(bmp.height*sc)),cv=document.createElement('canvas');cv.width=w;cv.height=h;
   const g=cv.getContext('2d');g.drawImage(bmp,0,0,w,h);bmp.close();const d=g.getImageData(0,0,w,h);pushU(mkSnap('p'));
   const l={cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:Math.min(W*.6/w,H*.6/h),r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:(f.name||'Image').replace(/\.[^.]+$/,'').slice(0,24)};
   layers.push(l);active=l;refreshLayers();draw()}
-function drawThumbnail(cv,l){
-  if(l.thumb?.source!==l.cv||l.thumb.version!==l.ver){
+function drawThumbnail(cv,original){
+  const l=visibleLayer(original);
+  if(original.thumb?.source!==l.cv||original.thumb.version!==l.ver){
     const preview=bc(36,36),scale=Math.min(36/l.cv.width,36/l.cv.height),w=l.cv.width*scale,h=l.cv.height*scale;
     preview.getContext('2d').drawImage(l.cv,(36-w)/2,(36-h)/2,w,h);
-    l.thumb={source:l.cv,version:l.ver,preview};
+    original.thumb={source:l.cv,version:l.ver,preview};
   }
-  const g=cv.getContext('2d');g.clearRect(0,0,36,36);g.drawImage(l.thumb.preview,0,0);
+  const g=cv.getContext('2d');g.clearRect(0,0,36,36);g.drawImage(original.thumb.preview,0,0);
 }
 function refreshLayers(){const a=active;$('lctl').hidden=!a;$('lnote').hidden=layers.length>0;$('bo').disabled=$('bm').disabled=!a;
-  $('llist').innerHTML=layers.map((l,i)=>`<div class="lrow${l===a?' on':''}${l.vis?'':' off'}" role="listitem" draggable="true" data-i="${i}"><button class="ib" data-a="vis" aria-label="${l.vis?'Hide':'Show'} ${esc(l.name)}" aria-pressed="${l.vis}">${l.vis?ICON.eye:ICON.eyeoff}</button><canvas width="36" height="36"></canvas><div class="ln">${ren===i?`<input class="rn" value="${esc(l.name)}" aria-label="Layer name">`:`<span class="nm">${esc(l.name)}</span>`}<small>${l.tx?'Text · ':''}${l.bm==='source-over'?'Normal':l.bm} \u00b7 ${Math.round(l.op*100)}%</small></div><button class="ib${l.lk?' lk':''}" data-a="lock" aria-label="${l.lk?'Unlock':'Lock'} ${esc(l.name)}" aria-pressed="${!!l.lk}">${l.lk?ICON.lock:ICON.unlock}</button></div>`).reverse().join('');
+  $('llist').innerHTML=layers.map((l,i)=>`<div class="lrow${l===a?' on':''}${l.vis?'':' off'}" role="listitem" draggable="true" data-i="${i}"><button class="ib" data-a="vis" aria-label="${l.vis?'Hide':'Show'} ${esc(l.name)}" aria-pressed="${l.vis}">${l.vis?ICON.eye:ICON.eyeoff}</button><canvas width="36" height="36"></canvas><div class="ln">${ren===i?`<input class="rn" value="${esc(l.name)}" aria-label="Layer name">`:`<span class="nm">${esc(l.name)}</span>`}<small>${l.tx?'Text · ':''}${l.mask?(l.maskEnabled===false?'Mask off · ':'Masked · '):''}${l.vectorMask?'Vector mask · ':''}${l.clipBelow?'Clipped · ':''}${l.bm==='source-over'?'Normal':l.bm} \u00b7 ${Math.round(l.op*100)}%</small></div><button class="ib${l.lk?' lk':''}" data-a="lock" aria-label="${l.lk?'Unlock':'Lock'} ${esc(l.name)}" aria-pressed="${!!l.lk}">${l.lk?ICON.lock:ICON.unlock}</button></div>`).reverse().join('');
   $('llist').querySelectorAll('canvas').forEach((cv,k)=>drawThumbnail(cv,layers[layers.length-1-k]));
   syncOverlay(a);
-  syncTextPanel();if(tab==='glints')syncGlintTool();
+  syncTextPanel();maskControls();if(tab==='glints')syncGlintTool();
   $('edit-glints').hidden=!(a?.overlay&&OVK[a.overlay.i][1]==='photoGlints'&&!a.o);
   if(base&&tab==='layers'&&previewDocument!==orig)showOverlays();
-  if(a){$('bo').value=a.op*100;$('bov').textContent=Math.round(a.op*100)+'%';$('bs').value=Math.round(a.s*100);$('lr').value=Math.round(((a.r*180/Math.PI+180)%360+360)%360-180);$('bm').value=a.bm;$('lcrop').classList.toggle('on',cropMode)}
+  if(a){$('bo').value=a.op*100;$('bov').textContent=Math.round(a.op*100)+'%';$('bs').value=Math.round(a.s*100);$('lr').value=Math.round(((a.r*180/Math.PI+180)%360+360)%360-180);$('bm').value=a.bm;$('bm').disabled=!!a.lk;$('lcrop').classList.toggle('on',cropMode)}
   $('ltx').hidden=!(a&&a.tx);if(a&&a.tx){const t=a.tx;if($('txt').value!==t.t)$('txt').value=t.t;$('tfont').value=t.f;markFont(t.f);syncTx(t);$('tsz').value=t.sz;$('tcol').value=t.c;$('tw').value=t.w;$('tit').checked=t.it}syncFx()}
 const LS=(id,fn)=>{$(id).onpointerdown=()=>active&&pushU(mkSnap('p'));$(id).oninput=()=>{if(active){fn(active,+$(id).value);$('bov').textContent=Math.round(active.op*100)+'%';draw()}}};
 LS('bo',(l,v)=>l.op=v/100);LS('bs',(l,v)=>{if(!l.lk)l.s=v/100});LS('lr',(l,v)=>{if(!l.lk)l.r=v*Math.PI/180});
-$('bm').onchange=()=>{if(active){pushU(mkSnap('p'));active.bm=$('bm').value;draw()}};
+$('text-blend').innerHTML=$('bm').innerHTML;
+for(const id of ['bm','text-blend'])$(id).onchange=e=>{
+ if(!active||active.lk||id==='text-blend'&&!active.tx)return;
+ pushU(mkSnap('p'));active.bm=e.target.value;refreshLayers();draw();
+};
 $('lgrade').onchange=()=>draw();
-$('file2').onchange=async e=>{for(const f of e.target.files)await addLayer(f);e.target.value=''};
+async function importLayerFiles(list){
+ const files=Array.from(list).filter(f=>f.type.startsWith('image/'));
+ if(!files.length)return;
+ if(!base&&!await load(files.shift()))return;
+ const doc=imageRequest,failed=[];
+ for(const file of files){
+  if(doc!==imageRequest)return;
+  try{await addLayer(file)}catch{failed.push(file.name||'Image')}
+ }
+ if(failed.length&&doc===imageRequest)alert('Could not open '+failed.join(', ')+'.');
+}
+$('file2').onchange=e=>{importLayerFiles(e.target.files);e.target.value=''};
 const act=(fn,free)=>()=>{if(!active||(active.lk&&!free))return;pushU(mkSnap('p'));fn(active);refreshLayers();draw()};
 $('lflip').onclick=act(l=>l.fl=!l.fl);$('lcen').onclick=act(l=>{l.x=W/2;l.y=H/2});
 $('lfit').onclick=act(l=>{l.s=Math.max(W/(l.cv.width*(1-l.cl-l.cr)),H/(l.cv.height*(1-l.ct-l.cb)));l.x=W/2;l.y=H/2});
@@ -1022,7 +1115,7 @@ $('ldup').onclick=act(l=>{const w=l.cv.width,h=l.cv.height,cv=document.createEle
 
 let lmd='replace',lastP=null;
 const selSnap=()=>{const s0=sel?sel.slice():null;return()=>{const cur=selSnap();sel=s0;updInfo();return cur}};
-function updInfo(){let t='Nothing selected';if(sel){let n=0;for(let i=0;i<sel.length;i++)if(sel[i]>127)n++;t=n?`${(n/sel.length*100).toFixed(1)}% of the image selected`:'Selection is empty'}$('sinfo').textContent=t}
+function updInfo(){maskControls();let t='Nothing selected';if(sel){let n=0;for(let i=0;i<sel.length;i++)if(sel[i]>127)n++;t=n?`${(n/sel.length*100).toFixed(1)}% of the image selected`:'Selection is empty'}$('sinfo').textContent=t}
 function paintSel(a,b){if(!sel||!a)return;const r=+$('ssz').value,sub=lmd==='sub',dist=hyp(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.ceil(dist/(r/4)));
   for(let i=1;i<=n;i++){const cx=a[0]+(b[0]-a[0])*i/n,cy=a[1]+(b[1]-a[1])*i/n,x0=Math.max(0,Math.floor(cx-r)),x1=Math.min(W-1,Math.ceil(cx+r)),y0=Math.max(0,Math.floor(cy-r)),y1=Math.min(H-1,Math.ceil(cy+r));
     for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const d=hyp(x-cx,y-cy);if(d>=r)continue;const v=d<r*.7?255:255*(1-(d-r*.7)/(r*.3)),j=y*W+x;sel[j]=sub?Math.min(sel[j],255-v):Math.max(sel[j],v)}}
@@ -1054,8 +1147,9 @@ const ensureO=l=>{if(!l.o)l.o=new ImageData(new Uint8ClampedArray(l.d.data),l.cv
 function getOut(){if(!outIm||outIm.width!==W||outIm.height!==H)outIm=new ImageData(W,H);return outIm}
 function isIdent(original,mask,split){const N=id=>+$(id).value;return!edits.length&&(!LUT||!N('str')||!$('gradient-enabled').checked)&&!($('reduce').checked&&palette.length)&&!N('ab')&&!N('ac')&&!N('as')&&!N('ah')&&!N('at')&&N('lb')===0&&N('lw')===255&&N('lg')===100&&!N('sn')&&!N('dt')&&!N('av')&&!N('ag')&&N('ap')<=1&&!$('ai').checked&&N('apx')<=1&&!sel&&mask<0&&!split&&!original}
 let chk=null;
+function edgeInspect(){return tab==='layers'&&$('mask-panel').open&&['refine','edge'].includes($('mask-paint').value)&&$('edge-back').value!=='image'}
 function soloDraw(){ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;if(!chk){chk=document.createElement('canvas');chk.width=chk.height=24;const g=chk.getContext('2d');g.fillStyle='#cfd5e4';g.fillRect(0,0,24,24);g.fillStyle='#9aa3bd';g.fillRect(0,0,12,12);g.fillRect(12,12,12,12)}
-  ctx.fillStyle=ctx.createPattern(chk,'repeat');ctx.fillRect(0,0,W,H);drawLayers(ctx,[{...active,op:1,bm:'source-over',vis:true}]);drawHandles()}
+  ctx.fillStyle=edgeInspect()?($('edge-back').value==='light'?'#f6f6f6':'#171717'):ctx.createPattern(chk,'repeat');ctx.fillRect(0,0,W,H);drawLayers(ctx,[{...visibleLayer(active),fxStack:null,mask:null,vectorMask:null,clipBelow:false,op:1,bm:'source-over',vis:true}]);if(!brushKind()&&!editingVector())drawHandles();drawVectorGuides();drawRepairSource()}
 function layerPix(l,p){const iw=l.cv.width,ih=l.cv.height,sw=iw*(1-l.cl-l.cr),sh=ih*(1-l.ct-l.cb),a=p[0]-l.x,b=p[1]-l.y,c0=Math.cos(l.r),s0=Math.sin(l.r);let u=(a*c0+b*s0)/l.s;const v=(-a*s0+b*c0)/l.s;if(l.fl)u=-u;
   const x=Math.round(u+l.cl*iw+sw/2),y=Math.round(v+l.ct*ih+sh/2);if(x<0||y<0||x>=iw||y>=ih)return null;const q=(y*iw+x)*4,d=l.d.data;return[d[q],d[q+1],d[q+2],d[q+3]]}
 const ss=(e0,e1,x)=>{const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0||1)));return t*t*(3-2*t)};
@@ -1092,7 +1186,7 @@ L$.addEventListener('dragend',()=>{dragI=-1;L$.querySelectorAll('.dov').forEach(
 document.addEventListener('keydown',e=>{const t=e.target;if(t.matches&&t.matches('input,select,textarea'))return;if((tab!=='layers'&&tab!=='text')||!active)return;const k=e.key;
   if(/^Arrow/.test(k)){if(active.lk)return;e.preventDefault();const n=e.shiftKey?10:1,now=Date.now();if(now-nudgeT>800)pushU(mkSnap('p'));nudgeT=now;active.x+=k==='ArrowRight'?n:k==='ArrowLeft'?-n:0;active.y+=k==='ArrowDown'?n:k==='ArrowUp'?-n:0;draw()}
   else if(k==='Delete'||k==='Backspace'){e.preventDefault();$('ldel').click()}});
-document.addEventListener('paste',e=>{const it=[...(e.clipboardData&&e.clipboardData.items||[])].find(i=>i.type.startsWith('image/'));const f=it&&it.getAsFile();if(f){e.preventDefault();if(film?.isDouble())film.loadSecond(f);else if(base)addLayer(f);else load(f)}});
+document.addEventListener('paste',e=>{const it=[...(e.clipboardData&&e.clipboardData.items||[])].find(i=>i.type.startsWith('image/'));const f=it&&it.getAsFile();if(f){e.preventDefault();if(film?.isDouble())film.loadSecond(f);else importLayerFiles([f])}});
 refreshLayers();
 
 const B4=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
@@ -1631,7 +1725,7 @@ function syncExp(){const o=$('exw').options;o[1].disabled=!active;o[2].disabled=
 function openExp(){if(!base)return;$('exw').value='all';$('exmsg').textContent='';$('exprev').hidden=true;syncExp();exp.hidden=false}
 function buildExport(){const wt=$('exw').value,fmt=$('exf').value;let src,sx=0,sy=0,sw=W,sh=H,cut=false;
   if(wt==='print')return buildPrint(exportScale(2*W,2*H),fmt);
-  if(wt==='layer'&&active){const l=active;sw=Math.round(l.cv.width*(1-l.cl-l.cr));sh=Math.round(l.cv.height*(1-l.ct-l.cb));src=document.createElement('canvas');src.width=sw;src.height=sh;const g=src.getContext('2d');if(l.fl){g.translate(sw,0);g.scale(-1,1)}g.drawImage(l.cv,Math.round(l.cl*l.cv.width),Math.round(l.ct*l.cv.height),sw,sh,0,0,sw,sh)}
+  if(wt==='layer'&&active){const l=active;sw=Math.round(l.cv.width*(1-l.cl-l.cr));sh=Math.round(l.cv.height*(1-l.ct-l.cb));src=document.createElement('canvas');src.width=sw;src.height=sh;const g=src.getContext('2d');g.globalAlpha=l.op;if(l.fl){g.translate(sw,0);g.scale(-1,1)}g.drawImage(visibleLayer(l).cv,Math.round(l.cl*l.cv.width),Math.round(l.ct*l.cv.height),sw,sh,0,0,sw,sh)}
   else{render(false);src=document.createElement('canvas');src.width=W;src.height=H;src.getContext('2d').drawImage(c,0,0);draw();
     if(wt==='sel'&&sel){const bb=selBox();if(bb){[sx,sy,sw,sh]=bb;cut=true}}}
   const sc=exportScale(sw,sh),out=document.createElement('canvas');out.width=Math.max(1,Math.round(sw*sc));out.height=Math.max(1,Math.round(sh*sc));const g=out.getContext('2d');g.imageSmoothingQuality='high';
@@ -1726,7 +1820,7 @@ for(const id of [...Object.keys(textControls),'tsz','tcol','tls','tlh','txt']){
 }
 $('tx-reset').onclick=()=>retext({sx:100,sy:100});
 const syncTx=t=>{
-  syncLettering(t);textPathUI(t);const tx={...TEXT_DEFAULTS,...t};
+  syncLettering(t);textPathUI(t);$('text-blend').value=active.bm;$('text-blend').disabled=$('fill-import').disabled=!!active.lk;const tx={...TEXT_DEFAULTS,...t};
   for(const [id,property] of Object.entries(textControls)){
     const input=$(id);input.disabled=!!active?.lk;
     if(input.type==='checkbox')input.checked=tx[property];else input.value=tx[property];
@@ -2227,9 +2321,12 @@ const waterEffect=i=>OVK[i][4]==='Water'||OVK[i][1]==='caustics';
 /* Highlight detection is cached per source photo. Colour and lens edits reuse the same peaks. */
 const glintBase={
   mode:'cross',glow:'halation',colour:'prism',kelvin:5200,cut:87,count:5,length:22,angle:-3,
-  amount:92,radius:4,gain:55,trail:17,direction:12,placement:'auto',a:'#fff1c6',b:'#ff9766'
+  width:66,fringe:35,coreSize:80,amount:92,radius:4,gain:55,trail:17,direction:12,placement:'auto',a:'#fff1c6',b:'#ff9766'
 };
 const glintLooks={
+  sunstar:{mode:'ten',angle:-12,width:39,length:18,glow:'halation',colour:'source',kelvin:4800,cut:94,coreSize:66},
+  jewelry:{mode:'eight',angle:26,width:48,length:10,count:15,glow:'bloom',radius:2,kelvin:7000,fringe:74},
+  glass:{mode:'cross',angle:4,width:34,length:27,coreSize:56,glow:'bloom',colour:'source',gain:24},
   chrome:{},filter:{mode:'six',angle:16,length:15,glow:'bloom',colour:'white',kelvin:6100},
   cinema:{mode:'streak',angle:0,length:33,colour:'custom',a:'#76baff',b:'#6b9dff',glow:'bloom',radius:5,kelvin:7600},
   prism:{mode:'eight',length:18,colour:'prism',angle:11,kelvin:6500,glow:'bloom'},
@@ -2268,12 +2365,19 @@ function analyseGlints(source){
       // Favor a coherent bright reflection over isolated noise or a flat white field.
       const local=Math.max(0,v-mean(integral,x,y,step)),wide=Math.max(0,v-mean(integral,x,y,step*5));
       const support=mean(brightArea,x,y,3);
-      const score=(.18*local+.95*wide)*v**4*(.35+1.5*support);
+      // A specular point falls off on both sides. A long bright boundary has little falloff along its tangent.
+      const span=Math.min(step,5),xl=Math.max(0,x-span),xr=Math.min(w-1,x+span),yt=Math.max(0,y-span),yb=Math.min(h-1,y+span);
+      const across=Math.max(0,v-(light[y*w+xl]+light[y*w+xr])/2),along=Math.max(0,v-(light[yt*w+x]+light[yb*w+x])/2);
+      const score=(.18*local+.95*wide)*v**4*(.35+1.5*support)*(.7+1.8*Math.min(across,along));
       if(score>bestScore){bestScore=score;best=j}
     }
     if(best<0||bestScore<.008)continue;
-    const i=best*4;
-    peaks.push({x:(best%w+.5)/w,y:(Math.floor(best/w)+.5)/h,value:light[best],score:bestScore,rgb:[pixels[i],pixels[i+1],pixels[i+2]]});
+    const i=best*4,bx=best%w,by=Math.floor(best/w),floor=light[best]-.05;
+    let energy=0,cx=0,cy=0;
+    for(let yy=Math.max(0,by-2);yy<=Math.min(h-1,by+2);yy++)for(let xx=Math.max(0,bx-2);xx<=Math.min(w-1,bx+2);xx++){
+      const e=Math.max(0,light[yy*w+xx]-floor);energy+=e;cx+=(xx+.5)*e;cy+=(yy+.5)*e;
+    }
+    peaks.push({x:cx/(energy*w),y:cy/(energy*h),value:light[best],score:bestScore,rgb:[pixels[i],pixels[i+1],pixels[i+2]]});
   }
   const result={peaks:peaks.sort((a,b)=>b.score-a.score),pixels,w,h};
   glintAnalysis.set(source,result);return result;
@@ -2351,19 +2455,24 @@ function drawGlintField(g,w,h,settings,source){
     }
     if(s.mode!=='soft'){
       g.rotate(s.angle*Math.PI/180);
-      const rays=s.mode==='six'?6:s.mode==='eight'?8:4,thickness=Math.max(.46,unit*(.24+.34*weight));
+      const rays=({six:6,eight:8,ten:10})[s.mode]||4;
+      const thickness=Math.max(.22,unit*(.24+.34*weight)*s.width/100);
       for(let j=0;j<rays;j++){
         g.save();g.rotate(j*Math.PI*2/rays);
         const len=ray*(s.mode==='streak'?(j%2?.085:1.3):s.mode==='eight'&&j%2?.53:j%2?.89:1);
-        if(s.colour==='prism'){
-          g.save();g.rotate(.012);glintRay(g,len*1.07,thickness*.68,'#ff8272',energy*.65);
-          g.rotate(-.025);glintRay(g,len*.95,thickness*.68,'#78beff',energy*.77);g.restore();
+        if(s.colour==='prism'&&s.fringe){
+          const split=.00048*s.fringe;g.save();g.rotate(split);glintRay(g,len*1.07,thickness*.68,'#ff8272',energy*.65);
+          g.rotate(-2*split);glintRay(g,len*.95,thickness*.68,'#78beff',energy*.77);g.restore();
         }
-        glintRay(g,len,thickness*2.3,light,energy*.42);
+        // A faint diffraction skirt blends the bright axial spike into the surrounding reflection.
+        glintHalo(g,0,0,len*.58,thickness*2.8,light,energy*.17*weight);
+        glintRay(g,len,thickness*2.3,light,energy*.35*weight);
         glintRay(g,len,thickness*.77,core,energy);g.restore();
       }
-      glintHalo(g,0,0,unit*.98*weight+.6,unit*.98*weight+.6,core,energy);
     }
+    const coreRadius=(.6+unit*.85*weight)*s.coreSize/100;
+    glintHalo(g,0,0,coreRadius*2.3,coreRadius*2.3,light,energy*.42*weight);
+    glintHalo(g,0,0,coreRadius,coreRadius,core,energy*weight);
     g.restore();
   }
   g.restore();
@@ -2811,12 +2920,12 @@ function overlayPixels(settings,w,h,source){
   const cv=ovGen(settings,w,h,source);
   return {cv,d:cv.getContext('2d').getImageData(0,0,w,h)};
 }
-function addOv(i,changes={}){
+function addOv(i,changes={},record=true){
   if(!base)return;
   const [name,,bm,op]=OVK[i],overlay={...overlayDefaults(i),...changes};
   const overlayPhoto=usesPhoto(i)?overlaySourceCanvas():null;
   const l={...overlayPixels(overlay,W,H,overlayPhoto),overlay,overlayPhoto,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:1,r:0,op,bm,fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name};
-  pushU(mkSnap('p'));layers.push(l);active=l;refreshLayers();draw();
+  if(record)pushU(mkSnap('p'));layers.push(l);active=l;refreshLayers();draw();
 }
 const overlayControls={ova:'a',ovb:'b',ovn:'amount','ov-angle':'angle'};
 const borderControls={'border-style':'style','border-width':'width','border-radius':'radius','border-inset':'inset','border-gap':'gap','border-bottom':'bottom','mat-top':'matTop','mat-right':'matRight','mat-bottom':'matBottom','mat-left':'matLeft'};
@@ -2978,6 +3087,7 @@ $('ov-search').oninput=showOverlays;$('ov-category').onchange=showOverlays;
 $('ovg').onclick=e=>{const b=e.target.closest('button');if(b)addOv(+b.dataset.i)};
 
 const glintFields={
+  'glint-width':['width','%'],'glint-fringe':['fringe','%'],'glint-core':['coreSize','%'],
   'glint-mode':['mode'],'glint-glow':['glow'],'glint-colour-mode':['colour'],'glint-placement':['placement'],
   'glint-ink':['a'],'glint-halo':['b'],'glint-temp':['kelvin',' K'],'glint-power':['amount','%'],
   'glint-cut':['cut','%'],'glint-count':['count',''],'glint-length':['length','%'],'glint-angle':['angle','°'],
@@ -3000,6 +3110,8 @@ function syncGlintTool(){
     const input=$(id);input.value=s[key];input.disabled=blocked;
     if(unit!==undefined)input.nextElementSibling.textContent=s[key]+unit;
   }
+  const opacity=$('glint-opacity');opacity.disabled=!l||blocked;opacity.value=Math.round(100*(l?.op??OVK[glintIndex][3]));
+  opacity.nextElementSibling.value=opacity.value+'%';$('glint-fringe').disabled=blocked||s.colour!=='prism';
   $('glint-detect').hidden=s.placement==='manual';
   $('glint-clear-row').hidden=s.placement==='auto';$('glint-clear').disabled=blocked||!s.points?.length;
   $('glint-rays').hidden=s.mode==='soft';
@@ -3048,6 +3160,13 @@ $('glint-look').onchange=e=>{
   const l=editableGlint();changeGlints({...glintBase,...look,placement:l?.overlay.placement||'auto'});
 };
 $('glint-clear').onclick=()=>changeGlints({points:[]});
+const glintOpacity=$('glint-opacity');let opacityGesture=null;
+glintOpacity.oninput=()=>{
+ const l=editableGlint();if(!l||l.lk||!l.vis||l.op===+glintOpacity.value/100)return;
+ if(opacityGesture!==l)pushU(mkSnap('p'));opacityGesture=l;l.op=+glintOpacity.value/100;refreshLayers();draw();
+};
+glintOpacity.onchange=()=>{glintOpacity.oninput();opacityGesture=null};
+glintOpacity.onblur=glintOpacity.onpointercancel=()=>{opacityGesture=null};
 $('glint-reset').onclick=()=>changeGlints({...glintBase,points:[]});
 $('edit-glints').onclick=()=>document.querySelector('.tabs [data-t=glints]').click();
 for(const [id,[key]] of Object.entries(glintFields)){
@@ -3155,8 +3274,191 @@ const extra=[
 ];
 FL.push(...extraFilters);
 PR.push(...extra.map(([name,filter,adj,grain,glow])=>[name,'Cinematic',filter,adj,grain,glow]));
+// The master curve is sampled at black, quarter tone, middle grey, three-quarter tone and white.
+const cinemaPrints=[
+ {name:'Rain on Asphalt',filter:18,a:{exp:-.18,sat:-18,hi:-20},grain:18,glow:12,curve:[3,47,122,204,251],shadows:[204,22],highlights:[38,12]},
+ {name:'Porcelain Morning',filter:0,a:{exp:.18,con:-6,sh:12,hi:-26},grain:8,glow:11,curve:[12,71,139,203,246],shadows:[221,8],highlights:[40,13]},
+ {name:'Copper Canyon',filter:17,a:{tmp:8,vib:12,hi:-18},grain:24,glow:4,curve:[4,55,139,207,249],shadows:[184,12],highlights:[26,27]},
+ {name:'Fluorescent Corridor',filter:6,a:{sat:-24,tint:-7,exp:-.12},grain:14,glow:6,curve:[5,50,121,191,238],shadows:[154,18],highlights:[77,12]},
+ {name:'Blue Velvet Dusk',filter:5,a:{tmp:-13,hi:-24,vib:12},grain:16,glow:19,curve:[9,52,120,189,245],shadows:[248,24],highlights:[320,14]},
+ {name:'Archive Silver',filter:10,a:{con:4,sh:9,hi:-14},grain:39,glow:5,curve:[12,65,133,203,241],shadows:[218,5],highlights:[41,6]},
+ {name:'Late Summer Drive',filter:3,a:{tmp:9,sat:-7,hi:-18},grain:23,glow:8,curve:[14,72,139,204,246],shadows:[169,9],highlights:[49,20]},
+ {name:'Arctic Searchlight',filter:16,a:{con:7,tmp:-16,hi:-29,sh:-5},grain:11,glow:16,curve:[2,48,128,205,248],shadows:[218,23],highlights:[183,12]},
+ {name:'Backstage Tungsten',filter:14,a:{hi:-28,tmp:12,sat:-7,vig:14},grain:28,glow:24,curve:[6,46,125,199,244],shadows:[280,11],highlights:[31,25]},
+ {name:'Silent Matinee',filter:9,a:{sh:14,hi:-23},grain:30,glow:9,curve:[2,49,134,217,250],shadows:[0,0],highlights:[0,0]},
+ {name:'Dusty Projector',filter:11,a:{sat:-22,fade:7,con:-6},grain:46,glow:17,curve:[20,72,136,198,235],shadows:[22,9],highlights:[48,17]},
+ {name:'Magenta Motel',filter:15,a:{tmp:-6,vib:16,con:6,hi:-19},grain:20,glow:22,curve:[7,54,124,202,250],shadows:[191,19],highlights:[329,23]}
+];
+for(const print of cinemaPrints)PR.push([print.name,'Cinematic',print.filter,print.a,print.grain,print.glow,null,print]);
+
 const blendModes=['screen','multiply','overlay','soft-light','hard-light','lighter','lighten','darken','difference','exclusion'];
-const defaults=()=>({a:Object.fromEntries(ADJ.map(([key])=>[key,0])),f:{i:0,m:100},n:{amt:0,size:30,col:0,seed:1},g:{amt:0,spr:50,thr:60,src:0},d:{on:0,mode:0,bl:0,op:80,fit:0,sc:100,rot:0,fx:0,fy:0,ox:0,oy:0,thr:50,soft:30,light:0,keep:0,bri:0,con:0,sat:0,fade:0,bw:0,inv:0,cl:0,cr:0,ct:0,cb:0},id:-1,k:100});
+// Creative interpretations of still and motion-picture emulsions. Each curve maps five evenly spaced input tones.
+const stockPrints=[
+ {name:'Kodak Portra 160',filter:0,a:{sat:-7,hi:-11,tmp:3},curve:[3,66,133,197,250],shadows:[205,3],highlights:[35,5],grain:8,size:12,col:4,glow:0},
+ {name:'Kodak Portra 400',filter:0,a:{sh:6,hi:-16,vib:6,tmp:5},curve:[5,67,138,202,248],shadows:[178,5],highlights:[32,8],grain:16,size:23,col:7,glow:2},
+ {name:'Kodak Portra 800',filter:2,a:{sh:9,hi:-20,tint:3,vib:9},curve:[8,65,135,201,244],shadows:[229,7],highlights:[29,10],grain:26,size:39,col:12,glow:4},
+ {name:'Kodak Ektar 100',filter:0,a:{con:8,sat:15,vib:12},curve:[1,52,130,209,253],shadows:[202,5],highlights:[23,7],grain:6,size:9,col:4,glow:0},
+ {name:'Kodak Ektachrome E100',filter:0,a:{con:7,sh:-4,hi:2,vib:7,tmp:-3},curve:[1,51,126,207,251],shadows:[226,6],highlights:[48,3],grain:9,size:13,col:5,glow:0},
+ {name:'Kodak VISION3 50D',filter:0,a:{con:4,hi:-12,vib:8},curve:[2,61,131,200,249],shadows:[203,5],highlights:[43,6],grain:5,size:8,col:3,glow:1},
+ {name:'Kodak VISION3 250D',filter:0,a:{sh:7,hi:-19,sat:2},curve:[5,65,132,198,246],shadows:[185,9],highlights:[40,9],grain:14,size:21,col:7,glow:3},
+ {name:'Kodak VISION3 200T',filter:0,a:{tmp:-5,tint:3,hi:-16,con:3},curve:[4,58,129,199,247],shadows:[221,10],highlights:[32,8],grain:13,size:18,col:6,glow:4},
+ {name:'Kodak VISION3 500T',filter:14,a:{tmp:-5,sh:11,hi:-24,sat:-4},curve:[6,58,125,190,240],shadows:[209,12],highlights:[30,10],grain:23,size:32,col:9,glow:8},
+ {name:'Kodak Tri-X 400',filter:8,a:{con:6,hi:-6},curve:[2,51,127,207,250],shadows:[0,0],highlights:[0,0],grain:33,size:44,col:0,glow:0},
+ {name:'Kodak T-Max 100',filter:8,a:{con:2},curve:[0,58,131,201,254],shadows:[0,0],highlights:[0,0],grain:5,size:8,col:0,glow:0},
+ {name:'Kodak T-Max 400',filter:8,a:{sh:4,hi:-8},curve:[2,57,128,201,251],shadows:[0,0],highlights:[0,0],grain:13,size:18,col:0,glow:0},
+ {name:'Ilford Pan F Plus 50',filter:8,a:{con:9},curve:[0,48,128,213,254],shadows:[0,0],highlights:[0,0],grain:6,size:10,col:0,glow:0},
+ {name:'Ilford FP4 Plus 125',filter:8,a:{hi:-5,sh:3},curve:[3,62,132,202,251],shadows:[0,0],highlights:[0,0],grain:12,size:20,col:0,glow:0},
+ {name:'Ilford HP5 Plus 400',filter:8,a:{con:-3,sh:8,hi:-11},curve:[5,64,130,199,247],shadows:[0,0],highlights:[0,0],grain:27,size:36,col:0,glow:0},
+ {name:'Ilford Delta 3200',filter:8,a:{con:-8,sh:14,hi:-14},curve:[9,66,129,192,240],shadows:[0,0],highlights:[0,0],grain:49,size:58,col:0,glow:2}
+];
+for(const stock of stockPrints)PR.push([stock.name,'Film stocks',stock.filter,stock.a,stock.grain,stock.glow,null,stock]);
+function locatePortraitFace(im,d){
+ // Midtones within the silhouette favour the lit cheek over hair and the backdrop.
+ if(!im)return;
+ let total=0,sx=0,sy=0;
+ for(let row=0;row<20;row++)for(let col=0;col<32;col++){
+  const u=.12+(col+.5)*.76/32,v=.28+(row+.5)*.36/20;
+  const i=4*(Math.floor(v*im.height)*im.width+Math.floor(u*im.width)),p=im.data;
+  const lum=(.2126*p[i]+.7152*p[i+1]+.0722*p[i+2])/255;
+  const weight=smooth(.10,.64,lum)*(1-smooth(.70,d.thr/100,lum))*p[i+3]/255;
+  total+=weight;sx+=u*weight;sy+=v*weight;
+ }
+ if(total>8){d.faceX=Math.round(100*sx/total);d.faceY=Math.round(100*sy/total)}
+}
+function subjectWeight(p,i,luma,d){
+ if(d.matte===2)return 1;
+ const feather=Math.max(.01,d.soft/110);
+ if(d.matte===3){
+  const delta=Math.hypot(p[i]-d.keyR,p[i+1]-d.keyG,p[i+2]-d.keyB)/(255*Math.sqrt(3));
+  return smooth(d.tolerance/100,d.tolerance/100+feather,delta);
+ }
+ const cutoff=d.thr/100;
+ return 1-smooth(cutoff-.75*feather,cutoff+.25*feather,d.matte===1?1-luma:luma);
+}
+function showSubjectMask(){
+ if(section!=='double'||!second||state.d.mode!==2)return false;
+ const sampling=$('film-sample-bg')?.getAttribute('aria-pressed')==='true';
+ if(!sampling&&!previewSubject)return false;
+ const source=$('lgrade').checked&&layers.length?flat():base;
+ if(sampling){ctx.putImageData(source,0,0);return true}
+ const saved=state.d.matte===4?maskPixels(state.d.savedId,W,H):null;
+ const src=source.data,mask=new ImageData(W,H),pixels=mask.data;
+ for(let i=0;i<src.length;i+=4){
+  const lum=(.2126*src[i]+.7152*src[i+1]+.0722*src[i+2])/255;
+  pixels[i]=pixels[i+1]=pixels[i+2]=src[i+3]*(state.d.matte===4?(saved?.[i/4]||0)/255:subjectWeight(src,i,lum,state.d));pixels[i+3]=255;
+ }
+ ctx.putImageData(mask,0,0);return true;
+}
+function portraitExposure(im,texture,d,placement){
+ const w=im.width,h=im.height,out=new ImageData(new Uint8ClampedArray(im.data),w,h),dst=out.data,src=im.data,tex=texture.data;
+ const mono=d.style===0,amount=d.op/100;
+ const pw=placement?.w||w,ph=placement?.h||h,inv=placement?.m.inverse();
+ const ax=(inv?.a??1)/pw,bx=(inv?.c??0)/pw,tx=(inv?.e??0)/pw;
+ const ay=(inv?.b??0)/ph,by=(inv?.d??1)/ph,ty=(inv?.f??0)/ph;
+ const radius=Math.max(.01,d.faceRadius/100),rx=radius*Math.min(pw,ph)/pw,ry=radius*1.25*Math.min(pw,ph)/ph;
+ const saved=d.matte===4?maskPixels(d.savedId,w,h):null;
+ const paper=mono?[218,219,212]:[242,246,246],ink=mono?[12,21,24]:[30,45,43];
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const i=4*(y*w+x);if(!src[i+3])continue;
+  const l=(.2126*src[i]+.7152*src[i+1]+.0722*src[i+2])/255;
+  const mask=d.matte===4?(saved?.[i/4]||0)/255:subjectWeight(src,i,l,d);
+  const u=ax*x+bx*y+tx,v=ay*x+by*y+ty;
+  const dx=(u-d.faceX/100)/rx,dy=(v-d.faceY/100)/ry,protect=(1-smooth(.15,1,dx*dx+dy*dy))*d.keep/100;
+  const lum=.2126*tex[i]+.7152*tex[i+1]+.0722*tex[i+2];
+  const landscape=smooth(.026,.96,lum/255),opacity=tex[i+3]/255;
+  const fill=opacity*(1-protect)*(.95-.22*l);
+  const foot=d.foreground/100*smooth(.68,1,v)*(1-mask)*opacity*(1-landscape);
+  for(let k=0;k<3;k++){
+   const baseColour=mono?ink[k]+(paper[k]-ink[k])*l:.82*src[i+k]+.18*l*255;
+   const tone=landscape*(.88+.12*l);
+   const secondColour=mono?ink[k]+tone*(paper[k]-ink[k]):Math.max(0,Math.min(255,255*tone+.80*(tex[i+k]-lum)));
+   const inside=baseColour+(secondColour-baseColour)*fill;
+   const surround=d.originalBg?src[i+k]:paper[k];
+   const print=surround+(inside-surround)*mask;
+   dst[i+k]=src[i+k]+amount*(print+(secondColour-print)*foot-src[i+k]);
+  }
+ }
+ return out;
+}
+
+function grainForRecipe(id){
+ const p=PR[id],stock=p[1]==='Film stocks'?p[7]:null;
+ return {amt:p[4],size:stock?.size??30,col:stock?.col??0,seed:1,...(stock?{organic:true}:{})};
+}
+
+
+const detailFields=[
+ ['clarity','Clarity',-100,100,1,0],['haze','Dehaze',-100,100,1,0],
+ ['denoise','Edge-aware smoothing',0,100,1,0],['fringe','Purple / green defringe',0,100,1,0],
+ ['sharp','Sharpen amount',0,150,1,0],['radius','Sharpen radius (px)',.5,5,.25,1],['threshold','Sharpen threshold',0,32,1,3]
+];
+const defaultDetail=()=>Object.fromEntries(detailFields.map(([key,,,,,value])=>[key,value]));
+const hasDetail=d=>!!d&&(d.clarity||d.haze||d.denoise||d.fringe||d.sharp);
+function validDetail(d){
+ return d&&detailFields.every(([key,,min,max])=>Number.isFinite(d[key])&&d[key]>=min&&d[key]<=max);
+}
+const lumaByte=(p,i)=>.2126*p[i]+.7152*p[i+1]+.0722*p[i+2];
+function blurredLuma(im,radius){
+ // Blur premultiplied colours so transparent pixels do not contribute dark outlines.
+ const cv=bc(im.width,im.height),g=cv.getContext('2d',{willReadFrequently:true});g.filter='blur('+radius+'px)';g.drawImage(asCanvas(im),0,0);
+ const rgba=read(cv).data,out=new Uint8Array(im.width*im.height);
+ for(let j=0;j<out.length;j++)out[j]=Math.round(lumaByte(rgba,4*j));
+ return out;
+}
+function smoothPhoto(im,amount){
+ const d=im.data,src=new Uint8ClampedArray(d),w=im.width,h=im.height,t=amount/100,range=8+24*t;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const i=4*(y*w+x);if(!src[i+3])continue;
+  let r=src[i],g=src[i+1],b=src[i+2],weight=1;
+  for(let yy=Math.max(0,y-1);yy<=Math.min(h-1,y+1);yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(w-1,x+1);xx++){
+   const q=4*(yy*w+xx);if(q===i||!src[q+3])continue;
+   const diff=Math.max(Math.abs(src[q]-src[i]),Math.abs(src[q+1]-src[i+1]),Math.abs(src[q+2]-src[i+2]))/range;
+   const squared=diff*diff,k=src[q+3]/(255*(1+squared*squared));r+=src[q]*k;g+=src[q+1]*k;b+=src[q+2]*k;weight+=k;
+  }
+  d[i]+=(r/weight-d[i])*t;d[i+1]+=(g/weight-d[i+1])*t;d[i+2]+=(b/weight-d[i+2])*t;
+ }
+}
+function developDetail(im,detail){
+ if(!hasDetail(detail))return;
+ if(detail.denoise)smoothPhoto(im,detail.denoise);
+ if(!(detail.clarity||detail.sharp||detail.haze||detail.fringe))return;
+ const p=im.data,w=im.width,h=im.height;
+ const broad=detail.clarity||detail.haze?blurredLuma(im,Math.max(2,Math.min(w,h)*.012)):null;
+ const fine=detail.sharp?blurredLuma(im,detail.radius):null;
+ const edge=detail.fringe?new Uint8Array(w*h):null;
+ if(edge)for(let j=0;j<edge.length;j++)edge[j]=Math.round(lumaByte(p,4*j));
+ for(let j=0;j<w*h;j++){
+  const i=4*j;if(!p[i+3])continue;
+  const l=lumaByte(p,i);let delta=0;
+  if(broad){
+   const midtone=1-Math.abs(2*l/255-1)**2;
+   delta+=(l-broad[j])*detail.clarity*.017*midtone;
+   // Remove a bounded amount of the pale veil in bright, low-contrast regions.
+   const veil=Math.min(p[i],p[i+1],p[i+2],broad[j])/255;
+   const transmission=1-detail.haze*.0042*veil;
+   delta+=(l-235)*(1/transmission-1);
+  }
+  if(fine){const high=l-fine[j];delta+=Math.sign(high)*Math.max(0,Math.abs(high)-detail.threshold)*detail.sharp*.018}
+  let neutral=0;
+  if(edge){
+   const x=j%w,y=Math.floor(j/w),lo=edge[x?j-1:j],hi=edge[x<w-1?j+1:j],up=edge[y?j-w:j],dn=edge[y<h-1?j+w:j];
+   const contrast=Math.max(Math.abs(hi-lo),Math.abs(dn-up),Math.abs(l-lo),Math.abs(l-up));
+   const purple=Math.min(p[i],p[i+2])-p[i+1],green=p[i+1]-Math.max(p[i],p[i+2]);
+   neutral=detail.fringe*.01*smooth(7,48,contrast)*smooth(9,64,Math.max(purple,green));
+  }
+  for(let ch=0;ch<3;ch++)p[i+ch]+=delta+(l-p[i+ch])*neutral;
+ }
+}
+function balancePixels(im,gains){
+ if(!gains)return;
+ const tables=gains.map(g=>Uint8ClampedArray.from({length:256},(_,i)=>255*toSRGB(Math.min(1,toLinear(i/255)*g))));
+ const p=im.data;for(let i=0;i<p.length;i+=4)if(p[i+3]){p[i]=tables[0][p[i]];p[i+1]=tables[1][p[i+1]];p[i+2]=tables[2][p[i+2]]}
+}
+
+const portraitDefaults={savedId:0,originalBg:0,keyR:255,keyG:255,keyB:255,tolerance:12,style:0,matte:0,faceX:50,faceY:46,faceRadius:26,foreground:40};
+const defaults=()=>({detail:defaultDetail(),wb:null,a:Object.fromEntries(ADJ.map(([key])=>[key,0])),f:{i:0,m:100},n:{amt:0,size:30,col:0,seed:1},g:{amt:0,spr:50,thr:60,src:0},d:{...portraitDefaults,on:0,mode:0,bl:0,op:80,fit:0,sc:100,rot:0,fx:0,fy:0,ox:0,oy:0,thr:50,soft:30,light:0,keep:0,bri:0,con:0,sat:0,fade:0,bw:0,inv:0,cl:0,cr:0,ct:0,cb:0},id:-1,k:100});
+let previewSubject=false;
+const exposurePanels=new Set();
 let anchor=null,layoutOrigin=null,paper=null,keepLayout=true,restoreOnOpen=false;
 let state=defaults(),second=null,cached=null,secondRequest=0,gesture=null;
 const clamp=v=>Math.max(0,Math.min(1,v));
@@ -3168,8 +3470,15 @@ const setPref=(key,value)=>{try{localStorage.setItem('totone:film:'+key,JSON.str
 function recipe(id,k,current=defaults()){
  const p=PR[id],next=defaults(),mix=k/100;
  for(const [q,value] of Object.entries(p[3]))next.a[q]=value*mix;
- next.f={i:p[2],m:k};next.n.amt=p[4]*mix;next.g.amt=p[5]*mix;
- next.d={...current.d};if(p[6])Object.assign(next.d,p[6],{op:p[6].op*mix,on:1});
+ next.f={i:p[2],m:k};next.n=grainForRecipe(id);next.n.amt*=mix;next.g.amt=p[5]*mix;
+ next.d={...next.d,...current.d};if(p[6])Object.assign(next.d,p[6],{op:p[6].op*mix,on:1});
+ if(p[7]){
+  const print=p[7],grade=neutralGrade();
+  grade.curves.master=[0,64,128,192,255].map((x,i)=>[x,Math.round(x+(print.curve[i]-x)*mix)]);
+  for(const zone of ['shadows','highlights']){const [hue,sat]=print[zone];grade.zones[zone]={hue,sat:sat*mix,lum:0}}
+  next.grading=grade;
+ }
+ next.detail={...current.detail};next.wb=current.wb?.slice()||null;
  next.id=id;next.k=k;return next;
 }
 const curveKeys=['master','red','green','blue'],zoneKeys=['shadows','midtones','highlights'];
@@ -3227,7 +3536,7 @@ function compileGrade(grade){
  return {curves,tints};
 }
 
-function enabled(s=state){return !!(usesGrade(s.grading)||(s.f.i&&s.f.m)||s.n.amt||s.g.amt||(s.d.on&&second&&s.d.op)||Object.values(s.a).some(Boolean))}
+function enabled(s=state){return !!(s.reference||hasDetail(s.detail)||s.wb||usesGrade(s.grading)||(s.f.i&&s.f.m)||s.n.amt||s.g.amt||(s.d.on&&second&&s.d.op)||Object.values(s.a).some(Boolean))}
 function composite(im,s,exposure,placement=null){
  const d=s.d,w=im.width,h=im.height,iw=exposure.width,ih=exposure.height;
  const left=iw*d.cl/100,top=ih*d.ct/100,sw=Math.max(1,Math.min(iw-left,iw*(1-(d.cl+d.cr)/100))),sh=Math.max(1,Math.min(ih-top,ih*(1-(d.ct+d.cb)/100)));
@@ -3248,8 +3557,9 @@ function composite(im,s,exposure,placement=null){
      if(d.inv)v=1-v;
      p[i+k]=255*(((v+d.bri*.003-.5)*(1+d.con/100)+.5)*(1-d.fade*.0025)+d.fade*.0012);
    }
-   p[i+3]*=mask*d.op/100;
+   if(d.mode!==2)p[i+3]*=mask*d.op/100;
  }
+ if(d.mode===2)return portraitExposure(im,projected,d,placement);
  g.putImageData(projected,0,0);
  const cv=asCanvas(im),out=cv.getContext('2d');out.globalCompositeOperation=blendModes[d.bl];out.drawImage(texture,0,0);
  const result=read(cv);if(!d.mode&&d.keep){
@@ -3262,10 +3572,19 @@ function composite(im,s,exposure,placement=null){
 function noise(x,y,seed){
  let h=Math.imul(x+seed*131,374761393)+Math.imul(y,668265263);h=Math.imul(h^(h>>>13),1274126177);return ((h^(h>>>16))>>>0)/4294967296-.5;
 }
+// Rotate and interpolate the coarse noise, then add a fine component to break up the lattice.
+function emulsionNoise(x,y,step,seed){
+ const u=(.92*x+.39*y)/step,v=(.92*y-.39*x)/step,gx=Math.floor(u),gy=Math.floor(v);
+ const fx=u-gx,fy=v-gy,top=noise(gx,gy,seed)*(1-fx)+noise(gx+1,gy,seed)*fx;
+ const bottom=noise(gx,gy+1,seed)*(1-fx)+noise(gx+1,gy+1,seed)*fx;
+ return (top+(bottom-top)*fy)*1.18+.24*noise(x,y,seed+103);
+}
 function develop(input,s,exposure,placement=null){
  const im=s.d.on&&s.d.op&&exposure?composite(input,s,exposure,placement):new ImageData(new Uint8ClampedArray(input.data),input.width,input.height);
+ balancePixels(im,s.wb);developDetail(im,s.detail);
  const {a,f,n,g}=s,fl=FL[f.i],p=im.data,w=im.width,h=im.height,ev=2**a.exp,ct=1+a.con/100,sat=1+a.sat/100,filterMix=f.i?f.m/100:0;
- const redBias=a.tmp*.001+a.tint*.0003,greenBias=-a.tint*.0006,blueBias=-a.tmp*.001+a.tint*.0003,grainStep=Math.max(1,Math.min(w,h)*(.0006+n.size*.00004));
+ const redBias=a.tmp*.001+a.tint*.0003,greenBias=-a.tint*.0006,blueBias=-a.tmp*.001+a.tint*.0003,grainStep=n.organic?
+   (.72+n.size*.043)*Math.max(1,Math.min(w,h)/1000):Math.max(1,Math.min(w,h)*(.0006+n.size*.00004));
  const creative=compileGrade(s.grading),mixer=s.grading?.on===false?null:compileMixer(s.grading?.bands),mixed=new Float32Array(3),masks=prepareMasks(s.grading,w,h);
  const doGrade=filterMix||Object.values(a).some(Boolean);
  if(doGrade||creative||n.amt)for(let y=0;y<h;y++)for(let x=0;x<w;x++){
@@ -3303,10 +3622,11 @@ function develop(input,s,exposure,placement=null){
      const j=3*Math.round(clamp(.2126*r+.7152*green+.0722*b)*255);r+=creative.tints[j];green+=creative.tints[j+1];b+=creative.tints[j+2];
     }
    }
-   if(n.amt){const gx=Math.floor(x/grainStep),gy=Math.floor(y/grainStep),strength=n.amt*.006*(1-.6*smooth(.35,.95,.2126*r+.7152*green+.0722*b)),v=noise(gx,gy,n.seed),color=n.col/100;
+   if(n.amt){const gx=Math.floor(x/grainStep),gy=Math.floor(y/grainStep),strength=n.amt*.006*(1-.6*smooth(.35,.95,.2126*r+.7152*green+.0722*b)),v=n.organic?emulsionNoise(x,y,grainStep,n.seed):noise(gx,gy,n.seed),color=n.col/100;
     r+=(v+(noise(gx,gy,n.seed+17)-v)*color)*strength;green+=v*strength;b+=(v+(noise(gx,gy,n.seed+43)-v)*color)*strength}
    p[i]=r*255;p[i+1]=green*255;p[i+2]=b*255;
  }
+ if(s.reference)matchReference(im,s.reference);
  if(!g.amt)return im;
  const cv=asCanvas(im),scale=Math.max(1,Math.min(w,h)/280),small=bc(Math.max(1,Math.round(w/scale)),Math.max(1,Math.round(h/scale))),sg=small.getContext('2d',{willReadFrequently:true});
  sg.drawImage(cv,0,0,small.width,small.height);const bright=read(small);
@@ -3336,7 +3656,10 @@ for(let wy=y+14;wy<990;wy+=22)for(let wx=px+8;wx<px+w-10;wx+=18)if(R()<(L?.28:.2
 for(let i=0;i<7;i++){const lx=120+i*230,ly=830+R()*30;x.fillStyle='#07080f';x.fillRect(lx-3,ly,6,170);g=x.createRadialGradient(lx,ly,0,lx,ly,70);g.addColorStop(0,'rgba(255,230,170,.9)');g.addColorStop(1,'rgba(255,200,120,0)');x.fillStyle=g;x.fillRect(lx-70,ly-70,140,140);x.fillStyle='#fff8e0';x.beginPath();x.arc(lx,ly,7,0,7);x.fill()}
 return c}
 
-let category='Cinematic',query='',section='presets',favorites=getPref('favorites',[]),recent=getPref('recent',[]),last=getPref('last',null);
+let category='All',query='',section='presets',favorites=getPref('favorites',[]),recent=getPref('recent',[]),last=getPref('last',null);
+// Projects saved with the two retired portrait recipes already contain their full settings.
+function migrateExposure(look){if(look?.d?.mode===2&&[80,81].includes(look.id))look.id=-1}
+migrateExposure(last);
 if(last&&(!last.a||!last.d||!last.g||!last.n||!FL[last.f?.i]||(last.id!==-1&&!PR[last.id])))last=null;
 if(!Array.isArray(favorites))favorites=[];if(!Array.isArray(recent))recent=[];
 const pane=$('film-controls'),view=$('film-section'),heading=text=>'<h3>'+esc(text)+'</h3>';
@@ -3344,11 +3667,19 @@ const button=(id,name)=>'<button type="button" id="film-'+id+'">'+esc(name)+'</b
 const bar=(...items)=>'<div class="bar">'+items.join('')+'</div>';
 function field(group,key,label,control){return '<label>'+esc(label)+' '+control.replace('FIELD','data-group="'+group+'" data-key="'+key+'" aria-label="'+esc(label)+'"')+'</label>'}
 function slider(group,key,label,min,max,step=1){
- const v=Number((group==='preset'?state.k:state[group][key]).toFixed(2));
+ const value=group==='preset'?state.k:group==='n'&&key==='amt'&&state.id>=0?(state.grainAmount??PR[state.id][4]):state[group][key];
+ const v=Number(value.toFixed(2));
  return field(group,key,label,'<input FIELD type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'"><output>'+v+'</output>');
 }
 function select(group,key,label,options){return field(group,key,label,'<select FIELD>'+options.map((n,i)=>'<option value="'+i+'" '+(i===state[group][key]?'selected':'')+'>'+esc(n)+'</option>').join('')+'</select>')}
 function check(group,key,label){return field(group,key,label,'<input FIELD type="checkbox" '+(state[group][key]?'checked':'')+'>')}
+function grainControls(){
+ return slider('n','amt','Grain amount',0,100)+slider('n','size','Grain size',0,100)+slider('n','col','Grain colour',0,100);
+}
+function presetStrength(value){
+ const amount=state.grainAmount??PR[state.id][4],next=recipe(state.id,value,state);
+ next.n={...state.n,amt:amount*value/100};next.grainAmount=amount;return next;
+}
 function snapshot(withTone=false){
  const prior=structuredClone(state),photo=second,location=anchor,tone=withTone?toneSnapshot():null;
  return ()=>{const redo=snapshot(withTone);if(tone)tone();state=prior;second=photo;anchor=location;thumbs.clear();changed(true);return redo};
@@ -3383,7 +3714,7 @@ function previews(){
   if(job!==thumbJob||tab!=='film')return;
   for(let count=0;cards.length&&count<4;count++){const img=cards.shift(),id=+img.dataset.preview;
    if(!thumbs.has(id)){
-    const st=id<0?defaults():recipe(id,100);if(id<0)st.f.i=-id-1;
+    const st=id<0?defaults():recipe(id,100,state);if(id<0){st.f.i=-id-1;st.detail=state.detail;st.wb=state.wb}
     const source=id>=0&&PR[id][6]?previewExposure():null;thumbs.set(id,asCanvas(develop(im,st,source)).toDataURL());
    }
    img.src=thumbs.get(id);
@@ -3394,41 +3725,91 @@ let sampleExposure=null;
 function previewExposure(){return second||(sampleExposure??=expSample(0))}
 function list(){
  const target=$('film-list');if(!target)return;
+ if($('stock-note'))$('stock-note').hidden=category!=='Film stocks';
  const matches=ids();
  target.innerHTML=matches.map(i=>'<div class="film-card"><button class="p'+(state.id===i?' on':'')+'" data-recipe="'+i+'" aria-pressed="'+(state.id===i)+'">'+(base?'<img data-preview="'+i+'" width="60" height="36" alt="">':'')+esc(PR[i][0])+'</button><button data-favorite="'+i+'" aria-label="Favourite '+esc(PR[i][0])+'" aria-pressed="'+favorites.includes(PR[i][0])+'">'+(favorites.includes(PR[i][0])?'★':'☆')+'</button></div>').join('')||'<p class="note">No matching looks.</p>';previews();
 }
+function exposurePanel(name,content){
+ return '<details data-exposure-panel="'+name+'" '+(exposurePanels.has(name)?'open':'')+'><summary>'+name+'</summary>'+content+'</details>';
+}
+function exposureSubject(d){
+ const sampled=[d.keyR,d.keyG,d.keyB].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
+ return select('d','matte','Subject mask',['Light background','Dark background','Transparency','Sampled colour',...(maskBank.length?['Saved mask']:[])])+
+  (d.matte===4?'<label>Saved mask <select data-group="d" data-key="savedId">'+maskBank.map(m=>'<option value="'+m.id+'" '+(m.id===d.savedId?'selected':'')+'>'+esc(m.name)+'</option>').join('')+'</select></label>':'')+
+  (d.matte===3?bar(button('sample-bg','Sample background on canvas'),'<span aria-label="Sampled colour #'+sampled+'" title="#'+sampled+'" style="display:inline-block;width:1.4em;height:1.4em;border:1px solid currentColor;background:#'+sampled+'"></span>')+
+   '<p class="note" role="status" id="sample-bg-help"></p>'+slider('d','tolerance','Colour tolerance',0,100):'')+
+  (d.matte<2?slider('d','thr','Subject cutoff',0,100):'')+(d.matte!==2?slider('d','soft','Edge softness',0,100):'')+
+  '<label>Preview subject mask <input type="checkbox" id="exposure-mask" '+(previewSubject?'checked':'')+'></label>'+
+  (previewSubject?'<p class="note">White receives the second photo. Black protects the background.</p>':'')+
+  select('d','style','Colour treatment',['Monochrome','Colour'])+
+  (d.matte!==2?check('d','originalBg','Keep original background')+slider('d','foreground','Blend into lower background',0,100):'')+
+  exposurePanel('Protect detail',slider('d','keep','Keep subject detail',0,100)+bar(button('portrait-focus','Place protected area'))+
+   '<p class="note" role="status" id="portrait-focus-help">Place the protected area over a detail such as an eye or a sign.</p>'+
+   slider('d','faceRadius','Protected area size',5,60)+slider('d','faceX','Protected area X',0,100)+slider('d','faceY','Protected area Y',0,100));
+}
 function build(){
+ if(suiteReady){refreshLooks($('look-list').value);syncReference()}
  if(tab==='grade')syncGrade();
- $('film-sample').hidden=!!base;view.value=section;const showPreset=state.id>=0?slider('preset','k','Preset strength',0,100):'';
+ $('film-sample').hidden=!!base||section==='double';view.value=section;const showPreset=state.id>=0?slider('preset','k','Preset strength',0,100)+grainControls()+
+   bar(button('reset-grain','Restore preset grain'))+'<p class="note">Preset strength scales the look and its grain together.</p>':'';
  if(section==='presets'){
- const cats=['Cinematic','All','Favourites','Recent',...new Set(PR.map(p=>p[1]).filter(n=>n!=='Cinematic'))];
- pane.innerHTML='<label>Collection <select id="film-collection">'+cats.map(n=>'<option '+(category===n?'selected':'')+'>'+esc(n)+'</option>').join('')+'</select></label><input type="search" id="film-search" placeholder="Search looks" aria-label="Search film looks">'+bar(button('surprise','Surprise me'),button('restore','Restore last look'))+showPreset+'<label>Keep my crop and frame <input id="film-keep" type="checkbox" '+(keepLayout?'checked':'')+'></label><div id="film-list"></div>'; $('film-search').value=query;$('film-restore').disabled=!last;list();
+ const cats=['All','Cinematic','Film stocks','Favourites','Recent',...new Set(PR.map(p=>p[1]).filter(n=>!['Cinematic','Film stocks'].includes(n)))];
+ pane.innerHTML='<label>Collection <select id="film-collection">'+cats.map(n=>'<option '+(category===n?'selected':'')+'>'+esc(n)+'</option>').join('')+'</select></label><input type="search" id="film-search" placeholder="Search looks" aria-label="Search film looks">'+bar(button('surprise','Surprise me'),button('restore','Restore last look'))+showPreset+'<p class="note" id="stock-note" hidden>Original looks inspired by still and motion-picture film stocks.</p><label>Keep my crop and frame <input id="film-keep" type="checkbox" '+(keepLayout?'checked':'')+'></label><div id="film-list"></div>'; $('film-search').value=query;$('film-restore').disabled=!last;list();
  }else if(section==='grade'){
  pane.innerHTML=select('f','i','Color filter',FL.map(f=>f[0]))+(base?'<details id="film-filter-grid"><summary>Preview filters</summary>'+FL.map(([name],i)=>'<button class="film-filter" data-filter="'+i+'"><img data-preview="'+(-i-1)+'" width="60" height="36" alt="">'+esc(name)+'</button>').join('')+'</details>':'')+slider('f','m','Filter strength',0,100)+heading('Light and color')+ADJ.map(([k,n,min,max,step])=>slider('a',k,n,min,max,step)).join('')+bar(button('reset-grade','Reset light and color'));const grid=$('film-filter-grid');if(grid)grid.ontoggle=()=>{if(grid.open)previews()};
+ }else if(section==='detail'){
+  pane.innerHTML=heading('White balance')+bar(button('wb-pick','Sample neutral colour'),button('wb-clear','Reset white balance'))+
+   '<p class="note" id="wb-status" role="status"></p>'+heading('Photo detail')+detailFields.map(([k,label,min,max,step])=>slider('detail',k,label,min,max,step)).join('')+bar(button('detail-reset','Reset detail'));
+  $('film-wb-pick').disabled=!base;$('film-wb-pick').setAttribute('aria-pressed','false');$('film-wb-clear').disabled=!state.wb;
+  $('wb-status').textContent=state.wb?'White balance sampled from this photo.':'Sample a grey or white area to correct a colour cast.';
  }else if(section==='finish'){
- pane.innerHTML=heading('Film grain')+slider('n','amt','Grain amount',0,100)+slider('n','size','Grain size',0,100)+slider('n','col','Grain color',0,100)+bar(button('seed','Randomise grain'))+heading('Lens diffusion')+slider('g','amt','Glow amount',0,100)+slider('g','spr','Spread',0,100)+slider('g','thr','Threshold',0,100)+select('g','src','Glow source',['Highlights','Whole image'])+bar(button('reset-finish','Reset grain and glow'));
+ pane.innerHTML=heading('Film grain')+grainControls()+bar(button('seed','Randomise grain'))+heading('Lens diffusion')+slider('g','amt','Glow amount',0,100)+slider('g','spr','Spread',0,100)+slider('g','thr','Threshold',0,100)+select('g','src','Glow source',['Highlights','Whole image'])+bar(button('reset-finish','Reset grain and glow'));
  }else{
  const d=state.d;
- pane.innerHTML=bar(button('choose',second?'Replace second photo':'Add second photo'),button('samples','Try a sample'))+'<div id="film-sample-list" hidden>'+['Pine forest','Mountain range','Cloudscape','Stars'].map((n,i)=>'<button data-sample="'+i+'">'+n+'</button>').join(' ')+'</div>';
- if(second)pane.insertAdjacentHTML('beforeend','<p class="note">Drag the second photo to move it. Alt-scroll changes its scale.</p>'+check('d','on','Show second photo')+select('d','mode','Exposure mode',['Classic silhouette','Blend'])+select('d','bl','Blend mode',BLN)+slider('d','op','Opacity',0,100)+(d.mode?'':select('d','light','Fill where base is',['Dark','Light'])+slider('d','thr','Threshold',0,100)+slider('d','soft','Softness',0,100)+slider('d','keep','Keep base detail',0,100))+heading('Placement')+select('d','fit','Fit',['Fill','Fit','Stretch'])+slider('d','sc','Scale',10,400)+slider('d','rot','Rotation',-180,180)+slider('d','ox','Horizontal position',-100,100)+slider('d','oy','Vertical position',-100,100)+check('d','fx','Flip horizontal')+check('d','fy','Flip vertical')+bar(button('placement','Reset placement'))+heading('Crop second photo')+['Left','Right','Top','Bottom'].map((n,i)=>slider('d',['cl','cr','ct','cb'][i],n,0,80)).join('')+bar(button('uncrop','Reset second crop'))+heading('Second photo adjustments')+['Brightness','Contrast','Saturation','Fade'].map((n,i)=>slider('d',['bri','con','sat','fade'][i],n,i===3?0:-100,100)).join('')+check('d','bw','Black and white')+check('d','inv','Invert')+bar(button('swap','Swap with base'),button('delete','Remove second photo')));
+ pane.innerHTML=!base?bar(button('open-pair','Open photos…'))+'<p class="note">Choose or drop two photos. The first is the base and the second fills the subject. You can also open them one at a time.</p>':
+  bar(button('choose',second?'Replace second photo':'Add second photo'),button('samples','Try a sample'))+'<div id="film-sample-list" hidden>'+['Pine forest','Mountain range','Cloudscape','Stars'].map((n,i)=>'<button data-sample="'+i+'">'+n+'</button>').join(' ')+'</div>'+
+  (second?'':'<p class="note">Choose or drop the image you want to blend into this photo.</p>');
+ if(second)pane.insertAdjacentHTML('beforeend','<p class="note">Drag the second photo to move it. Alt-scroll changes its scale.</p>'+check('d','on','Show second photo')+select('d','mode','Exposure mode',['Classic silhouette','Blend','Fill subject'])+(d.mode===2?'':select('d','bl','Blend mode',BLN))+slider('d','op','Opacity',0,100)+(d.mode?'':select('d','light','Fill where base is',['Dark','Light'])+slider('d','thr','Threshold',0,100)+slider('d','soft','Softness',0,100)+slider('d','keep','Keep base detail',0,100))+(d.mode===2?exposureSubject(d):'')+
+  exposurePanel('Placement',select('d','fit','Fit',['Fill','Fit','Stretch'])+slider('d','sc','Scale',10,400)+slider('d','rot','Rotation',-180,180)+slider('d','ox','Horizontal position',-100,100)+slider('d','oy','Vertical position',-100,100)+check('d','fx','Flip horizontal')+check('d','fy','Flip vertical')+bar(button('placement','Reset placement')))+
+  exposurePanel('Crop second photo',['Left','Right','Top','Bottom'].map((n,i)=>slider('d',['cl','cr','ct','cb'][i],n,0,80)).join('')+bar(button('uncrop','Reset second crop')))+
+  exposurePanel('Second photo adjustments',['Brightness','Contrast','Saturation','Fade'].map((n,i)=>slider('d',['bri','con','sat','fade'][i],n,i===3?0:-100,100)).join('')+check('d','bw','Black and white')+check('d','inv','Invert'))+
+  bar(button('swap','Swap with base'),button('delete','Remove second photo')));
+ for(const panel of pane.querySelectorAll('[data-exposure-panel]'))panel.ontoggle=()=>{if(panel.isConnected){if(panel.open)exposurePanels.add(panel.dataset.exposurePanel);else exposurePanels.delete(panel.dataset.exposurePanel)}};
  }
- $('film-status').textContent=state.id>=0?PR[state.id][0]+' · '+state.k+'%':enabled()?'Custom grade':'';
+ $('film-status').textContent=state.id>=0?PR[state.id][0]+' · '+state.k+'%':enabled()?(section==='double'&&state.d.on?'Double exposure':'Custom grade'):'';
 }
-function setSection(next){section=next;build()}
+document.addEventListener('keydown',e=>{
+ if(e.key!=='Escape'||tab!=='film'||section!=='double')return;
+ const picker=pane.querySelector('button[aria-pressed="true"]');if(picker)picker.click();
+});
+function setSection(next){section=next;previewSubject=false;build();draw(true)}
 view.onchange=()=>setSection(view.value);
+$('adjust-detail').onclick=()=>{document.querySelector('.tabs [data-t="film"]').click();setSection('detail')};
 function updateField(input){
  const group=input.dataset.group,key=input.dataset.key;if(!group)return;
  if(gesture!==input){if(base)pushU(snapshot());gesture=input}
  const v=input.type==='checkbox'?Number(input.checked):+input.value;
- if(group==='preset')state=recipe(state.id,v,state);
- else{state[group][key]=v;state.id=-1}
+ if(group==='preset')state=presetStrength(v);
+ else if(group==='n'&&state.id>=0){
+  if(key==='amt'){state.grainAmount=v;state.n.amt=v*state.k/100}else state.n[key]=v;
+ }
+ else{if(group==='d'&&key==='mode'&&v===2&&state.d.mode!==2&&state.d.originalBg===0&&state.d.keep===0)initialSubject();
+ if(group==='d'&&key==='matte'&&v===4&&!maskBank.some(m=>m.id===state.d.savedId))state.d.savedId=maskBank[0]?.id||0;
+ state[group][key]=v;if(group==='detail')thumbs.clear();else state.id=-1}
  if(input.nextElementSibling?.tagName==='OUTPUT')input.nextElementSibling.value=v;
- cached=null;draw(true);$('film-status').textContent=state.id>=0?PR[state.id][0]+' · '+state.k+'%':'Custom grade';
+ cached=null;draw(true);$('film-status').textContent=state.id>=0?PR[state.id][0]+' · '+state.k+'%':section==='double'?'Double exposure':'Custom grade';
 }
 pane.addEventListener('input',e=>{if(e.target.id==='film-search'){query=e.target.value;list()}else updateField(e.target)});
-pane.addEventListener('change',e=>{const el=e.target;if(el.id==='film-keep'){keepLayout=el.checked;return}if(el.id==='film-collection'){category=el.value;list();return}
- if(el.dataset.group){if(gesture!==el)updateField(el);gesture=null;save();if(el.dataset.key==='mode')build();showP($('q').value.toLowerCase())}});
-function setSecond(photo){secondRequest++;command(()=>{second=photo;anchor=null;state.d.on=photo?1:0;thumbs.clear();thumbJob++})}
+pane.addEventListener('change',e=>{const el=e.target;
+ if(el.id==='exposure-mask'){previewSubject=el.checked;build();$('exposure-mask')?.focus({preventScroll:true});draw(true);return}
+ if(el.id==='film-keep'){keepLayout=el.checked;return}if(el.id==='film-collection'){category=el.value;list();return}
+ if(el.dataset.group){if(gesture!==el)updateField(el);gesture=null;save();if(['mode','matte'].includes(el.dataset.key)){build();pane.querySelector('[data-group="d"][data-key="'+el.dataset.key+'"]')?.focus({preventScroll:true})}showP($('q').value.toLowerCase())}});
+function initialSubject(){
+ Object.assign(state.d,{mode:2,style:1,originalBg:1,thr:82,soft:22,keep:70,foreground:0});
+ locatePortraitFace(base,state.d);
+}
+function setSecond(photo){secondRequest++;command(()=>{if(photo&&!second&&!state.d.on&&state.d.mode===0&&section==='double'&&state.id===-1)initialSubject();
+ previewSubject=false;second=photo;anchor=null;state.d.on=photo?1:0;thumbs.clear();thumbJob++})}
 async function loadSecond(file){
  if(!file||!base)return;const request=++secondRequest,doc=imageRequest;
  try{const bmp=await createImageBitmap(file);if(doc!==imageRequest||request!==secondRequest){bmp.close();return}
@@ -3437,6 +3818,15 @@ async function loadSecond(file){
  }catch{if(doc===imageRequest)$('film-status').textContent='Could not open that second photo.'}
 }
 $('file').addEventListener('cancel',()=>{restoreOnOpen=false});
+async function openExposureFiles(list){
+ const files=Array.from(list||[]);if(!files.length)return;
+ if(files.length>(base?1:2)||files.some(f=>!f.type.startsWith('image/'))){
+  $('film-status').textContent=base?'Choose one image for the second exposure.':'Choose one or two image files.';return;
+ }
+ if(base){await loadSecond(files[0]);return}
+ if(await load(files[0])&&files[1])await loadSecond(files[1]);
+}
+$('exposure-files').onchange=e=>{openExposureFiles(e.target.files);e.target.value=''};
 $('film-file').onchange=e=>{loadSecond(e.target.files[0]);e.target.value=''};
 pane.onclick=e=>{
  const el=e.target.closest('button');if(!el)return;
@@ -3445,9 +3835,26 @@ pane.onclick=e=>{
  if(el.dataset.favorite!==undefined){const name=PR[+el.dataset.favorite][0];favorites=favorites.includes(name)?favorites.filter(n=>n!==name):[...favorites,name];setPref('favorites',favorites);list();return}
  if(el.dataset.sample!==undefined){if(base)setSecond(expSample(+el.dataset.sample));else $('open').click();return}
  switch(el.id){
+ case 'film-open-pair':$('exposure-files').click();break;
+ case 'film-sample-bg':{
+  const pick=el.getAttribute('aria-pressed')!=='true';el.setAttribute('aria-pressed',String(pick));
+  $('film-portrait-focus')?.setAttribute('aria-pressed','false');$('sample-bg-help').textContent=pick?'Click the background in the original photo. Press Escape to cancel.':'';draw(true);break;
+ }
+ case 'film-portrait-focus':{
+  $('film-sample-bg')?.setAttribute('aria-pressed','false');if($('sample-bg-help'))$('sample-bg-help').textContent='';draw(true);
+  const on=el.getAttribute('aria-pressed')!=='true';el.setAttribute('aria-pressed',String(on));
+  $('portrait-focus-help').textContent=on?'Click a detail on the canvas.':'Placement cancelled.';break;
+ }
  case 'film-surprise':{const pool=ids();if(pool.length)apply(pool[Math.floor(Math.random()*pool.length)]);break}
  case 'film-restore':if(last){if(base)restoreLast();else{restoreOnOpen=true;$('file').click()}}break;
- case 'film-seed':command(()=>{state.n.seed=1+Math.floor(Math.random()*100000);state.id=-1});break;
+ case 'film-wb-pick':{
+  const on=el.getAttribute('aria-pressed')!=='true';el.setAttribute('aria-pressed',String(on));
+  $('wb-status').textContent=on?'Click a neutral patch on the image.':'Sampling cancelled.';break;
+ }
+ case 'film-wb-clear':command(()=>{state.wb=null;thumbs.clear()});break;
+ case 'film-detail-reset':command(()=>{state.detail=defaultDetail();thumbs.clear()});break;
+ case 'film-seed':command(()=>{state.n.seed=1+Math.floor(Math.random()*100000)});break;
+ case 'film-reset-grain':if(state.id>=0)command(()=>{state.n=grainForRecipe(state.id);state.n.amt*=state.k/100;delete state.grainAmount});break;
  case 'film-reset-grade':command(()=>{const def=defaults();state.a=def.a;state.f=def.f;state.id=-1});break;
  case 'film-reset-finish':command(()=>{const def=defaults();state.g=def.g;state.n=def.n;state.id=-1});break;
  case 'film-choose':(base?$('film-file'):$('file')).click();break;
@@ -3458,7 +3865,7 @@ pane.onclick=e=>{
  case 'film-uncrop':command(()=>Object.assign(state.d,{cl:0,cr:0,ct:0,cb:0}));break;
  }
 };
-function reset(newDoc=false,keepPending=false){gesture=null;secondRequest++;if(!keepPending)state=defaults();second=null;anchor=null;if(newDoc){layoutOrigin=null;paper=null}cached=null;thumbSource=null;thumbs.clear();thumbJob++;if(!newDoc||tab==='film')build()}
+function reset(newDoc=false,keepPending=false){previewSubject=false;gesture=null;secondRequest++;if(!keepPending)state=defaults();second=null;anchor=null;if(newDoc){maskBank=[];maskChoice=0;layoutOrigin=null;paper=null}cached=null;thumbSource=null;thumbs.clear();thumbJob++;if(!newDoc||tab==='film')build()}
 $('film-off').onclick=()=>command(()=>{state=defaults()});
 function filmRows(q){
  return PR.map((p,i)=>({p,i})).filter(({p})=>(p[0]+' '+p[1]+' film').toLowerCase().includes(q.trim().toLowerCase())).map(({p,i})=>'<button class="p'+(i===state.id?' on':'')+'" data-film="'+i+'">'+esc(p[0])+'</button>').join('');
@@ -3501,6 +3908,7 @@ function paintFrame(g,rect){
  g.globalCompositeOperation='source-over';g.drawImage(paper.color,0,0);g.restore();
 }
 function transformSpace(matrix,w,h,frame,step){
+ transformBank(matrix,w,h);
  transformMasks(matrix,W,H,w,h);
  if(paper||frame){
   function marginCanvas(previous,fill){
@@ -3538,7 +3946,7 @@ function restoreLayout(){
   sg.putImageData(initial,0,0);sg.setTransform(back);sg.clearRect(0,0,W,H);const im=new ImageData(W,H);for(let i=0;i<sel.length;i++)im.data[i*4+3]=sel[i];sg.drawImage(asCanvas(im),0,0);
   const data=read(out).data;selection=new Uint8Array(original.w*original.h);for(let i=0;i<selection.length;i++)selection[i]=data[i*4+3];
  }
- transformMasks(back,W,H,original.w,original.h);repositionLayers(back);if(second){const prior=anchor||{w:W,h:H,m:new DOMMatrix()};anchor={...prior,m:back.multiply(prior.m)}}
+ transformBank(back,original.w,original.h);transformMasks(back,W,H,original.w,original.h);repositionLayers(back);if(second){const prior=anchor||{w:W,h:H,m:new DOMMatrix()};anchor={...prior,m:back.multiply(prior.m)}}
  base=new ImageData(new Uint8ClampedArray(restored.data),restored.width,restored.height);orig=original.orig;sel=selection;layoutOrigin=null;paper=null;syncDocument();
 }
 function geometry(action,tilt=+$('film-angle').value,record=true){
@@ -3572,9 +3980,9 @@ function restoreLast(){
   if(step?.kind==='crop'){const x=Math.min(W-1,Math.max(0,Math.round(step.x*W))),y=Math.min(H-1,Math.max(0,Math.round(step.y*H))),w=Math.max(1,Math.min(W-x,Math.round(step.w*W))),h=Math.max(1,Math.min(H-y,Math.round(step.h*H)));
    moveDocument(new DOMMatrix().translate(-x,-y),w,h,null,step,false)}
  }
- state=look;$('gradient-enabled').checked=false;save();changed(true);
+ look.detail=validDetail(look.detail)?look.detail:defaultDetail();look.d={...portraitDefaults,...look.d};state=look;thumbs.clear();$('gradient-enabled').checked=false;save();changed(true);
 }
-function afterOpen(){if(restoreOnOpen){restoreOnOpen=false;restoreLast()}}
+function afterOpen(){if(suiteReady)queueDraft();if(restoreOnOpen){restoreOnOpen=false;restoreLast()}}
 $('outside-picker').onclick=async()=>{try{$('outside-color').value=(await new EyeDropper().open()).sRGBHex}catch{}};
 $('outside-picker').hidden=!window.EyeDropper;
 $('outside-jump').onclick=()=>{document.querySelector('[data-t="crop"]').click();$('outside-frame').open=true;$('outside-frame').scrollIntoView({block:'nearest'})};
@@ -3588,6 +3996,31 @@ function toggleZoom(e){if(zoomV){$('zoom').value='0';$('zoom').onchange()}else a
 c.addEventListener('dblclick',e=>{if(tab==='film'&&base)toggleZoom(e)});
 c.addEventListener('pointerdown',e=>{
  if(tab!=='film'||!base||spaceDown||e.button!==0)return;
+ if(section==='detail'&&$('film-wb-pick')?.getAttribute('aria-pressed')==='true'){
+  const [x,y]=pos(e),src=$('lgrade').checked&&layers.length?flat():base;
+  const sums=[0,0,0];let total=0;
+  for(let yy=Math.max(0,Math.floor(y)-2);yy<=Math.min(H-1,Math.floor(y)+2);yy++)for(let xx=Math.max(0,Math.floor(x)-2);xx<=Math.min(W-1,Math.floor(x)+2);xx++){
+   const i=4*(yy*W+xx),weight=src.data[i+3]/255;
+   for(let ch=0;ch<3;ch++)sums[ch]+=weight*toLinear(src.data[i+ch]/255);total+=weight;
+  }
+  const gray=(.2126*sums[0]+.7152*sums[1]+.0722*sums[2])/(total||1);
+  if(!total||gray<.006||Math.max(...sums)/total>.985){$('wb-status').textContent='Choose a visible patch with detail, away from black or clipped highlights.';return}
+  command(()=>{state.wb=sums.map(v=>Math.max(.125,Math.min(8,gray*total/Math.max(.0001,v))));thumbs.clear()});return;
+ }
+ if(section==='double'&&$('film-sample-bg')?.getAttribute('aria-pressed')==='true'){
+  const [x,y]=pos(e),src=$('lgrade').checked&&layers.length?flat():base;
+  let r=0,g=0,b=0,n=0;
+  for(let yy=Math.max(0,Math.floor(y)-1);yy<=Math.min(H-1,Math.floor(y)+1);yy++)for(let xx=Math.max(0,Math.floor(x)-1);xx<=Math.min(W-1,Math.floor(x)+1);xx++){
+   const i=(yy*W+xx)*4,alpha=src.data[i+3]/255;r+=src.data[i]*alpha;g+=src.data[i+1]*alpha;b+=src.data[i+2]*alpha;n+=alpha;
+  }
+  if(!n){$('sample-bg-help').textContent='Choose a visible background colour, or use Transparency.';return}
+  command(()=>{Object.assign(state.d,{keyR:Math.round(r/n),keyG:Math.round(g/n),keyB:Math.round(b/n)});state.id=-1});return;
+ }
+ if(section==='double'&&$('film-portrait-focus')?.getAttribute('aria-pressed')==='true'){
+  let point=new DOMPoint(...pos(e));if(anchor)point=anchor.m.inverse().transformPoint(point);
+  command(()=>{state.d.faceX=Math.round(100*clamp(point.x/(anchor?.w||W)));state.d.faceY=Math.round(100*clamp(point.y/(anchor?.h||H)));state.id=-1});
+  return;
+ }
  c.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);
  if(pointers.size===2){if(drag?.changed&&drag.exposure)finishPlacement();drag=null;return}
  drag={start:[e.clientX,e.clientY],last:[e.clientX,e.clientY],exposure:section==='double'&&second&&state.d.on,ox:state.d.ox,oy:state.d.oy,changed:false};
@@ -3713,7 +4146,7 @@ function paintWheel(z){
  g.strokeStyle='#ffffff66';g.lineWidth=1;g.beginPath();g.arc(center,center,r/2,0,2*Math.PI);g.stroke();
  g.beginPath();g.arc(center+Math.cos(theta)*r*z.sat/100,center-Math.sin(theta)*r*z.sat/100,6,0,2*Math.PI);g.lineWidth=4;g.strokeStyle='#172133';g.stroke();g.lineWidth=2;g.strokeStyle='white';g.stroke();
 }
-function syncGrade(){
+function syncGrade(){if(suiteReady)syncReference();
  studioGradeUI();const grade=currentGrade(),points=grade.curves[curveChannel];pointIndex=Math.min(Math.max(0,pointIndex),points.length-1);
  $('grading-on').checked=grade.on!==false;$('curve-add').disabled=points.length>=32;
  const select=$('curve-point');if(select.length!==points.length)select.replaceChildren(...points.map((_,i)=>new Option('Point '+(i+1),i)));
@@ -3823,10 +4256,11 @@ function prepareMasks(grading,w,h){
  if(grading?.on===false)return [];
  return (grading?.masks||[]).filter(m=>m.on&&(m.exposure||m.warmth||m.tint||m.saturation)).map(m=>{
   const dx=(m.ex-m.x)*w,dy=(m.ey-m.y)*h,len=Math.max(1,Math.hypot(dx,dy));
-  return {...m,cx:m.x*w,cy:m.y*h,ux:dx/len,uy:dy/len,radius:len,gain:2**m.exposure,sat:1+m.saturation/100,red:m.warmth*.0015+m.tint*.0005,green:-m.tint*.0008,blue:-m.warmth*.0015+m.tint*.0005};
+  return {...m,bitmap:m.kind==='saved'?maskPixels(m.savedId,w,h):null,stride:w,cx:m.x*w,cy:m.y*h,ux:dx/len,uy:dy/len,radius:len,gain:2**m.exposure,sat:1+m.saturation/100,red:m.warmth*.0015+m.tint*.0005,green:-m.tint*.0008,blue:-m.warmth*.0015+m.tint*.0005};
  });
 }
 function maskWeight(m,x,y){
+ if(m.kind==='saved'){const a=(m.bitmap?.[y*m.stride+x]||0)/255;return m.invert?1-a:a}
  const dx=x-m.cx,dy=y-m.cy,u=(dx*m.ux+dy*m.uy)/m.radius,v=(-dx*m.uy+dy*m.ux)/m.radius;
  const feather=Math.max(.002,m.feather/100);let value;
  if(m.kind==='radial')value=1-smooth(1-feather,1,Math.hypot(u,v*100/m.aspect));
@@ -3839,7 +4273,7 @@ function studioGradeUI(){
  const masks=s.masks||[],list=$('local-list');selectedMask=Math.max(0,Math.min(selectedMask,masks.length-1));
  list.replaceChildren(...masks.map((m,i)=>new Option((i+1)+'. '+m.name+(m.on?'':' · off'),i)));list.value=selectedMask;list.disabled=!masks.length;
  $('local-edit').hidden=!masks.length;if(!masks.length)return;
- const mask=masks[selectedMask];$('mask-name').value=mask.name;$('mask-on').checked=mask.on;$('mask-invert').checked=mask.invert;$('mask-aspect-row').hidden=mask.kind!=='radial';
+ const mask=masks[selectedMask];$('mask-place').disabled=mask.kind==='saved';$('mask-feather-row').hidden=mask.kind==='saved';$('mask-name').value=mask.name;$('mask-on').checked=mask.on;$('mask-invert').checked=mask.invert;$('mask-aspect-row').hidden=mask.kind!=='radial';
  for(const key of ['feather','aspect','exposure','warmth','tint','saturation']){const el=$('mask-'+key);el.value=mask[key];el.nextElementSibling.value=mask[key]+(key==='exposure'?' EV':'%')}
 }
 $('hsl-band').replaceChildren(...hueBands.map(([name],i)=>new Option(name,i)));
@@ -3870,7 +4304,7 @@ c.addEventListener('pointerdown',e=>{
   const [r,g,b,a]=raw.data.subarray(i,i+4);if(!a||Math.max(r,g,b)-Math.min(r,g,b)<2){$('hsl-msg').textContent='Pick a colored pixel.';return}
   const hue=Math.round(rgbHue(r,g,b))%360;selectedBand=hueBands.map((v,i)=>[Math.abs((v[1]-hue+540)%360-180),i]).sort((a,b)=>a[0]-b[0])[0][1];singleGrade('pick-hue',s=>{updateBand(s).center=hue});$('hsl-msg').textContent='Sampled hue '+hue+'°';setGradeTool(false,false);return;
  }
- const m=currentGrade().masks?.[selectedMask];if(!m||!maskPlace||!$('local-tools').open)return;
+ const m=currentGrade().masks?.[selectedMask];if(!m||m.kind==='saved'||!maskPlace||!$('local-tools').open)return;
  e.stopImmediatePropagation();e.preventDefault();c.setPointerCapture(e.pointerId);
  const near=(x,y)=>Math.hypot(x*W-p[0],y*H-p[1])<10*KK();maskDrag={id:e.pointerId,p,mask:{...m},mode:near(m.ex,m.ey)?'edge':near(m.x,m.y)?'move':'new'};
 },true);
@@ -3889,19 +4323,41 @@ function transformMasks(matrix,oldW,oldH,w,h){
 }
 function restoreProject(data){
  const next=data.state,expected=defaults();
+ migrateExposure(next);
+ if(next?.d)next.d={...portraitDefaults,...next.d};
  if(!FL[next?.f?.i]||!Number.isInteger(next.id)||next.id!==-1&&!PR[next.id]||!Number.isFinite(next.k)||
     !['a','d','f','g','n'].every(group=>Object.keys(expected[group]).every(key=>Number.isFinite(next[group]?.[key]))))throw Error('Invalid film settings.');
+ if(![0,1,2].includes(next.d.mode)||![0,1].includes(next.d.style)||![0,1,2,3,4].includes(next.d.matte)||![0,1].includes(next.d.originalBg)||
+    !['keyR','keyG','keyB'].every(k=>next.d[k]>=0&&next.d[k]<=255)||next.d.tolerance<0||next.d.tolerance>100||
+    !['faceX','faceY','foreground'].every(k=>next.d[k]>=0&&next.d[k]<=100)||next.d.faceRadius<5||next.d.faceRadius>60)throw Error('Invalid portrait exposure settings.');
+ if(next.grainAmount!=null&&(!Number.isFinite(next.grainAmount)||next.grainAmount<0||next.grainAmount>100))throw Error('Invalid preset grain amount.');
+ if(next.detail!=null&&!validDetail(next.detail))throw Error('Invalid photo detail settings.');
+ if(next.wb!=null&&(!Array.isArray(next.wb)||next.wb.length!==3||!next.wb.every(v=>Number.isFinite(v)&&v>=.125&&v<=8)))throw Error('Invalid white balance.');
+ next.detail??=defaultDetail();
  const grade=next.grading;
  if(grade&&(!curveKeys.every(key=>{
    const points=grade.curves?.[key];return Array.isArray(points)&&points.length>=2&&points[0][0]===0&&points.at(-1)[0]===255&&points.every(([x,y],i)=>Number.isInteger(x)&&Number.isFinite(y)&&y>=0&&y<=255&&(!i||x>points[i-1][0]));
  })||!zoneKeys.every(key=>['hue','sat','lum'].every(k=>Number.isFinite(grade.zones?.[key]?.[k])))||
  grade.bands&&(!Array.isArray(grade.bands)||![0,8].includes(grade.bands.length)||!grade.bands.every(b=>['center','width','h','s','l'].every(k=>Number.isFinite(b[k]))))||
- grade.masks&&(!Array.isArray(grade.masks)||!grade.masks.every(m=>['linear','radial'].includes(m.kind)&&typeof m.name==='string'&&['x','y','ex','ey','aspect','feather','exposure','saturation','warmth','tint'].every(k=>Number.isFinite(m[k]))))))throw Error('Invalid grading settings.');
+ grade.masks&&(!Array.isArray(grade.masks)||!grade.masks.every(m=>['linear','radial','saved'].includes(m.kind)&&typeof m.name==='string'&&['x','y','ex','ey','aspect','feather','exposure','saturation','warmth','tint'].every(k=>Number.isFinite(m[k]))))))throw Error('Invalid grading settings.');
  if(data.second&&!(data.second instanceof HTMLCanvasElement)||data.anchor&&!(data.anchor.m instanceof DOMMatrix)||
     data.paper&&(!(data.paper.mask instanceof HTMLCanvasElement)||!(data.paper.color instanceof HTMLCanvasElement)))throw Error('Invalid film assets.');
- state=data.state;second=data.second||null;anchor=data.anchor||null;paper=data.paper||null;layoutOrigin=data.layoutOrigin||null;secondRequest++;cached=null;gesture=null;maskDrag=null;gradePick=false;maskPlace=false;section=data.section||'presets';syncDocument();build();
+ previewSubject=false;state=data.state;second=data.second||null;anchor=data.anchor||null;paper=data.paper||null;layoutOrigin=data.layoutOrigin||null;secondRequest++;cached=null;gesture=null;maskDrag=null;gradePick=false;maskPlace=false;section=data.section||'presets';thumbs.clear();syncDocument();build();
 }
-return {image,enabled,reset,build,afterOpen,paintFrame,maskGuides,projectState:()=>({state:structuredClone(state),second,anchor,paper,layoutOrigin,section}),restoreProject,syncGrade,updateScopes,space:()=>({anchor,layoutOrigin,paper,masks:state.grading?.masks}),restoreSpace:value=>{if(value){if(state.grading)state.grading.masks=value.masks;anchor=value.anchor;layoutOrigin=value.layoutOrigin;paper=value.paper;cached=null}},transformSpace,rememberPixels,filmRows,openRecipe,loadSecond,invalidate:()=>{cached=null},isDouble:()=>tab==='film'&&section==='double'&&!!base,focusDouble:()=>{document.querySelector('[data-t="film"]').click();setSection('double')},get state(){return state}};
+function gradeMask(id){singleGrade('saved-mask',s=>{s.masks??=[];s.masks.push({...defaultMask('saved'),savedId:id,name:maskBank.find(m=>m.id===id).name});selectedMask=s.masks.length-1});setGradeTool(false,false)}
+function fillMask(id){command(()=>{if(state.d.mode!==2)initialSubject();Object.assign(state.d,{mode:2,savedId:id,matte:4,foreground:0});state.id=-1})}
+function effectPixels(im,e){
+ let s=defaults();
+ if(e.kind==='film')s=recipe(e.recipe,100);
+ if(e.kind==='curve'){s.grading=neutralGrade();s.grading.curves.master=[[0,0],[128,e.param],[255,255]]}
+ if(e.kind==='grain'){s.n={amt:45,size:e.param,col:0,seed:1,organic:true}}
+ return develop(im,s,null);
+}
+function renderLook(im,settings){return develop(im,{...defaults(),...settings,d:defaults().d},null)}
+function applySavedLook(settings){state={...defaults(),...structuredClone(settings),d:state.d};save();changed(true)}
+function setReference(ref,record=true){command(()=>{state.reference=ref;state.id=-1},false,record);syncReference()}
+$('fx-film').replaceChildren(...PR.flatMap((p,i)=>p[6]?[]:[new Option(p[0],i)]));
+return {effectPixels,renderLook,applySavedLook,setReference,gradeMask,fillMask,image,enabled,showSubjectMask,openExposureFiles,inDouble:()=>tab==='film'&&section==='double',reset,build,afterOpen,paintFrame,maskGuides,projectState:()=>({state:structuredClone(state),second,anchor,paper,layoutOrigin,section}),restoreProject,syncGrade,updateScopes,space:()=>({bank:maskBank,anchor,layoutOrigin,paper,masks:state.grading?.masks}),restoreSpace:value=>{if(value){maskBank=value.bank||[];if(state.grading)state.grading.masks=value.masks;anchor=value.anchor;layoutOrigin=value.layoutOrigin;paper=value.paper;cached=null}},transformSpace,rememberPixels,filmRows,openRecipe,loadSecond,invalidate:()=>{cached=null},isDouble:()=>tab==='film'&&section==='double'&&!!base,focusDouble:()=>{document.querySelector('[data-t="film"]').click();setSection('double')},get state(){return state}};
 })();
 let panelSize=1;
 $('panel-height').onclick=()=>{panelSize=(panelSize+1)%3;document.querySelector('aside').style.setProperty('--panel-height',['36%','52%','68%'][panelSize])};
@@ -3950,15 +4406,16 @@ function textPathUI(tx){
  const list=$('fill-layer');list.replaceChildren(new Option('Choose a layer',''),...layers.flatMap((l,i)=>l===active?[]:[new Option(l.name,i)]));
 }
 function applyPhotoFill(cv){if(cv&&active?.tx&&!active.lk)retext({fill:'photo',photo:cv,photoScale:100,photoX:0,photoY:0})}
-$('fill-import').onclick=()=>$('fill-file').click();
+$('fill-import').onclick=()=>{$('text-fill-status').textContent='';$('fill-file').click()};
 $('fill-file').onchange=e=>{const file=e.target.files[0];e.target.value='';importTextPicture(file)};
 const photoOptions=$('photo-options');
 photoOptions.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation()});
 photoOptions.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();importTextPicture(e.dataTransfer.files[0])});
+let photoFillRequest=0;
 async function importTextPicture(f){
- const target=active;if(!f||!target?.tx||target.lk)return;
- try{const img=await createImageBitmap(f);try{if(target!==active||!layers.includes(target)||target.lk)return;const k=Math.min(1,4000/Math.max(img.width,img.height)),cv=bc(Math.max(1,Math.round(img.width*k)),Math.max(1,Math.round(img.height*k)));
- cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);applyPhotoFill(cv);$('fill-msg').textContent='Photo added.'}finally{img.close()}}catch{$('fill-msg').textContent='Could not open this image.'}
+ const target=active;if(!f||!target?.tx||target.lk)return;const job=++photoFillRequest;
+ try{const img=await createImageBitmap(f);try{if(job!==photoFillRequest||target!==active||!layers.includes(target)||target.lk)return;const k=Math.min(1,4000/Math.max(img.width,img.height)),cv=bc(Math.max(1,Math.round(img.width*k)),Math.max(1,Math.round(img.height*k)));
+ cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);applyPhotoFill(cv);$('text-fill-status').textContent='Image applied inside the letters.'}finally{img.close()}}catch{if(job===photoFillRequest&&target===active)$('text-fill-status').textContent='Could not open this image.'}
 };
 $('fill-base').onclick=()=>applyPhotoFill(overlaySourceCanvas());
 $('fill-water').onclick=()=>{
@@ -4032,11 +4489,11 @@ c.addEventListener('pointerup',finishPath,true);c.addEventListener('pointercance
 // Projects store the editable document plus lossless pixel buffers. The same document bundle backs pinned versions.
 const projectControls=[...document.querySelectorAll('#p-adjust input[id],#p-adjust select[id],#p-pixel input[id],#p-pixel select[id],#p-pixel textarea[id],#p-warp input[id],#p-warp select[id],#p-select input[id],#p-select select[id]')]
  .map(el=>el.id).concat(['k','reduce','str','gradient-enabled','lgrade','sov','spl','spr','exn','exs','exf','exq']);
-const layerFields=['name','x','y','s','r','fl','op','bm','vis','lk','cl','cr','ct','cb','tx','overlay','overlayPhoto','o','sh','ol','tn','gl','lf','brushPadding'];
+const layerFields=['fxStack','name','x','y','s','r','fl','op','bm','vis','lk','cl','cr','ct','cb','tx','overlay','overlayPhoto','o','sh','ol','tn','gl','lf','brushPadding','mask','maskEnabled','maskDensity','maskFeather','depthMap','clipBelow','retouch','vectorMask'];
 let versions=[],projectTitle='Totone',projectJob=0;
 function captureDocument(){
  if(!base)throw Error('Open a photo or a blank canvas first.');
- return {base,orig,sel,active:layers.indexOf(active),layers:layers.map(l=>{
+ return {base,orig,sel,maskBank,active:layers.indexOf(active),layers:layers.map(l=>{
   const result={pixels:l.d,mesh:l.cv.typeGeometry,path:l.cv.pathGeometry};for(const key of layerFields)if(l[key]!=null)result[key]=l[key];return result;
  }),tone:{stops,pos:stopPos,map:mapSettings(),cs,selectedStop,cur,name:P[cur]?.n,edits,palette},pixel:{curPx,pxSeed},crop:{cAsp,box:CR},film:film.projectState(),tab,
  controls:Object.fromEntries(projectControls.map(id=>{const e=$(id);return [id,e.type==='checkbox'?e.checked:e.value]}))};
@@ -4097,6 +4554,9 @@ async function readBundle(file){
  }
  const result=decode(manifest.root),d=result?.doc;
  if(!(d?.base instanceof ImageData)||!(d.orig instanceof ImageData)||d.orig.width!==d.base.width||d.orig.height!==d.base.height||!Array.isArray(d.layers)||!d.tone||!d.pixel||!d.film?.state||!Array.isArray(result.pins)||result.pins.length>4)throw Error('Invalid project document.');
+ if(d.maskBank!=null&&(!Array.isArray(d.maskBank)||!d.maskBank.every(m=>Number.isInteger(m.id)&&typeof m.name==='string'&&m.cv instanceof HTMLCanvasElement&&m.cv.width===d.base.width&&m.cv.height===d.base.height)))throw Error('Invalid saved mask.');
+ for(const l of d.layers)if(l.fxStack!=null&&(!Array.isArray(l.fxStack)||!l.fxStack.every(e=>Object.hasOwn(effectLabels,e.kind)&&Number.isFinite(e.amount)&&e.amount>=0&&e.amount<=100&&Number.isFinite(e.param)&&(!e.mask||e.mask instanceof HTMLCanvasElement)&&$('fx-film').querySelector('option[value="'+Number(e.recipe)+'"]'))))throw Error('Invalid layer effects.');
+ const ref=d.film.state.reference;if(ref&&(!Array.isArray(ref.tones)||ref.tones.length!==3||!ref.tones.every(row=>Array.isArray(row)&&row.length===3&&row.every(v=>Number.isFinite(v)&&v>=0&&v<=255))||!Array.isArray(ref.amounts)||ref.amounts.length!==3||!ref.amounts.every(v=>Number.isFinite(v)&&v>=0&&v<=100)))throw Error('Invalid reference colours.');
  if(d.sel&&(!(d.sel instanceof Uint8Array)||d.sel.length!==d.base.width*d.base.height))throw Error('Invalid selection.');
  const between=(n,a,b)=>Number.isFinite(n)&&n>=a&&n<=b;
  const color=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
@@ -4109,6 +4569,12 @@ async function readBundle(file){
     tone.pos&&(!Array.isArray(tone.pos)||tone.pos.length!==tone.stops?.length||!tone.pos.every(p=>between(p,0,100))))throw Error('Invalid tone settings.');
  for(const l of d.layers){
   if(!['x','y','s','r','op','ct','cb','cl','cr'].every(k=>Number.isFinite(l[k]))||![true,false,0,1].includes(l.vis))throw Error('Invalid layer settings.');
+  if(l.vectorMask){
+   const {kind,points}=l.vectorMask;
+   if(!['ellipse','rect','path'].includes(kind)||!Array.isArray(points)||(kind==='path'?points.length<3||points.length>128:points.length!==2)||
+    !points.every(p=>Array.isArray(p)&&between(p[0],0,1)&&between(p[1],0,1)))throw Error('Invalid vector mask.');
+  }
+  if(l.mask&&!(l.mask instanceof HTMLCanvasElement)||l.depthMap&&!(l.depthMap instanceof HTMLCanvasElement)||l.maskDensity!=null&&!between(l.maskDensity,0,100)||l.maskFeather!=null&&!between(l.maskFeather,0,80))throw Error('Invalid layer mask.');
   const tx=l.tx;
   if(tx&&(typeof tx.t!=='string'||typeof tx.f!=='string'||!between(tx.sz,1,4000)||tx.photo&&!(tx.photo instanceof HTMLCanvasElement)||
      tx.rows!=null&&!between(tx.rows,1,100)||tx.typePath&&(!Array.isArray(tx.typePath)||tx.typePath.length>512||!tx.typePath.every(pair))||
@@ -4120,13 +4586,14 @@ async function readBundle(file){
  return result;
 }
 function installDocument(d,existingLayers=null){
+ maskBank=d.maskBank||[];maskChoice=maskBank[0]?.id||0;
  const restored=existingLayers||d.layers.map(item=>{
   const l={};for(const k of layerFields)if(item[k]!=null)l[k]=item[k];
   l.d=item.pixels;l.cv=bc(l.d.width,l.d.height);l.cv.getContext('2d').putImageData(l.d,0,0);
   if(item.mesh)l.cv.typeGeometry=item.mesh;if(item.path)l.cv.pathGeometry=item.path;return l;
  });
  ++imageRequest;++fontRequest;clearInterval(tick);SS=null;strokeLayers=null;guides=[];ren=-1;clearTimeout(idleT);if(raf)cancelAnimationFrame(raf);raf=0;DR=null;needFull=true;down=false;ls=null;meshDrag=null;textEdit=null;typeDraft=null;lasso=[];maskIdx=-1;showOrig=false;
- cancelPathInput();setTypeDrawing(false);base=d.base;orig=d.orig;W=base.width;H=base.height;sel=d.sel||null;layers=restored;active=layers[d.active]||null;
+ cancelPathInput();resetCorrectionTools();setTypeDrawing(false);base=d.base;orig=d.orig;W=base.width;H=base.height;sel=d.sel||null;layers=restored;active=layers[d.active]||null;
  for(const id of projectControls){if(!Object.hasOwn(d.controls,id))continue;const el=$(id);if(el.type==='checkbox')el.checked=!!d.controls[id];else el.value=d.controls[id]}
  const t=d.tone;setMapSettings(t.map);cs=t.cs;selectedStop=t.selectedStop;buildC();setStops(t.stops,t.pos,false);$('gradient-enabled').checked=!!d.controls['gradient-enabled'];cur=P.findIndex(p=>p.n===t.name);edits=t.edits||[];palette=t.palette||[];drawEdits();showP($('q').value.toLowerCase());
  curPx=PXS[d.pixel.curPx]?d.pixel.curPx:0;pxSeed=d.pixel.pxSeed||0;pxo();showPx();syncPxUI();cAsp=d.crop?.cAsp||'free';setAspUI();
@@ -4172,7 +4639,7 @@ function drawComparisons(){
   g.clearRect(0,0,w,h);g.imageSmoothingEnabled=true;g.drawImage(photo,w/2-photo.width*scale*compareCenter[0],h/2-photo.height*scale*compareCenter[1],photo.width*scale,photo.height*scale);
  }
 }
-function updatePins(){
+function updatePins(){if(suiteReady)queueDraft();
  const grid=$('version-grid');grid.replaceChildren();
  for(const [i,pin] of versions.entries()){
   const card=document.createElement('div'),cv=bc(1,1),bar=document.createElement('div'),name=document.createElement('input');card.className='version-card';bar.className='bar';cv.dataset.pin=i;cv.setAttribute('aria-label',pin.name);
@@ -4204,9 +4671,600 @@ versionGrid.addEventListener('wheel',e=>{if(!e.target.closest('canvas'))return;e
 new ResizeObserver(()=>{if($('version-dialog').open)drawComparisons()}).observe(versionGrid);
 
 
-film.build();showP();
+function maskControls(){
+ const l=active,disabled=!l||l.lk,masked=!!l?.mask;
+ $('mask-lift').hidden=!!l||!base;
+ $('layer-mask-kind').disabled=disabled;
+ $('layer-mask-add').disabled=disabled||($('layer-mask-kind').value==='selection'&&!sel);
+ $('layer-mask-add').textContent=masked?'Replace mask':'Add mask';
+ for(const id of ['layer-mask-invert','layer-mask-remove','layer-mask-on'])$(id).disabled=disabled||!masked;
+ $('layer-mask-on').checked=masked&&l.maskEnabled!==false;
+ $('layer-clip').checked=!!l?.clipBelow;$('layer-clip').disabled=disabled||layers.indexOf(l)<1;
+ const edge=['edge','refine'].includes($('mask-paint').value);
+ $('edge-start').disabled=disabled||!l?.vis;$('edge-options').hidden=!edge;
+ $('mask-paint').disabled=disabled||!l?.vis||l?.maskEnabled===false;
+ for(const opt of $('mask-paint').options)if(['hide','show'].includes(opt.value))opt.disabled=!masked;
+ if(suiteReady){syncMaskBank();syncStack()}
+
+ const range=$('layer-mask-kind').value;
+ $('mask-luma-options').hidden=!['depth','luma'].includes(range);$('mask-depth-options').hidden=range!=='depth';
+ $('depth-choose').disabled=disabled;if(range==='depth'&&!l?.depthMap)$('layer-mask-add').disabled=true;
+ for(const [id,k,v,u] of [['mask-density','maskDensity',100,'%'],['mask-feather','maskFeather',0,' px']]){
+  const input=$(id);input.value=l?.[k]??v;input.disabled=disabled||!masked;input.nextElementSibling.value=input.value+u;
+ }
+ const v=l?.vectorMask;
+ $('vector-add').disabled=$('vector-kind').disabled=disabled;$('vector-add').textContent=v?'Replace vector mask':'Add vector mask';
+ $('vector-remove').disabled=$('vector-edit').disabled=disabled||!v;
+ $('vector-anchors').hidden=!v||v.kind!=='path';for(const el of $('vector-anchors').children)el.disabled=disabled||!$('vector-edit').checked;
+ if(v?.kind==='path'){$('vector-delete').disabled||=v.points.length<=3;$('vector-insert').disabled||=v.points.length>=128}
+ $('repair-mode').disabled=!base;
+}
+for(const [id,unit] of [['mask-low',''],['mask-high',''],['mask-soft',''],['edge-width',' px'],['edge-flow','%'],['mask-brush-radius',' px'],['mask-hardness','%'],['repair-radius',' px'],['repair-opacity','%']]){
+ $(id).oninput=e=>e.target.nextElementSibling.value=e.target.value+unit;
+}
+$('mask-lift').onclick=()=>{
+ if(active||!base)return;
+ pushU(mkSnap('all'));const cv=bc(W,H),d=new ImageData(new Uint8ClampedArray(base.data),W,H);cv.getContext('2d').putImageData(d,0,0);
+ active={name:'Base photo',cv,d,x:W/2,y:H/2,s:1,r:0,op:1,bm:'source-over',vis:true,fl:false,lk:false,ct:0,cb:0,cl:0,cr:0};
+ layers.unshift(active);base.data.fill(0);refreshLayers();draw();
+};
+$('layer-mask-kind').onchange=maskControls;
+for(const [id,key] of [['mask-density','maskDensity'],['mask-feather','maskFeather']]){
+ const el=$(id);let layer=null;
+ el.oninput=()=>{if(!active?.mask||active.lk)return;if(layer!==active){pushU(mkSnap('p'));layer=active}
+  active[key]=+el.value;el.nextElementSibling.value=el.value+(key==='maskDensity'?'%':' px');draw()};
+ el.onchange=el.onblur=()=>{layer=null;refreshLayers()};
+}
+$('depth-choose').onclick=()=>$('depth-file').click();
+let depthRequest=0;
+$('depth-file').onchange=async e=>{
+ const file=e.target.files[0],l=active,job=++depthRequest;e.target.value='';if(!file||!l||l.lk)return;
+ try{const img=await createImageBitmap(file);try{
+  if(active!==l||l.lk||job!==depthRequest||!layers.includes(l))return;
+  const cv=bc(l.cv.width,l.cv.height);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+  pushU(mkSnap('p'));l.depthMap=cv;maskControls();$('depth-status').textContent='Depth map ready. Set the limits and apply the mask.';
+ }finally{img.close()}}catch{$('depth-status').textContent='Could not read this depth image.'}
+};
+function layerSelectionStencil(l){
+ const stencil=bc(W,H),sg=stencil.getContext('2d'),im=sg.createImageData(W,H);
+ for(let i=0;i<sel.length;i++)im.data[4*i+3]=sel[i];sg.putImageData(im,0,0);
+ const cv=bc(l.cv.width,l.cv.height),g=cv.getContext('2d');
+ g.setTransform(layerMatrix(l).inverse());g.drawImage(stencil,0,0);return cv;
+}
+function replaceMask(mask){
+ const l=active;if(!l||l.lk)return;pushU(mkSnap('p'));l.mask=mask;l.maskEnabled=true;
+ if(!mask)$('mask-paint').value='';refreshLayers();draw();
+}
+$('layer-mask-add').onclick=()=>{
+ const l=active;if(!l||l.lk)return;const w=l.cv.width,h=l.cv.height,mask=bc(w,h),g=mask.getContext('2d'),kind=$('layer-mask-kind').value;
+ if(kind==='white')g.fillRect(0,0,w,h);
+ if(kind==='selection'){
+  if(!sel)return;
+  g.drawImage(layerSelectionStencil(l),0,0);
+ }
+ if(kind==='luma'||kind==='depth'){
+  if(kind==='depth'){if(!l.depthMap)return;g.drawImage(l.depthMap,0,0,w,h)}
+  const im=g.createImageData(w,h),d=kind==='depth'?g.getImageData(0,0,w,h).data:l.d.data,lo=Math.min(+$('mask-low').value,+$('mask-high').value),hi=Math.max(+$('mask-low').value,+$('mask-high').value),f=+$('mask-soft').value;
+  for(let i=0;i<d.length;i+=4){const v=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2];im.data[i+3]=(kind==='depth'?d[i+3]:255)*(v<lo?(f?ss(lo-f,lo,v):0):v>hi?(f?1-ss(hi,hi+f,v):0):1)}
+  g.putImageData(im,0,0);
+ }
+ replaceMask(mask);
+};
+$('layer-mask-remove').onclick=()=>replaceMask(null);
+$('layer-mask-invert').onclick=()=>{
+ if(!active?.mask||active.lk)return;const old=active.mask,cv=bc(old.width,old.height),g=cv.getContext('2d');
+ g.fillRect(0,0,cv.width,cv.height);g.globalCompositeOperation='destination-out';g.drawImage(old,0,0);replaceMask(cv);
+};
+$('layer-mask-on').onchange=act(l=>l.maskEnabled=$('layer-mask-on').checked);
+$('layer-clip').onchange=act(l=>l.clipBelow=$('layer-clip').checked);
+let correctionStroke=null,sourcePoint=null,chooseSource=false;
+function repairSampleNeeded(){return ['clone','heal'].includes($('repair-mode').value)}
+function updateRepair(){
+ const sampled=repairSampleNeeded();
+ $('repair-source').hidden=!sampled;$('repair-source').setAttribute('aria-pressed',String(sampled&&chooseSource));
+ if($('repair-mode').value==='patch'){$('repair-note').textContent='Select the damaged area in Select, then click the centre of a clean source patch.';return}
+ $('repair-note').textContent=sampled?(chooseSource||!sourcePoint?'Click the source area first, then paint where the correction belongs.':'Paint to sample from the marked area. Alt-click to pick another source.'):'Paint corrections onto a separate retouch layer.';
+}
+$('repair-source').onclick=()=>{chooseSource=true;updateRepair()};
+$('repair-mode').onchange=()=>{chooseSource=repairSampleNeeded()&&!sourcePoint;if($('repair-mode').value){$('mask-paint').value='';$('vector-edit').checked=false;maskControls()}updateRepair()};
+$('mask-paint').onchange=()=>{if($('mask-paint').value){$('vector-edit').checked=false;maskControls();$('repair-mode').value='';updateRepair()}};
+function brushKind(){
+ if(tab!=='layers'||typeDrawing||!base)return '';
+ if($('mask-panel').open&&!$('mask-paint').disabled&&$('mask-paint').value)return $('mask-paint').value;
+ return $('retouch-panel').open?$('repair-mode').value:'';
+}
+function newRepairTarget(){
+ // A retouch layer is painted in document coordinates. Start a new one after transforming the old one.
+ const l=active;
+ if(l?.retouch&&l===layers.at(-1)&&l.vis&&!l.lk&&!l.mask&&!l.vectorMask&&!l.clipBelow&&!l.fl&&!l.r&&l.s===1&&l.op===1&&l.bm==='source-over'&&
+    l.x===W/2&&l.y===H/2&&l.cv.width===W&&l.cv.height===H&&!l.ct&&!l.cl&&!l.cr&&!l.cb&&!l.sh&&!l.gl&&!l.lf&&!l.ol&&!l.tn){
+  const cv=bc(W,H);cv.getContext('2d').drawImage(l.cv,0,0);l.cv=cv;l.d=new ImageData(new Uint8ClampedArray(l.d.data),W,H);return l;
+ }
+ const cv=bc(W,H),layer={name:'Retouch',retouch:true,cv,d:cv.getContext('2d').createImageData(W,H),vis:true,lk:false,fl:false,x:W/2,y:H/2,r:0,s:1,op:1,bm:'source-over',cl:0,ct:0,cr:0,cb:0};
+ layers.push(layer);active=layer;return layer;
+}
+function ringMean(data,x,y,r){
+ const color=[0,0,0];let total=0;
+ for(let i=0;i<20;i++){
+  const angle=i*Math.PI/10,px=Math.round(x+Math.cos(angle)*r),py=Math.round(y+Math.sin(angle)*r);
+  if(px<0||py<0||px>=W||py>=H)continue;const j=4*(py*W+px),alpha=data[j+3]/255;
+  for(let ch=0;ch<3;ch++)color[ch]+=data[j+ch]*alpha;total+=alpha;
+ }
+ return color.map(v=>v/(total||1));
+}
+function spotOffset(st,x,y){
+ // Match patches by the texture and colour around the blemish, keeping the damaged centre out of the comparison.
+ let best=Infinity,offset=[0,0];const r=st.radius,d=st.image;
+ for(let i=0;i<16;i++){
+  const a=i*Math.PI/8,dx=Math.round(2.4*r*Math.cos(a)),dy=Math.round(2.4*r*Math.sin(a));
+  let score=0,n=0;
+  for(let j=0;j<12;j++){
+   const b=j*Math.PI/6,px=Math.round(x+r*Math.cos(b)),py=Math.round(y+r*Math.sin(b));
+   if(px<0||py<0||px>=W||py>=H||px+dx<0||py+dy<0||px+dx>=W||py+dy>=H)continue;
+   const k=4*(py*W+px),q=k+4*(dy*W+dx);if(d[q+3]<32||d[k+3]<32)continue;
+   for(let ch=0;ch<3;ch++)score+=(d[q+ch]-d[k+ch])**2;n++;
+  }
+  if(n>=3&&score/n<best){best=score/n;offset=[dx,dy]}
+ }
+ return offset;
+}
+function repairDab(st,x,y){
+ const r=st.radius,d=st.image,out=st.l.d.data,mode=st.mode;
+ const left=Math.max(0,Math.floor(x-r)),right=Math.min(W,Math.ceil(x+r)),top=Math.max(0,Math.floor(y-r)),bottom=Math.min(H,Math.ceil(y+r));
+ if(right<=left||bottom<=top)return;
+ const [dx,dy]=mode==='spot'?spotOffset(st,x,y):st.offset;
+ const heal=mode==='heal'||mode==='spot',shift=[0,0,0];
+ if(heal){const a=ringMean(d,x,y,r),b=ringMean(d,x+dx,y+dy,r);for(let ch=0;ch<3;ch++)shift[ch]=a[ch]-b[ch]}
+ for(let py=top;py<bottom;py++)for(let px=left;px<right;px++){
+  const falloff=1-ss(.4,1,Math.hypot(px+.5-x,py+.5-y)/r),i=py*W+px,j=i*4;
+  let a=falloff*st.strength*(sel?sel[i]/255:1);if(!a)continue;
+  const sx=px+dx,sy=py+dy;if(sx<0||sy<0||sx>=W||sy>=H)continue;
+  const q=4*(sy*W+sx),red=d[q],green=d[q+1],blue=d[q+2];a*=d[q+3]/255;if(a===0)continue;
+  if(mode==='redeye'&&(red<55||red<1.3*Math.max(green,blue)))continue;
+  const old=out[j+3]/255,alpha=a+old*(1-a),lum=.2126*red+.7152*green+.0722*blue;
+  for(let ch=0;ch<3;ch++){
+   let value=d[q+ch];
+   if(heal)value+=shift[ch];
+   else if(mode==='redeye'&&ch===0)value=(green+blue)/2;
+   else if(mode==='dodge')value=255*(value/255)**.68;
+   else if(mode==='burn')value=255*(value/255)**1.5;
+   else if(mode==='sponge')value=lum;
+   else if(mode==='blur'||mode==='sharp'){
+    const step=Math.max(1,Math.round(r/6)),ix=4*Math.min(step,px),ax=4*Math.min(step,W-1-px),iy=4*W*Math.min(step,py),ay=4*W*Math.min(step,H-1-py);
+    const average=(value*2+d[j-ix+ch]+d[j+ax+ch]+d[j-iy+ch]+d[j+ay+ch])/6;
+    value=mode==='blur'?average:value+1.8*(value-average);
+   }
+   out[j+ch]=(Math.max(0,Math.min(255,value))*a+out[j+ch]*old*(1-a))/alpha;
+  }
+  out[j+3]=255*alpha;
+ }
+ syncL(st.l,[left,top,right-left,bottom-top]);
+}
+function correctionDab(st,p){
+ if(st.edge){brushEdge(st,p);return}
+ if(st.mask){
+  const local=st.inverse.transformPoint(new DOMPoint(...p)),g=st.g,r=st.radius/st.l.s;
+  g.globalCompositeOperation=st.mode==='hide'?'destination-out':'source-over';
+  const brush=g.createRadialGradient(local.x,local.y,0,local.x,local.y,r);
+  brush.addColorStop(0,'#fff');brush.addColorStop(Math.min(.999,+$('mask-hardness').value/100),'#fff');brush.addColorStop(1,'transparent');
+  if(st.stencil){
+   const x=Math.max(0,Math.floor(local.x-r)),y=Math.max(0,Math.floor(local.y-r)),w=Math.min(st.l.cv.width,Math.ceil(local.x+r))-x,h=Math.min(st.l.cv.height,Math.ceil(local.y+r))-y;
+   if(w<=0||h<=0)return;
+   const tip=st.tip;tip.width=w;tip.height=h;const tg=tip.getContext('2d');tg.translate(-x,-y);tg.fillStyle=brush;tg.fillRect(x,y,w,h);
+   tg.globalCompositeOperation='destination-in';tg.drawImage(st.stencil,0,0);g.drawImage(tip,x,y);
+  }else{g.fillStyle=brush;g.fillRect(local.x-r,local.y-r,2*r,2*r)}
+  maskViews.delete(st.l);
+ }else repairDab(st,p[0],p[1]);
+}
+function repairSourcePixels(){
+ if($('lgrade').checked)return flat().data;
+ render(false);return ctx.getImageData(0,0,W,H).data;
+}
+function patchSelection(p){
+ const box=sel&&selBox();if(!box){$('repair-note').textContent='Make a selection around the area to repair first.';return}
+ const [x,y,w,h]=box,dx=Math.round(p[0]-x-w/2),dy=Math.round(p[1]-y-h/2);
+ if(!dx&&!dy)return;
+ if(x+dx<0||y+dy<0||x+w+dx>W||y+h+dy>H){$('repair-note').textContent='Choose a source that fits inside the photo.';return}
+ const input=repairSourcePixels(),strength=+$('repair-opacity').value/100,delta=[0,0,0];let weight=0;
+ // Estimate the colour offset on the selection boundary so the pasted texture meets its surroundings.
+ for(let py=y;py<y+h;py++)for(let px=x;px<x+w;px++){
+  const i=py*W+px;if(!sel[i])continue;
+  if(px>x&&px<x+w-1&&py>y&&py<y+h-1&&sel[i-1]>=sel[i]&&sel[i+1]>=sel[i]&&sel[i-W]>=sel[i]&&sel[i+W]>=sel[i])continue;
+  const a=4*i,b=4*(i+dy*W+dx),k=sel[i]/255*input[a+3]*input[b+3]/65025;
+  weight+=k;for(let j=0;j<3;j++)delta[j]+=(input[a+j]-input[b+j])*k;
+ }
+ if(weight)for(let j=0;j<3;j++)delta[j]/=weight;
+ pushU(mkSnap('p'));const l=newRepairTarget(),out=l.d.data;
+ for(let py=y;py<y+h;py++)for(let px=x;px<x+w;px++){
+  const i=py*W+px,j=4*i,q=4*(i+dy*W+dx),a=sel[i]/255*strength*input[q+3]/255;if(!a)continue;
+  const old=out[j+3]/255,alpha=a+(1-a)*old;
+  for(let ch=0;ch<3;ch++)out[j+ch]=(a*Math.max(0,Math.min(255,input[q+ch]+delta[ch]))+(1-a)*old*out[j+ch])/alpha;
+  out[j+3]=255*alpha;
+ }
+ syncL(l,[x,y,w,h]);refreshLayers();draw();$('repair-note').textContent='Patch applied to the retouch layer.';
+}
+function resetCorrectionTools(){
+ correctionStroke=null;sourcePoint=null;vectorDrag=null;$('vector-edit').checked=false;chooseSource=false;$('repair-mode').value='';$('mask-paint').value='';updateRepair();
+}
+c.addEventListener('pointerdown',e=>{
+ const mode=brushKind();if(!mode||spaceDown||e.button!==0||correctionStroke)return;
+ e.preventDefault();e.stopImmediatePropagation();const p=pos(e),mask=['edge','refine','hide','show'].includes(mode);
+ if(!mask&&repairSampleNeeded()&&(e.altKey||chooseSource||!sourcePoint||sourcePoint.base!==base)){
+  sourcePoint={p,base,offset:null};chooseSource=false;updateRepair();draw(true);return;
+ }
+ if(!mask&&active?.retouch&&active.lk){$('repair-note').textContent='Unlock the retouch layer to paint.';return}
+ if(mode==='patch'){patchSelection(p);return}
+ const st={id:e.pointerId,mode,mask,last:p,radius:+$(mask?'mask-brush-radius':'repair-radius').value};
+ if(mask){
+  st.l=active;if(!st.l||st.l.lk||!st.l.mask&&!['edge','refine'].includes(mode))return;
+  pushU(mkSnap('p'));const cv=bc(st.l.cv.width,st.l.cv.height);st.g=cv.getContext('2d');if(st.l.mask)st.g.drawImage(st.l.mask,0,0,cv.width,cv.height);else st.g.fillRect(0,0,cv.width,cv.height);st.l.mask=cv;st.inverse=layerMatrix(st.l).inverse();
+  if(sel){st.stencil=layerSelectionStencil(st.l);st.tip=bc(1,1)}
+  if(['edge','refine'].includes(mode))beginEdgeStroke(st);
+ }else{
+  st.image=repairSourcePixels();st.strength=+$('repair-opacity').value/100;
+  st.offset=repairSampleNeeded()?(sourcePoint.offset??=sourcePoint.p.map((v,i)=>Math.round(v-p[i]))):[0,0];
+  pushU(mkSnap('p'));st.l=newRepairTarget();refreshLayers();
+ }
+ correctionStroke=st;c.setPointerCapture(e.pointerId);correctionDab(st,p);draw();
+},true);
+function moveCorrection(e){
+ const st=correctionStroke;if(!st||e.pointerId!==st.id)return;
+ e.stopImmediatePropagation();if(brushKind()!==st.mode||active!==st.l||active.lk)return;
+ const p=pos(e),dx=p[0]-st.last[0],dy=p[1]-st.last[1],d=Math.hypot(dx,dy);if(!d)return;
+ const n=Math.ceil(d/Math.max(1,st.radius*.35));
+ for(let i=1;i<=n;i++)correctionDab(st,[st.last[0]+dx*i/n,st.last[1]+dy*i/n]);st.last=p;draw();
+}
+c.addEventListener('pointermove',moveCorrection,true);
+function endCorrection(e){if(correctionStroke?.id!==e.pointerId)return;if(e.type==='pointerup')moveCorrection(e);correctionStroke=null;refreshLayers();draw()}
+for(const type of ['pointerup','pointercancel','lostpointercapture'])c.addEventListener(type,endCorrection,true);
+function drawRepairSource(){
+ if(!repairSampleNeeded()||!brushKind()||!sourcePoint||sourcePoint.base!==base)return;
+ const [x,y]=sourcePoint.p,k=KK();ctx.save();ctx.lineWidth=1.5*k;ctx.strokeStyle='#75dbff';ctx.beginPath();ctx.arc(x,y,5*k,0,Math.PI*2);ctx.moveTo(x-8*k,y);ctx.lineTo(x+8*k,y);ctx.moveTo(x,y-8*k);ctx.lineTo(x,y+8*k);ctx.stroke();ctx.restore();
+}
+function vectorPath(v,w,h){
+ const p=new Path2D(),points=v.points.map(([x,y])=>[x*w,y*h]),[a,b]=points;
+ if(v.kind!=='path'){
+  const x=Math.min(a[0],b[0]),y=Math.min(a[1],b[1]),dx=Math.abs(a[0]-b[0]),dy=Math.abs(a[1]-b[1]);
+  if(v.kind==='ellipse')p.ellipse(x+dx/2,y+dy/2,dx/2,dy/2,0,0,2*Math.PI);else p.rect(x,y,dx,dy);
+ }else{
+  p.moveTo(...a);const n=points.length;
+  for(let i=0;i<n;i++){
+   const j=(i+1)%n,prev=points[(i+n-1)%n],next=points[(j+1)%n],u=points[i],z=points[j];
+   if(v.points[i][2]||v.points[j][2]){
+    const k=v.points[i][2]?1/6:0,t=v.points[j][2]?1/6:0;
+    p.bezierCurveTo(u[0]+k*(z[0]-prev[0]),u[1]+k*(z[1]-prev[1]),z[0]-t*(next[0]-u[0]),z[1]-t*(next[1]-u[1]),...z);
+   }else p.lineTo(...z);
+  }
+ }
+ p.closePath();return p;
+}
+let vectorDrag=null,vectorPoint=0;
+function editingVector(){return tab==='layers'&&$('mask-panel').open&&$('vector-edit').checked&&active?.vis&&active.vectorMask&&!active.lk&&!typeDrawing}
+function drawVectorGuides(){
+ if(!editingVector())return;
+ const l=active,v=l.vectorMask,m=layerMatrix(l),k=KK();ctx.save();ctx.transform(m.a,m.b,m.c,m.d,m.e,m.f);
+ ctx.strokeStyle='#74d4ff';ctx.lineWidth=1.5*k/l.s;ctx.stroke(vectorPath(v,l.cv.width,l.cv.height));
+ v.points.forEach(([x,y],i)=>{ctx.beginPath();ctx.arc(x*l.cv.width,y*l.cv.height,5*k/l.s,0,2*Math.PI);ctx.fillStyle=i===vectorPoint?'#ffc475':'#e7f7ff';ctx.fill();ctx.stroke()});ctx.restore();
+}
+function setVector(v){
+ if(!active||active.lk)return;pushU(mkSnap('p'));active.vectorMask=v;vectorPoint=0;
+ $('vector-edit').checked=!!v;$('mask-paint').value='';$('repair-mode').value='';refreshLayers();draw();
+}
+$('vector-add').onclick=()=>{
+ const kind=$('vector-kind').value,points=kind==='path'?[[.15,.78],[.5,.14],[.85,.78]]:[[.12,.12],[.88,.88]];
+ setVector({kind,points});
+};
+$('vector-remove').onclick=()=>setVector(null);
+$('vector-edit').onchange=()=>{if($('vector-edit').checked){$('mask-paint').value='';$('repair-mode').value=''}maskControls();draw(true)};
+$('mask-panel').addEventListener('toggle',()=>draw(true));
+function editVectorPoint(command){
+ if(!editingVector())return;const v=active.vectorMask;if(v.kind!=='path')return;
+ const points=v.points.map(p=>p.slice()),i=Math.min(vectorPoint,points.length-1);
+ if(command==='insert'&&points.length<128){
+  const a=points[i],b=points[(i+1)%points.length];points.splice(i+1,0,[(a[0]+b[0])/2,(a[1]+b[1])/2]);vectorPoint=i+1;
+ }else if(command==='delete'&&points.length>3){points.splice(i,1);vectorPoint=Math.min(i,points.length-1)}
+ else if(command==='curve')points[i][2]=!points[i][2];else return;
+ pushU(mkSnap('p'));active.vectorMask={...v,points};refreshLayers();draw();
+}
+for(const id of ['insert','delete','curve'])$('vector-'+id).onclick=()=>editVectorPoint(id);
+c.addEventListener('pointerdown',e=>{
+ if(!editingVector()||spaceDown||e.button)return;
+ const l=active,m=layerMatrix(l),p=pos(e);
+ const hits=l.vectorMask.points.map(([x,y],i)=>{const q=m.transformPoint(new DOMPoint(x*l.cv.width,y*l.cv.height));return {i,d:Math.hypot(p[0]-q.x,p[1]-q.y)}}).sort((a,b)=>a.d-b.d);
+ e.stopImmediatePropagation();e.preventDefault();if(hits[0].d>12*KK())return;
+ vectorPoint=hits[0].i;vectorDrag={id:e.pointerId,l,inverse:m.inverse(),changed:false};c.setPointerCapture(e.pointerId);draw(true);
+},true);
+function moveVector(e){
+ const st=vectorDrag;if(st?.id!==e.pointerId||active!==st.l||!editingVector())return;e.stopImmediatePropagation();
+ const l=st.l,v=l.vectorMask,p=st.inverse.transformPoint(new DOMPoint(...pos(e))),a=v.points[vectorPoint],x=Math.min(1,Math.max(0,p.x/l.cv.width)),y=Math.min(1,Math.max(0,p.y/l.cv.height));
+ if(Math.hypot((x-a[0])*l.cv.width,(y-a[1])*l.cv.height)<.3)return;
+ if(!st.changed){pushU(mkSnap('p'));st.changed=true}
+ l.vectorMask={...v,points:v.points.map((q,i)=>i===vectorPoint?[x,y,!!q[2]]:q)};draw();
+}
+c.addEventListener('pointermove',moveVector,true);
+for(const type of ['pointerup','pointercancel','lostpointercapture'])c.addEventListener(type,e=>{if(vectorDrag?.id!==e.pointerId)return;if(type==='pointerup')moveVector(e);vectorDrag=null;refreshLayers();draw()},true);
+
+
+let maskBank=[],maskChoice=0;
+const maskSamples=new WeakMap();
+function maskPixels(id,w,h){
+ const item=maskBank.find(m=>m.id===id);if(!item)return null;
+ let cache=maskSamples.get(item.cv);
+ if(!cache||cache.w!==w||cache.h!==h){const cv=bc(w,h),g=cv.getContext('2d');g.drawImage(item.cv,0,0,w,h);const data=g.getImageData(0,0,w,h).data,alpha=new Uint8Array(w*h);for(let i=0;i<alpha.length;i++)alpha[i]=data[4*i+3];cache={w,h,alpha};maskSamples.set(item.cv,cache)}
+ return cache.alpha;
+}
+function selectionCanvas(){
+ if(!sel)return null;
+ const cv=bc(W,H),g=cv.getContext('2d'),im=g.createImageData(W,H);for(let i=0;i<sel.length;i++)im.data[4*i+3]=sel[i];g.putImageData(im,0,0);return cv;
+}
+function layerToMask(l){const cv=bc(W,H),g=cv.getContext('2d');g.setTransform(layerMatrix(l));const view=visibleLayer(l).cv,w=view.width,h=view.height,rect=[l.cl*w,l.ct*h,(1-l.cl-l.cr)*w,(1-l.ct-l.cb)*h];g.drawImage(view,...rect,...rect);return cv}
+function localMask(l,cv){const result=bc(l.cv.width,l.cv.height),g=result.getContext('2d');g.setTransform(layerMatrix(l).inverse());g.drawImage(cv,0,0);return result}
+function bankUndo(){const old=maskBank,id=maskChoice;return ()=>{const redo=bankUndo();maskBank=old;maskChoice=id;film.invalidate();syncMaskBank();draw();return redo}}
+function syncMaskBank(){
+ const list=$('saved-mask-list');list.replaceChildren(...maskBank.map(m=>new Option(m.name,m.id)));if(!maskBank.some(m=>m.id===maskChoice))maskChoice=maskBank[0]?.id||0;list.value=maskChoice;
+ for(const id of ['mask-recall','mask-to-grade','mask-to-fill'])$(id).disabled=!maskChoice;
+ $('mask-to-layer').disabled=!maskChoice||!active||active.lk;$('save-selection-mask').disabled=!sel;$('save-layer-mask').disabled=!active;
+}
+function storeMask(cv){
+ if(!cv)return;
+ const name=$('saved-mask-name').value.trim()||'Mask '+(maskBank.length+1),old=maskBank.find(m=>m.name===name);
+ pushU(bankUndo());maskChoice=old?.id||Math.max(0,...maskBank.map(m=>m.id))+1;maskBank=[...maskBank.filter(m=>m.id!==maskChoice),{id:maskChoice,name,cv}];
+ $('saved-mask-note').textContent='Saved '+name+'.';syncMaskBank();film.invalidate();draw();
+}
+$('save-selection-mask').onclick=()=>storeMask(selectionCanvas());
+$('save-layer-mask').onclick=()=>active&&storeMask(layerToMask(active));
+$('saved-mask-list').onchange=e=>{maskChoice=+e.target.value;const m=maskBank.find(m=>m.id===maskChoice);$('saved-mask-name').value=m?.name||''};
+$('mask-recall').onclick=()=>{const alpha=maskPixels(maskChoice,W,H);if(alpha){pushU(selSnap());sel=alpha.slice();updInfo();draw()}};
+$('mask-to-layer').onclick=()=>{if(active&&!active.lk&&maskChoice){replaceMask(localMask(active,maskBank.find(m=>m.id===maskChoice).cv));jumpTool('layers','mask-panel')}};
+$('mask-to-grade').onclick=()=>{if(maskChoice){film.gradeMask(maskChoice);jumpTool('grade','local-tools')}};
+$('mask-to-fill').onclick=()=>{if(maskChoice){film.focusDouble();film.fillMask(maskChoice)}};
+function transformBank(matrix,w,h){maskBank=maskBank.map(m=>{const cv=bc(w,h),g=cv.getContext('2d');g.setTransform(matrix);g.drawImage(m.cv,0,0);return {...m,cv}})}
+function beginEdgeStroke(st){
+ const w=st.l.cv.width,h=st.l.cv.height,source=bc(w,h),g=source.getContext('2d');
+ g.drawImage(st.l.cv,0,0);g.globalCompositeOperation='destination-in';g.drawImage(st.l.mask,0,0);
+ const blurred=bc(w,h),bg=blurred.getContext('2d');bg.filter='blur('+Math.max(.65,+$('edge-width').value/st.l.s)+'px)';bg.drawImage(source,0,0);
+ st.edge=bg.getImageData(0,0,w,h).data;st.coverage=g.getImageData(0,0,w,h).data;
+ st.source=st.l.d.data;st.width=w;st.height=h;st.flow=+$('edge-flow').value/100;
+ if(st.stencil)st.limit=st.stencil.getContext('2d').getImageData(0,0,w,h).data;
+}
+function brushEdge(st,p){
+ const local=st.inverse.transformPoint(new DOMPoint(...p)),r=st.radius/st.l.s,x=Math.max(0,Math.floor(local.x-r)),y=Math.max(0,Math.floor(local.y-r));
+ const w=Math.min(st.width,Math.ceil(local.x+r))-x,h=Math.min(st.height,Math.ceil(local.y+r))-y;if(w<=0||h<=0)return;
+ const patch=st.g.getImageData(x,y,w,h),out=patch.data,step=Math.max(1,Math.round(+$('edge-width').value/st.l.s/2));
+ for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++){
+  const px=x+xx,py=y+yy,i=4*(py*st.width+px),j=4*(yy*w+xx),alpha=st.source[i+3];if(!alpha)continue;
+  const fall=1-ss(Math.min(.99,+$('mask-hardness').value/100),1,Math.hypot(px+.5-local.x,py+.5-local.y)/r);if(!fall)continue;
+  let coverage=st.edge[i+3];
+  if(st.mode==='refine'&&coverage>1&&coverage<254){
+   let sum=0,weight=0;
+   for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+    const sx=px+dx*step,sy=py+dy*step,q=4*(sy*st.width+sx);
+    if(sx<0||sx>=st.width||sy<0||sy>=st.height){weight+=.2;continue}
+    const distance=Math.abs(st.source[q]-st.source[i])+Math.abs(st.source[q+1]-st.source[i+1])+Math.abs(st.source[q+2]-st.source[i+2]);
+    const k=Math.exp(-distance/45-(dx*dx+dy*dy)/5);sum+=k*st.coverage[q+3];weight+=k;
+   }
+   if(weight)coverage=sum/weight;
+  }
+  const target=Math.min(255,255*coverage/alpha);out[j+3]+=(target-out[j+3])*fall*st.flow*(st.limit?st.limit[i+3]/255:1);
+ }
+ st.g.putImageData(patch,x,y);maskViews.delete(st.l);
+}
+$('edge-start').onclick=()=>{if(!active||active.lk)return;$('mask-panel').open=true;$('mask-paint').value='edge';$('mask-paint').onchange();$('edge-options').hidden=false;$('mask-paint').focus()};
+
+
+const effectLabels={curve:'Tone curve',film:'Film look',grain:'Film grain',halation:'Halation'};
+let effectIndex=0,stackOwner=null;
+function layerEffects(cv,stack){
+ let current=cv;
+ for(const e of stack){
+  if(!e.on||!e.amount)continue;
+  const w=cv.width,h=cv.height,next=bc(w,h),g=next.getContext('2d'),im=current.getContext('2d').getImageData(0,0,w,h);
+  let processed;
+  if(e.kind==='halation'){
+   const light=bc(w,h),lg=light.getContext('2d'),map=lg.createImageData(w,h);
+   for(let i=0;i<map.data.length;i+=4){const p=im.data,l=(.2126*p[i]+.7152*p[i+1]+.0722*p[i+2])/255;map.data[i]=255;map.data[i+1]=69;map.data[i+2]=21;map.data[i+3]=p[i+3]*ss(.55,.96,l)}
+   lg.putImageData(map,0,0);g.drawImage(current,0,0);g.globalCompositeOperation='screen';g.filter='blur('+Math.max(.6,e.param*Math.min(w,h)/1200)+'px)';g.drawImage(light,0,0);processed=g.getImageData(0,0,w,h);
+  }else processed=film.effectPixels(im,e);
+  let mask=null;if(e.mask){g.setTransform(1,0,0,1,0,0);g.filter='none';g.globalCompositeOperation='copy';g.drawImage(e.mask,0,0,w,h);mask=g.getImageData(0,0,w,h).data}
+  for(let i=0;i<im.data.length;i+=4){const blend=e.amount/100*(mask?mask[i+3]/255:1);for(let k=0;k<3;k++)im.data[i+k]+=(processed.data[i+k]-im.data[i+k])*blend}
+  g.putImageData(im,0,0);current=next;
+ }
+ return current;
+}
+function editStack(fn,undo=true){
+ if(!active||active.lk)return;if(undo)pushU(mkSnap('p'));active.fxStack=(active.fxStack||[]).map(e=>({...e}));fn(active.fxStack);maskViews.delete(active);draw();
+}
+function syncStack(){
+ const l=active,stack=l?.fxStack||[];if(stackOwner!==l){stackOwner=l;effectIndex=0}
+ effectIndex=Math.max(0,Math.min(stack.length-1,effectIndex));const e=stack[effectIndex],list=$('fx-list');
+ list.replaceChildren(...stack.map((v,i)=>{const b=document.createElement('button');b.type='button';b.draggable=!l.lk;b.dataset.effect=i;b.setAttribute('aria-pressed',String(i===effectIndex));b.textContent=(i+1)+'. '+effectLabels[v.kind]+(v.on?'':' (off)')+(v.mask?' · masked':'');return b}));
+ $('fx-add').disabled=!l||l.lk;$('fx-controls').hidden=!e;if(!e)return;
+ $('fx-controls').disabled=l.lk;$('fx-on').checked=e.on;$('fx-amount').value=e.amount;$('fx-amount').nextElementSibling.value=e.amount+'%';
+ $('fx-film-row').hidden=e.kind!=='film';$('fx-param-row').hidden=e.kind==='film';
+ if(e.kind==='film')$('fx-film').value=e.recipe;else{$('fx-param-name').textContent={curve:'Midtone output',grain:'Grain size',halation:'Glow radius'}[e.kind];$('fx-param').max=e.kind==='curve'?254:100;$('fx-param').value=e.param;$('fx-param').nextElementSibling.value=e.param}
+ $('fx-up').disabled=effectIndex===0;$('fx-down').disabled=effectIndex===stack.length-1;
+ $('fx-mask').replaceChildren(new Option('Whole layer',''),...(sel?[new Option('Current selection','selection')]:[]),...maskBank.map(m=>new Option(m.name,m.id)),...(e.mask?[new Option(e.maskName||'Effect mask','current')]:[]));$('fx-mask').value=e.mask?'current':'';
+}
+function moveEffect(from,to){if(!active||to<0||to>=active.fxStack.length||from===to)return;editStack(s=>s.splice(to,0,s.splice(from,1)[0]));effectIndex=to;syncStack()}
+$('fx-add').onclick=()=>{const kind=$('fx-kind').value;editStack(s=>{s.push({kind,on:true,amount:70,param:{curve:159,film:0,grain:35,halation:18}[kind],recipe:41});effectIndex=s.length-1});syncStack()};
+$('fx-list').onclick=e=>{const b=e.target.closest('[data-effect]');if(b){effectIndex=+b.dataset.effect;syncStack()}};
+$('fx-list').ondragstart=e=>e.dataTransfer.setData('text/totone-effect',e.target.dataset.effect);
+$('fx-list').ondragover=e=>e.preventDefault();$('fx-list').ondrop=e=>{e.preventDefault();const to=e.target.closest('[data-effect]'),from=e.dataTransfer.getData('text/totone-effect');if(to&&from!=='')moveEffect(+from,+to.dataset.effect)};
+$('fx-up').onclick=()=>moveEffect(effectIndex,effectIndex-1);$('fx-down').onclick=()=>moveEffect(effectIndex,effectIndex+1);
+$('fx-remove').onclick=()=>{editStack(s=>s.splice(effectIndex,1));syncStack()};
+for(const [id,key] of [['fx-on','on'],['fx-amount','amount'],['fx-param','param'],['fx-film','recipe']]){
+ const el=$(id);let held=false;el.oninput=()=>{editStack(s=>{s[effectIndex][key]=el.type==='checkbox'?el.checked:+el.value},!held);held=true;syncStack()};el.onchange=el.onblur=()=>{held=false};
+}
+$('fx-mask').onchange=e=>{const v=e.target.value;if(v==='current')return;const item=maskBank.find(m=>m.id===+v),cv=v==='selection'?selectionCanvas():item?.cv;
+ editStack(s=>{s[effectIndex].mask=cv?localMask(active,cv):null;s[effectIndex].maskName=item?.name||'Selection mask'});syncStack()};
+
+
+function toneStats(im){
+ const zones=[[0,0,0,0],[0,0,0,0],[0,0,0,0]],all=[0,0,0,0],p=im.data,step=Math.max(1,Math.floor(Math.sqrt(im.width*im.height/24000)));
+ for(let y=0;y<im.height;y+=step)for(let x=0;x<im.width;x+=step){
+  const i=4*(y*im.width+x),a=p[i+3]/255;if(!a)continue;
+  const lum=(.2126*p[i]+.7152*p[i+1]+.0722*p[i+2])/255;
+  for(let z=0;z<3;z++){const k=a*Math.max(0,1-Math.abs(2*lum-z));for(let c=0;c<3;c++)zones[z][c]+=p[i+c]*k;zones[z][3]+=k}
+  for(let c=0;c<3;c++)all[c]+=p[i+c]*a;all[3]+=a;
+ }
+ return zones.map(row=>row.slice(0,3).map((v,c)=>row[3]>1?v/row[3]:all[c]/(all[3]||1)));
+}
+function matchReference(im,ref){
+ if(!ref||!ref.amounts.some(Boolean))return;
+ const current=toneStats(im),deltas=current.map((row,z)=>row.map((v,k)=>(ref.tones[z][k]-v)*ref.amounts[z]/100)),p=im.data;
+ for(let i=0;i<p.length;i+=4){if(!p[i+3])continue;const r=p[i],g=p[i+1],b=p[i+2],level=(.2126*r+.7152*g+.0722*b)*2/255,z=Math.min(1,Math.floor(level)),f=level-z;
+  const skin=ref.skin&&r>g&&g>b&&r-b>12?1-.88*ss(0,.3,(r-g)/(r+1))*(1-ss(.55,.85,(r-b)/(r+1))):1;
+  for(let k=0;k<3;k++)p[i+k]+=skin*(deltas[z][k]*(1-f)+deltas[z+1][k]*f);
+ }
+}
+async function photoPixels(file,limit){
+ const bitmap=await createImageBitmap(file);
+ try{const scale=Math.min(1,limit/Math.max(bitmap.width,bitmap.height),Math.sqrt(18000000/(bitmap.width*bitmap.height))),cv=bc(Math.max(1,Math.round(bitmap.width*scale)),Math.max(1,Math.round(bitmap.height*scale))),g=cv.getContext('2d');g.drawImage(bitmap,0,0,cv.width,cv.height);return g.getImageData(0,0,cv.width,cv.height)}finally{bitmap.close()}
+}
+let referenceJob=0;
+$('ref-file').onchange=async e=>{
+ const file=e.target.files[0],doc=imageRequest,job=++referenceJob;e.target.value='';if(!file||!base)return;
+ try{const im=await photoPixels(file,240);if(job!==referenceJob||doc!==imageRequest)return;film.setReference({name:file.name,tones:toneStats(im),amounts:[65,65,65],skin:true})}
+ catch{$('ref-status').textContent='Could not read the reference photo.'}
+};
+function syncReference(){
+ const ref=film?.state.reference;$('ref-choose').disabled=!base;$('ref-controls').hidden=!ref;$('ref-status').textContent=ref?ref.name:'';
+ if(!ref)return;for(const [z,el] of [...document.querySelectorAll('[data-ref-zone]')].entries()){el.value=ref.amounts[z];el.nextElementSibling.value=el.value+'%'}$('ref-skin').checked=ref.skin;
+}
+$('ref-choose').onclick=()=>$('ref-file').click();$('ref-clear').onclick=()=>film.setReference(null);
+for(const el of document.querySelectorAll('[data-ref-zone],#ref-skin')){
+ let gesture=false;el.oninput=()=>{const ref=structuredClone(film.state.reference);if(!ref)return;if(el.id==='ref-skin')ref.skin=el.checked;else ref.amounts[+el.dataset.refZone]=+el.value;
+ film.setReference(ref,!gesture);gesture=true};el.onchange=el.onblur=()=>{gesture=false};
+}
+let namedLooks=[];
+try{const saved=JSON.parse(localStorage.getItem('totone:looks')||'[]');if(Array.isArray(saved))namedLooks=saved.filter(l=>typeof l.name==='string'&&l.state?.f&&Array.isArray(l.glints))}catch{}
+function captureLook(name){
+ const state=structuredClone(film.state);delete state.d;if(state.grading)state.grading.masks=state.grading.masks?.filter(m=>m.kind!=='saved');
+ return {name,state,glints:layers.filter(l=>l.vis&&l.overlay?.i===glintIndex&&!l.o).map(l=>({settings:structuredClone(l.overlay),opacity:l.op,blend:l.bm}))};
+}
+function refreshLooks(name){
+ const list=$('look-list');list.replaceChildren(...namedLooks.map(l=>new Option(l.name,l.name)));if(name&&namedLooks.some(l=>l.name===name))list.value=name;
+ $('look-apply').disabled=!base||!namedLooks.length;$('look-save').disabled=!base;$('batch-files').disabled=!namedLooks.length;
+}
+$('look-save').onclick=()=>{const name=$('look-name').value.trim();if(!name){$('look-name').focus();return}
+ const next=[...namedLooks.filter(l=>l.name!==name),captureLook(name)];
+ try{localStorage.setItem('totone:looks',JSON.stringify(next));namedLooks=next;refreshLooks(name);$('look-status').textContent='Saved '+name+' in this browser.'}catch{$('look-status').textContent='Browser storage is full or unavailable.'}
+};
+$('look-apply').onclick=()=>{const look=namedLooks.find(l=>l.name===$('look-list').value);if(!look||!base)return;
+ pushU(documentUndo());layers=layers.filter(l=>l.lk||l.overlay?.i!==glintIndex||l.o);if(!layers.includes(active))active=layers.at(-1)||null;
+ film.applySavedLook(look.state);for(const glint of look.glints){addOv(glintIndex,glint.settings,false);active.op=glint.opacity;active.bm=glint.blend}refreshLayers();draw()
+};
+function batchRender(im,look,ev){
+ const state=structuredClone(look.state);state.a.exp+=ev;const output=film.renderLook(im,state),cv=bc(im.width,im.height),g=cv.getContext('2d');g.putImageData(output,0,0);
+ if(look.glints.length){const source=bc(im.width,im.height);source.getContext('2d').putImageData(im,0,0);
+  for(const glint of look.glints){const layer=overlayPixels(glint.settings,im.width,im.height,source);g.globalAlpha=glint.opacity;g.globalCompositeOperation=glint.blend;g.drawImage(layer.cv,0,0)}}
+ return cv;
+}
+// A stored ZIP keeps already-compressed PNG files intact and downloads the set in one action.
+const crcTable=Uint32Array.from({length:256},(_,i)=>{let c=i;for(let j=0;j<8;j++)c=(c>>>1)^((c&1)?0xedb88320:0);return c>>>0});
+async function zipPhotos(entries){
+ const parts=[],directory=[];let offset=0,centralSize=0;
+ for(const [filename,blob] of entries){
+  const name=new TextEncoder().encode(filename),data=new Uint8Array(await blob.arrayBuffer());let crc=0xffffffff;for(const byte of data)crc=(crc>>>8)^crcTable[(crc^byte)&255];crc=(crc^0xffffffff)>>>0;
+  const head=new Uint8Array(30+name.length),h=new DataView(head.buffer);h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x800,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);head.set(name,30);
+  const record=new Uint8Array(46+name.length),r=new DataView(record.buffer);r.setUint32(0,0x02014b50,true);r.setUint16(4,20,true);record.set(head.subarray(4,30),6);r.setUint32(42,offset,true);record.set(name,46);
+  directory.push(record);parts.push(head,blob);offset+=head.length+data.length;centralSize+=record.length;
+  if(offset+centralSize>=0xffffffff||entries.length>65535)throw Error('Choose a smaller set for this ZIP.');
+ }
+ const end=new Uint8Array(22),v=new DataView(end.buffer);v.setUint32(0,0x06054b50,true);v.setUint16(8,entries.length,true);v.setUint16(10,entries.length,true);v.setUint32(12,centralSize,true);v.setUint32(16,offset,true);
+ return new Blob([...parts,...directory,end],{type:'application/zip'});
+}
+let batch=[],batchJob=0,batchBusy=false;
+function previewBatch(row){const look=namedLooks.find(l=>l.name===$('look-list').value);if(!look)return;const view=batchRender(row.thumb,look,row.ev);row.canvas.getContext('2d').drawImage(view,0,0)}
+$('look-list').onchange=()=>batch.forEach(previewBatch);
+$('batch-files').onchange=async e=>{
+ const files=[...e.target.files],job=++batchJob;e.target.value='';if(!files.length)return;batch=[];$('batch-items').replaceChildren();$('batch-export').disabled=true;const failed=[];
+ for(const file of files){try{const thumb=await photoPixels(file,128);if(job!==batchJob)return;
+  const canvas=bc(thumb.width,thumb.height),label=document.createElement('label'),ev=document.createElement('input');ev.type='number';ev.min=-4;ev.max=4;ev.step=.1;ev.value=0;ev.setAttribute('aria-label',file.name+' exposure in EV');
+  const row={file,thumb,canvas,ev:0};batch.push(row);label.append(canvas,document.createTextNode(file.name+' · EV'),ev);$('batch-items').append(label);previewBatch(row);ev.oninput=()=>{row.ev=Math.max(-4,Math.min(4,+ev.value||0));previewBatch(row)}
+ }catch{failed.push(file.name)}}if(job!==batchJob)return;$('batch-export').disabled=!batch.length;$('look-status').textContent=batch.length+' photos ready.'+(failed.length?' Could not read '+failed.join(', '):'');
+};
+$('batch-export').onclick=async()=>{
+ const look=namedLooks.find(l=>l.name===$('look-list').value),items=batch.map(r=>({file:r.file,ev:r.ev}));if(!items.length||batchBusy||!look)return;
+ batchBusy=true;$('batch-setup').disabled=true;const entries=[],limit=+$('mx').value;
+ try{for(const [i,row] of items.entries()){
+  $('look-status').textContent='Rendering '+(i+1)+' of '+items.length+'…';const im=await photoPixels(row.file,limit),blob=await toBlob(batchRender(im,look,row.ev),'image/png');if(!blob)throw Error('Could not encode '+row.file.name);
+  entries.push([String(i+1).padStart(3,'0')+'-'+row.file.name.replace(/\.[^.]*$/,'').replace(/[\\/:*?"<>|]/g,'_')+'.png',blob])
+ }downloadBlob(await zipPhotos(entries),'Totone photos.zip');$('look-status').textContent='Exported '+items.length+' photos.'}catch(e){$('look-status').textContent=e.message}finally{batchBusy=false;$('batch-setup').disabled=false}
+};
+
+
+function jumpTool(tabName,id){
+ const tabButton=document.querySelector('.tabs [data-t="'+tabName+'"]');if(!tabButton)return;tabButton.click();
+ const el=$(id);if(!el)return;let parent=el;while(parent){if(parent.tagName==='DETAILS')parent.open=true;parent=parent.parentElement}
+ const target=el.tagName==='DETAILS'?el.querySelector('summary'):el;target.scrollIntoView({block:'nearest'});target.focus({preventScroll:true});
+}
+const toolCommands=[
+ ['Saved masks','select','saved-masks','subject silhouette hair selection reuse library'],['Select subject','select','auto2','person object cutout'],
+ ['Smooth layer edges','layers','edge-start','brush hair refine side feather outline'],['Layer mask','layers','mask-panel','hide reveal mask hair cutout'],
+ ['Layer effects stack','layers','fx-panel','order curve grain halation effect'],['Retouch brush','layers','retouch-panel','heal clone spot blemish repair'],
+ ['Reference colour match','grade','reference-panel','color copy still protect skin'],['Local grading masks','grade','local-tools','exposure gradient radial'],
+ ['Tone curves','grade','curve-plot','contrast rgb graph'],['HSL colour mixer','grade','hsl-tools','hue saturation lightness color'],
+ ['Saved looks and batch export','film','batch-panel','set apply series zip grain preset'],['Double exposure','film','film-section','fill subject blend silhouette'],
+ ['Film grain','film','film-section','texture stock noise finish'],['White balance','film','film-section','neutral sample temperature'],
+ ['Film presets','film','film-section','cinematic stocks looks'],['Photo-filled lettering','text','tx-fill','image type text'],
+ ['Custom text warp','text','custom-warp','bend curve lettering'],['Glints','glints','glint-look','star sparkle lens halation'],
+ ['Gradient map','tone','gradient-enabled','duo recolour palette'],['Crop and straighten','crop','cgrid','rotate frame aspect ratio']
+];
+function searchTools(){
+ const q=$('tool-query').value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+ const rows=toolCommands.filter(([n,,,alias])=>q.every(k=>(n+' '+alias).toLowerCase().includes(k)));
+ const list=$('tool-results');list.replaceChildren(...rows.map(row=>{const b=document.createElement('button');b.textContent=row[0];b.onclick=()=>{$('tool-dialog').close();jumpTool(row[1],row[2]);
+  if(row[2]==='film-section'){const section={'Double exposure':'double','Film grain':'finish','White balance':'detail','Film presets':'presets'}[row[0]];$('film-section').value=section;$('film-section').dispatchEvent(new Event('change'))}
+ };return b}));if(!rows.length)list.textContent='No matching tools.';
+}
+function openToolSearch(){if(document.querySelector('dialog[open]'))return;$('tool-query').value='';searchTools();$('tool-dialog').showModal();$('tool-query').focus()}
+$('tool-finder').onclick=openToolSearch;$('tool-close').onclick=()=>$('tool-dialog').close();$('tool-query').oninput=searchTools;
+$('tool-dialog').onkeydown=e=>{e.stopPropagation();const buttons=[...$('tool-results').querySelectorAll('button')],i=buttons.indexOf(document.activeElement);
+ if(e.key==='Enter'&&e.target===$('tool-query')){e.preventDefault();buttons[0]?.click()}
+ if((e.key==='ArrowDown'||e.key==='ArrowUp')&&buttons.length){e.preventDefault();buttons[(i+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length].focus()}
+};
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!e.target.closest('input,select,textarea,[contenteditable="true"],dialog')){e.preventDefault();openToolSearch()}});
+const draftDB=new Promise((resolve,reject)=>{
+ try{const request=indexedDB.open('totone-recovery',1);request.onupgradeneeded=()=>request.result.createObjectStore('drafts',{keyPath:'key'}).createIndex('time','time');
+ request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)}catch(e){reject(e)}
+});
+let draftKey;try{draftKey=sessionStorage.getItem('totone:session')||crypto.randomUUID();sessionStorage.setItem('totone:session',draftKey)}catch{draftKey=String(Date.now())+'-'+Math.random()}
+let draftTimer=0,draftDirty=false,draftBusy=false,previousDraft=null,draftRevision=0;
+function draftStatus(message){$('draft-status').textContent=message}
+const draftReady=draftDB.then(db=>new Promise((done,fail)=>{
+ const req=db.transaction('drafts').objectStore('drafts').index('time').openCursor(null,'prev');req.onsuccess=()=>{previousDraft=req.result?.value||null;$('recover-empty').hidden=$('recover-project').hidden=!previousDraft;done()};req.onerror=()=>fail(req.error);
+})).catch(()=>draftStatus('Local recovery is unavailable in this browser.'));
+function queueDraft(){
+ if(!base)return;draftDirty=true;draftRevision++;clearTimeout(draftTimer);draftTimer=setTimeout(writeDraft,1800);
+}
+async function writeDraft(){
+ if(!base||!draftDirty||draftBusy)return;draftBusy=true;const revision=draftRevision;
+ try{await draftReady;const db=await draftDB;const record={key:draftKey,time:Date.now(),name:projectTitle,blob:packProject(captureDocument(),versions)};
+ await new Promise((done,fail)=>{const tx=db.transaction('drafts','readwrite');tx.objectStore('drafts').put(record);tx.oncomplete=done;tx.onabort=tx.onerror=()=>fail(tx.error)});
+ draftStatus('Saved on this device at '+new Date(record.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'.');
+ }catch{draftStatus('Local save failed. Save a project file to keep this edit.')}
+ finally{draftBusy=false;draftDirty=revision!==draftRevision;if(draftDirty){clearTimeout(draftTimer);draftTimer=setTimeout(writeDraft,1000)}}
+}
+async function restoreDraft(){
+ if(!previousDraft)return;const doc=imageRequest;
+ try{const bundle=await unpackProject(previousDraft.blob);if(doc!==imageRequest)return;const prior=base?documentUndo():null;installDocument(bundle.doc);versions=bundle.pins;projectTitle=previousDraft.name;undoStack=[];redoS=[];if(prior)pushU(prior);updatePins();
+ $('recover-empty').hidden=$('recover-project').hidden=true;if($('project-dialog').open)$('project-dialog').close();queueDraft()
+ }catch{draftStatus('The recovery copy could not be opened.')}
+}
+$('recover-empty').onclick=$('recover-project').onclick=restoreDraft;
+document.addEventListener('input',e=>{if(e.target.closest('.pn')&&!['search','file'].includes(e.target.type))queueDraft()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)writeDraft()});
+window.addEventListener('pagehide',()=>{if(draftDirty)writeDraft()});
+
+
+$('edge-back').onchange=()=>draw(true);suiteReady=true;
+maskControls();film.build();showP();
+if(['#portraits','#double-exposure'].includes(location.hash))film.focusDouble();
 if(location.hash==='#text')showTextLayer();
 if(location.hash==='#grade')document.querySelector('[data-t="grade"]').click();
+if(location.hash==='#film'||location.hash==='#stocks')document.querySelector('[data-t="film"]').click();
+if(location.hash==='#stocks'){const collection=$('film-collection');collection.value='Film stocks';collection.dispatchEvent(new Event('change',{bubbles:true}))}
 
 
 </script>
