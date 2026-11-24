@@ -1,0 +1,73 @@
+/* Totone Studio Extensions — Canva + Photoshop Power Modules */
+header{gap:6px;padding:8px 14px}
+header button,header select{padding:5px 9px;font-size:13px}
+.tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+.tabs button{padding:10px 2px 8px;font-size:11.5px}
+
+/* Stage Guides / Grid & Floating Layer Context Bar */
+#stage-guides{position:fixed;pointer-events:none;z-index:4;display:none;border:0;margin:0;max-width:none;max-height:none}
+#layer-float-bar{position:fixed;z-index:11;display:flex;align-items:center;gap:4px;padding:4px 6px;background:rgba(9,21,52,.94);backdrop-filter:blur(8px);border:1px solid var(--edge);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.45);transform:translateX(-50%);white-space:nowrap}
+#layer-float-bar[hidden]{display:none!important}
+#layer-float-bar button{padding:4px 7px;font-size:11.5px;border-color:transparent;background:transparent}
+#layer-float-bar button:hover{background:var(--line);border-color:var(--edge)}
+#layer-float-bar .fl-sep{width:1px;height:16px;background:var(--line);margin:0 1px}
+#layer-float-bar input[type=range]{width:66px;flex:none;margin:0 2px}
+#grid-toggle[aria-pressed=true]{background:var(--ink);color:var(--panel)}
+.shape-warp-box{border:1px solid var(--edge);background:rgba(255,255,255,.035);border-radius:5px;padding:8px 10px;margin:8px 0}
+.draw-tools.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.draw-tools.four button{padding:6px 2px;font-size:11.5px}
+.y2k-chip{width:20px;height:20px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.45);flex:none}
+.y2k-chip:hover{transform:scale(1.12)}
+#y2k-grid .studio-card{padding:7px 6px;gap:3px}
+#y2k-grid .studio-card small{font-size:10px;opacity:.75}
+
+/* Canva Design Studio */
+.studio-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:8px 0}
+.studio-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.studio-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 5px;background:var(--bg);border:1px solid var(--line);border-radius:4px;text-align:center;font-size:11.5px;color:var(--ink);cursor:pointer;min-width:0}
+.studio-card:hover{border-color:var(--acc);background:var(--line)}
+.studio-card svg{width:28px;height:28px;flex:none}
+.studio-card small{color:var(--mute);font-size:10px}
+.tpl-card{display:flex;flex-direction:column;gap:4px;padding:5px;background:var(--bg);border:1px solid var(--line);border-radius:4px;text-align:left;cursor:pointer;min-width:0}
+.tpl-card:hover{border-color:var(--acc);background:var(--line)}
+.tpl-swatch{width:100%;aspect-ratio:1.35;border-radius:2px;display:grid;place-items:center;font-weight:800;font-size:11px;letter-spacing:.04em;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.tpl-card span{font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pair-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;padding:8px 10px;margin:4px 0;background:var(--bg);border:1px solid var(--line);border-radius:4px;text-align:left}
+.pair-btn:hover{border-color:var(--acc);background:var(--line)}
+.pair-btn strong{font-size:15px;line-height:1.15;color:var(--ink)}
+.pair-btn small{font-size:11px;color:var(--mute)}
+.brand-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0;align-items:center}
+.brand-dot{width:28px;height:28px;padding:0;border-radius:4px;border:1px solid var(--edge);position:relative}
+.brand-dot:hover{transform:scale(1.08)}
+
+/* Photoshop Draw Studio */
+.draw-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:6px 0}
+.draw-tools button{padding:7px 4px;font-size:12px}
+.draw-tools button.on{background:var(--ink);color:var(--panel)}
+.color-pair{display:flex;align-items:center;gap:8px;margin:8px 0}
+.color-pair input[type=color]{width:42px;height:34px;border-radius:4px}
+.draw-swatches{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.draw-swatches button{width:22px;height:22px;padding:0;border-radius:3px;border:1px solid var(--edge)}
+#eyedrop-loupe{position:fixed;pointer-events:none;z-index:25;display:none;padding:4px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--edge);font-size:12px;font-family:monospace;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+#eyedrop-loupe i{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid #fff}
+
+/* Photoshop Filters Studio */
+.fx-btn-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:8px 0}
+.fx-btn-grid button{padding:8px 6px;font-size:12px;text-align:left}
+.fx-btn-grid button.on{background:var(--ink);color:var(--panel)}
+.bg-rm-box{border:1px solid var(--edge);background:rgba(255,255,255,.03);border-radius:5px;padding:10px;margin:6px 0 12px}
+.bg-rm-box h4{margin:0 0 4px;font-size:13px}
+
+/* New Canvas & History Dialogs */
+#new-canvas-dialog{width:min(620px,95vw)}
+.size-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
+@media (max-width:540px){.size-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.size-presets button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 9px;background:var(--bg);border:1px solid var(--line);border-radius:4px;text-align:left}
+.size-presets button:hover,.size-presets button.on{border-color:var(--acc);background:var(--line)}
+.size-presets button strong{font-size:12.5px;color:var(--ink)}
+.size-presets button small{font-size:11px;color:var(--mute)}
+#history-dialog{width:min(400px,94vw)}
+#history-list{display:flex;flex-direction:column;gap:3px;max-height:46vh;overflow:auto;margin:8px 0}
+#history-list button{display:flex;justify-content:space-between;align-items:center;text-align:left;padding:6px 9px;font-size:12.5px}
+#history-list button.current{background:var(--ink);color:var(--panel);font-weight:700}
+#history-list button.future{opacity:.55}
