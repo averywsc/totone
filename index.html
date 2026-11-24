@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Totone</title>
-<meta name="description" content="Grade and retouch photos with cinematic presets, film-stock-inspired looks, adjustable strength and grain, and gradient maps, then build layered designs with precise selections, masks, warp brushes, text on paths, photo-filled lettering, custom borders, overlays, and highlight glints—all in a browser-based editor with side-by-side version comparison and editable project files.">
+<meta name="description" content="A free browser photo editor, Lightroom-style color grader, and design studio with on-device AI background removal, ESRGAN upscaling, depth bokeh, 3D LUTs, Point Color, warpable shapes &amp; text, 30+ overlays, 38 filters, Liquify, Magic Eraser, multi-format export with MB size caps, customizable UI themes, and editable project files.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050c1f'/%3E%3Cpath d='M14 16h36v10H37v26H27V26H14z' fill='%23ffffff'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Lobster&family=Pacifico&family=Permanent+Marker&family=Bangers&family=Abril+Fatface&family=Righteous&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
 <body>
 <header>
 <h1>Totone</h1><a id="donate-btn" href="https://buymeacoffee.com/averyuwubaka" target="_blank" rel="noopener noreferrer" title="Support Totone on Buy Me a Coffee">♥ Donate</a>
-<button id="open" title="Open image or .totone project (O)">Open</button><button id="new-canvas-open" title="New blank design or Magic Resize">New</button><button id="project-menu" title="Save or open .totone project">Project</button>
+<button id="open" title="Open image or .totone project (O)">Open</button><button id="new-canvas-open" title="New blank design or Magic Resize">New</button><button id="sessions-open" title="Previous Sessions &amp; Saved Browser Projects">Sessions</button><button id="project-menu" title="Save or open .totone project">Project</button>
 <button id="undo" title="Undo (Ctrl+Z)">Undo</button><button id="redo" title="Redo (Ctrl+Y)">Redo</button><button id="cmp" title="Hold to compare original (\)">Compare</button>
 <label class="hd" title="Before / after split slider"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label>
 <select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select>
@@ -76,10 +76,11 @@
 <button type="button" data-dock="grid" title="Toggle Rulers &amp; Snap Grid (Ctrl+')"><svg viewBox="0 0 24 24"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
 <button type="button" data-dock="border" title="Add Image Border / Polaroid Frame"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5"/><rect x="7" y="7" width="10" height="10" rx=".5" opacity=".55"/></svg></button>
 <button type="button" data-dock="history" title="Visual Edit History Timeline"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></button>
+<button type="button" data-dock="sessions" title="Previous Sessions &amp; Saved Browser Projects"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 14h6" opacity=".65"/></svg></button>
 <button type="button" data-dock="auto" title="1-Click Smart Auto Enhance"><svg viewBox="0 0 24 24"><path d="M4 20L15 9M14 4v3M19 9h3M17.5 5.5l2-2M17.5 12.5l2 2"/></svg></button>
 <button type="button" data-dock="settings" title="Settings &amp; UI Theme Customizer (Ctrl+,)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.08a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </nav>
-<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
+<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sessions">Previous sessions</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="nav-minimap" hidden aria-label="Zoom Navigator"><canvas id="nav-mini-cv" width="144" height="108"></canvas><div id="nav-mini-box"></div></div><div id="split-handle" hidden title="Drag left/right to compare before &amp; after"><span>⇄</span></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
 <aside>
 <button id="panel-height" aria-label="Change editing panel height">Panel height</button>
 <nav id="cat-tabs" aria-label="Workspace categories">
@@ -120,11 +121,36 @@
 <label><span><input type="checkbox" id="rmbg-decontam" checked> Decontaminate edge halo</span></label>
 <div id="rmbg-prog-wrap" class="mini-prog" hidden><div id="rmbg-prog-bar"></div></div>
 <div class="bar"><button id="rmbg-smart" class="pri">Remove Background</button><button id="rmbg-refine">Refine hair / edges</button></div>
+<div class="rmbg-touchup" id="rmbg-touchup">
+<div class="rmbg-tu-head"><strong>Erase &amp; Restore Brush</strong><small>Press X to flip · [ ] size</small></div>
+<div class="el-chips rmbg-tu-modes" id="rmbg-tu-modes">
+<button type="button" class="on" data-tu="off">Off</button>
+<button type="button" data-tu="erase">Erase</button>
+<button type="button" data-tu="restore">Restore</button>
+<button type="button" data-tu="soft">Soft Edge</button>
+</div>
+<div id="rmbg-tu-opts" hidden>
+<label>Brush size <input id="rmbg-tu-size" type="range" min="4" max="180" value="34"><output>34 px</output></label>
+<label>Softness <input id="rmbg-tu-soft" type="range" min="0" max="100" value="40"><output>40%</output></label>
+<label>Inspect edge on <select id="rmbg-tu-bg"><option value="none">Normal Canvas</option><option value="#00e676">Green Screen</option><option value="#ef4444">High-Contrast Red</option><option value="#050811">Pitch Black</option><option value="#ffffff">Pure White</option></select></label>
+<div class="bar">
+<button type="button" id="rmbg-tu-undo">Undo stroke</button>
+<button type="button" id="rmbg-tu-shrink" title="Shrink cutout edge by 1px to remove fringes">− Edge</button>
+<button type="button" id="rmbg-tu-grow" title="Expand cutout edge by 1px">+ Edge</button>
+<button type="button" id="rmbg-tu-invert" title="Swap subject and background">Invert</button>
+</div>
+</div>
+</div>
 <div class="bar rmbg-next" id="rmbg-next" hidden>
 <button type="button" data-rn="outline">+ Sticker outline</button>
 <button type="button" data-rn="shadow">+ Drop shadow</button>
 <button type="button" data-rn="swapbg">Swap background</button>
-<button type="button" data-rn="frame">Photo frame</button>
+<button type="button" data-rn="trim">Auto-trim</button>
+</div>
+<div id="rmbg-bg-studio" class="rmbg-bg-studio" hidden>
+<div class="rmbg-tu-head"><strong>Instant Background Swapper</strong><button type="button" id="rmbg-bg-close" style="padding:1px 6px;font-size:11px">✕</button></div>
+<div class="rmbg-bg-swatches" id="rmbg-bg-swatches"></div>
+<div class="bar" style="margin-top:6px"><button type="button" id="rmbg-bg-blur" class="pri">Blurred Original (Bokeh)</button><button type="button" id="rmbg-bg-photo">Upload Photo…</button><input type="file" id="rmbg-bg-file" accept="image/*" hidden></div>
 </div>
 <p class="note" id="rmbg-status" role="status"></p>
 </div>
@@ -256,6 +282,7 @@
 <h3>Quick styles</h3><div class="sty" id="tsty"></div></div>
 </div>
 <div class="pn" id="p-grade">
+<div class="lr-recipes" id="lr-recipes" aria-label="1-Click Develop Recipes"></div>
 <details id="lr-basic" open><summary>Basic Develop</summary>
 <div class="bar lr-top-bar"><button type="button" id="lr-auto">Auto</button><button type="button" id="lr-bw" aria-pressed="false">B&amp;W</button><button type="button" id="lr-hdr" aria-pressed="false">HDR</button><button type="button" id="lr-basic-reset">Reset</button></div>
 <div class="bar" style="align-items:center"><label style="margin:0;flex:1">White Balance <select id="lr-wb"><option value="custom">As Shot</option><option value="daylight">Daylight</option><option value="cloudy">Cloudy</option><option value="shade">Shade</option><option value="tungsten">Tungsten</option><option value="fluorescent">Fluorescent</option><option value="concert">Concert Red Fix</option></select></label><button type="button" id="lr-wb-pick" aria-pressed="false" title="Click a neutral grey/white area on photo">Pick WB</button></div>
@@ -459,7 +486,7 @@
 
 <div class="pn" id="p-warp"><label>Brush <select id="mode"></select></label><label>Size <input type="range" id="size" min="10" max="300" value="90"></label><label>Strength <input type="range" id="pow" min="1" max="100" value="40"></label><label>Hardness <input type="range" id="hard" min="0" max="100" value="50"></label><h3>Brush options</h3><label>Pixel size <input type="range" id="bpx" min="2" max="80" value="10"></label><label>Colour levels <input type="range" id="blv" min="2" max="16" value="4"></label><label>Paint colour <input type="color" id="bpc" value="#ffb347"></label><h3>Stroke</h3><label>Spacing <input type="range" id="spc" min="5" max="100" value="25"></label><label>Smoothing <input type="range" id="smo" min="0" max="100" value="0"></label><label>Apply to <select id="bt"><option value="all">Photo and layers</option><option value="layer">Selected layer</option><option value="bg">Photo only</option></select></label><label><span><input type="checkbox" id="warp-extend" checked> Warp past layer edges</span></label><p class="note">Warp can pull pixels past a layer edge within the canvas.</p><label><span><input type="checkbox" id="sym"> Mirror stroke left to right</span></label><p class="note">Drag on the image. Hold still to keep applying swirl, bloat and similar brushes. Pen pressure is supported. Strokes carry across the photo and every layer. Combine brushes work between the photo and the selected layer (the top layer if none is selected): erase or dissolve it to reveal the photo, reveal only in highlights or shadows, mix colours, colourise it from the photo, or bake it into the photo. Pixel, Colour and Texture brushes paint effects onto the photo and layers.</p></div>
 
-<div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="layers-elements">Search elements</button><button id="add-border">Add border</button><button id="edit-glints" hidden>Edit glints</button><button id="ltxt">Add text</button><button id="edit-text-layer" hidden>Edit text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="edge-start">Smooth edges</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><details id="fx-panel"><summary>Layer effects stack</summary><label>Effect <select id="fx-kind"><option value="curve">Tone curve</option><option value="film">Film look</option><option value="grain">Film grain</option><option value="halation">Halation</option></select></label><button id="fx-add">Add effect</button><div id="fx-list" aria-label="Effects in rendering order"></div><fieldset id="fx-controls"><label>Enabled <input id="fx-on" type="checkbox" ></label><label>Strength <input id="fx-amount" type="range" min="0" max="100"><output></output></label><label id="fx-param-row"><span id="fx-param-name"></span> <input type="range" min="1" max="254" id="fx-param"><output></output></label><label id="fx-film-row">Film recipe <select id="fx-film"></select></label><label>Effect mask <select id="fx-mask"></select></label><div class="bar"><button id="fx-up">Earlier</button><button id="fx-down">Later</button><button id="fx-remove">Remove</button></div></fieldset></details>
+<div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div class="layer-align-bar" id="layer-align-bar" aria-label="Align active layer"><button type="button" data-al="left" title="Align left">⇤</button><button type="button" data-al="cx" title="Center horizontally">↔</button><button type="button" data-al="right" title="Align right">⇥</button><button type="button" data-al="top" title="Align top">⤒</button><button type="button" data-al="cy" title="Center vertically">↕</button><button type="button" data-al="bottom" title="Align bottom">⤓</button><button type="button" data-al="fit" title="Fit layer inside canvas">Fit</button><button type="button" data-al="fill" title="Fill canvas with layer">Fill</button></div><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="layers-elements">Search elements</button><button id="add-border">Add border</button><button id="edit-glints" hidden>Edit glints</button><button id="ltxt">Add text</button><button id="edit-text-layer" hidden>Edit text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="edge-start">Smooth edges</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><details id="fx-panel"><summary>Layer effects stack</summary><label>Effect <select id="fx-kind"><option value="curve">Tone curve</option><option value="film">Film look</option><option value="grain">Film grain</option><option value="halation">Halation</option></select></label><button id="fx-add">Add effect</button><div id="fx-list" aria-label="Effects in rendering order"></div><fieldset id="fx-controls"><label>Enabled <input id="fx-on" type="checkbox" ></label><label>Strength <input id="fx-amount" type="range" min="0" max="100"><output></output></label><label id="fx-param-row"><span id="fx-param-name"></span> <input type="range" min="1" max="254" id="fx-param"><output></output></label><label id="fx-film-row">Film recipe <select id="fx-film"></select></label><label>Effect mask <select id="fx-mask"></select></label><div class="bar"><button id="fx-up">Earlier</button><button id="fx-down">Later</button><button id="fx-remove">Remove</button></div></fieldset></details>
 <details id="mask-panel"><summary>Layer mask</summary><button id="mask-lift">Make base photo a layer</button>
 <label>Start mask from <select id="layer-mask-kind"><option value="white">Reveal all</option><option value="black">Hide all</option><option value="selection">Current selection</option><option value="luma">Luminance range</option><option value="depth">Imported depth range</option></select></label>
 <div id="mask-depth-options" hidden><button id="depth-choose">Upload depth map…</button><input type="file" accept="image/*" id="depth-file" hidden><p class="note" id="depth-status" role="status">Use a grayscale depth image aligned with this layer.</p></div><div id="mask-luma-options" hidden><label>Dark limit <input id="mask-low" type="range" min="0" max="255" value="128"><output>128</output></label><label>Light limit <input id="mask-high" type="range" min="0" max="255" value="255"><output>255</output></label><label>Range feather <input id="mask-soft" type="range" min="0" max="100" value="24"><output>24</output></label></div>
@@ -1244,6 +1271,24 @@
 </div>
 <div class="bar set-foot"><a id="set-credit" href="https://averybeuth.xyz" target="_blank" rel="noopener noreferrer">averybeuth.xyz</a><span class="sp"></span><button type="button" id="set-close" class="pri">Done</button></div>
 </dialog>
+<dialog id="sessions-dialog" class="studio-dialog" aria-label="Previous Sessions">
+<div class="ses-head">
+<h2>Previous Sessions</h2>
+<div class="bar" style="margin:0"><input type="text" id="ses-save-name" placeholder="Session name (optional)" style="width:180px"><button type="button" id="ses-save-now" class="pri">Save current</button><button type="button" id="ses-save-copy" title="Save as a separate new session slot">Save as new</button></div>
+</div>
+<p class="note">Your edits auto-save locally in your browser (IndexedDB) with all layers, masks, text &amp; color grades intact.</p>
+<div class="bar" style="align-items:center">
+<input type="search" id="ses-search" placeholder="Search saved sessions…" style="flex:1;min-width:0">
+<label style="margin:0;font-size:12px"><input type="checkbox" id="ses-auto" checked> Auto-save</label>
+</div>
+<div id="ses-grid" class="ses-grid"></div>
+<div class="bar ses-foot">
+<span class="note" id="ses-stats" style="margin:0">Loading sessions…</span>
+<span class="sp"></span>
+<button type="button" id="ses-clear-unpinned" class="danger-btn">Clear unpinned</button>
+<button type="button" id="ses-close">Close</button>
+</div>
+</dialog>
 <dialog id="cmd-dialog" class="studio-dialog" aria-label="Command Palette">
 <input type="search" id="cmd-input" placeholder="Type any tool, filter, theme, safe-zone, export, or action…" autocomplete="off">
 <div id="cmd-list" role="listbox"></div>
@@ -1263,5 +1308,7 @@
 <script defer src="js/studio-overlays.js"></script>
 <script defer src="js/studio-lab10.js"></script>
 <script defer src="js/studio-polish.js"></script>
+<script defer src="js/studio-cutout-pro.js"></script>
+<script defer src="js/studio-sessions.js"></script>
 </body>
 </html>

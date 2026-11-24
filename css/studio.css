@@ -290,6 +290,53 @@ h3{border-top:0!important;padding-top:2px!important;margin:18px 0 6px;font-size:
 .ai-tool-grid .studio-card{align-items:flex-start;text-align:left;padding:9px 10px}
 .ai-tool-grid .studio-card span{font-weight:700;font-size:12px}
 #p-grade details,#p-tone h3,.pn h3,.el-bridge,.preset-heading{border:0!important}
+
+/* Erase & Restore Cutout Brush, Instant Backdrop Swapper, Develop Recipes, Layer Align, Draggable Split Wipe & Zoom Minimap */
+.rmbg-touchup{margin:10px 0 6px;padding:8px 9px;background:color-mix(in srgb,var(--bg) 72%,transparent);border:1px solid color-mix(in srgb,var(--edge) 55%,transparent);border-radius:var(--ui-radius)}
+.rmbg-tu-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:5px;font-size:12px}
+.rmbg-tu-head small{font-size:10.5px;color:var(--mute)}
+.rmbg-tu-modes{margin:0 0 4px}
+.rmbg-tu-modes button{flex:1;padding:5px 4px;font-size:11.5px;font-weight:600}
+.rmbg-tu-modes button[data-tu="erase"].on{background:#f43f5e;color:#fff;border-color:#f43f5e}
+.rmbg-tu-modes button[data-tu="restore"].on{background:#10b981;color:#fff;border-color:#10b981}
+.rmbg-tu-modes button[data-tu="soft"].on{background:#38bdf8;color:#050c1f;border-color:#38bdf8}
+.rmbg-bg-studio{margin:8px 0 4px;padding:8px 9px;background:color-mix(in srgb,var(--bg) 80%,transparent);border:1px solid color-mix(in srgb,var(--acc) 35%,var(--edge));border-radius:var(--ui-radius)}
+.rmbg-bg-swatches{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:6px}
+.rmbg-bg-swatches button{height:26px;padding:0;border-radius:4px;border:1px solid rgba(255,255,255,.25)}
+.rmbg-bg-swatches button:hover{transform:scale(1.08);border-color:var(--acc)}
+.lr-recipes{display:flex;gap:4px;overflow-x:auto;padding:2px 0 8px;margin-bottom:4px}
+.lr-recipes button{flex:none;padding:4px 9px;font-size:11.5px;border-radius:999px;background:var(--bg);white-space:nowrap}
+.lr-recipes button:hover{background:var(--line);border-color:var(--acc)}
+.layer-align-bar{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;margin:6px 0}
+.layer-align-bar button{padding:4px 0;font-size:11.5px;text-align:center}
+#split-handle{position:fixed;z-index:10;width:28px;height:28px;border-radius:50%;background:var(--acc);color:var(--accink);border:2px solid var(--panel);box-shadow:0 4px 16px rgba(0,0,0,.55);display:grid;place-items:center;font-size:13px;font-weight:800;cursor:ew-resize;transform:translate(-50%,-50%);user-select:none;touch-action:none}
+#split-handle[hidden]{display:none!important}
+#nav-minimap{position:absolute;left:12px;bottom:12px;z-index:8;padding:4px;background:rgba(9,21,52,.9);border:1px solid var(--edge);border-radius:6px;box-shadow:0 8px 22px rgba(0,0,0,.5);cursor:pointer;user-select:none}
+#nav-minimap[hidden]{display:none!important}
+#nav-mini-cv{display:block!important;width:144px;height:auto;max-height:108px;border:0;margin:0;border-radius:3px;background:#050812}
+#nav-mini-box{position:absolute;border:1.5px solid #38bdf8;background:rgba(56,189,248,.16);pointer-events:none;border-radius:2px}
+
+/* Previous Sessions Gallery Modal */
+#sessions-dialog{width:min(820px,96vw)}
+.ses-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.ses-head h2{margin:0}
+.ses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:10px;max-height:52vh;overflow:auto;padding:4px 2px;margin:8px 0}
+.ses-card{display:flex;flex-direction:column;background:var(--bg);border:1px solid color-mix(in srgb,var(--edge) 60%,transparent);border-radius:calc(var(--ui-radius) + 2px);overflow:hidden;transition:transform .12s ease,border-color .14s ease}
+.ses-card:hover{transform:translateY(-2px);border-color:var(--acc)}
+.ses-card.current{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.ses-thumb-wrap{position:relative;width:100%;aspect-ratio:16/10;background:repeating-conic-gradient(#121d38 0% 25%,#0b142a 0% 50%) 0 0/12px 12px;overflow:hidden;cursor:pointer}
+.ses-thumb-wrap img{width:100%;height:100%;object-fit:contain;display:block}
+.ses-badge{position:absolute;top:6px;left:6px;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700;background:var(--acc);color:var(--accink)}
+.ses-pin-btn{position:absolute;top:5px;right:5px;width:24px;height:24px;padding:0;border-radius:999px;background:rgba(5,12,31,.76);border:1px solid rgba(255,255,255,.25);color:var(--mute);display:grid;place-items:center;font-size:13px}
+.ses-pin-btn.pinned{color:#fbbf24;border-color:#fbbf24;background:rgba(251,191,36,.18)}
+.ses-body{padding:8px 9px;display:flex;flex-direction:column;gap:4px}
+.ses-title{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ses-meta{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
+.ses-actions{display:flex;gap:4px;margin-top:4px}
+.ses-actions button{flex:1;padding:4px 6px;font-size:11.5px}
+.ses-actions button.ses-ic{flex:none;padding:4px 7px}
+.ses-empty{grid-column:1/-1;text-align:center;padding:34px 16px;color:var(--mute);font-size:13.5px}
+.ses-foot{align-items:center;margin-top:6px}
 button,select,input[type=search],input[type=text],input[type=number]{border-color:color-mix(in srgb,var(--edge) 62%,transparent)}
 button:hover{border-color:var(--edge)}
 .studio-card,.tpl-card,.sov-card,.pair-btn{border-color:color-mix(in srgb,var(--line) 85%,transparent);transition:transform .12s ease,border-color .14s ease,background-color .14s ease}
