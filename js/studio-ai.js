@@ -277,43 +277,218 @@ $('ai-depth-mask').onclick=async()=>{
  }finally{aiBusy=false;$('ai-depth-mask').disabled=false}
 };
 
-/* ========== Custom QR Code Layer Generator (qrcode-generator CDN) ========== */
-let qrScriptPromise=null;
-$('qr-add').onclick=async()=>{
- const text=($('qr-text').value||'https://buymeacoffee.com/averyuwubaka').trim();
- if(!text){$('qr-text').focus();return}
- try{
-  if(!window.qrcode){
-   if(!qrScriptPromise)qrScriptPromise=new Promise((res,rej)=>{
-    const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';s.crossOrigin='anonymous';
-    s.onload=res;s.onerror=()=>{qrScriptPromise=null;rej(Error('Could not load QR generator'))};document.head.appendChild(s);
-   });
-   await qrScriptPromise;
+/* ========== Creative QR Code Studio (8 Styles, Gradients, Center Emoji/Logo & Live Preview) ========== */
+let qrScriptPromise=null,qrLogoImg=null;
+function ensureQrLib(){
+ if(window.qrcode)return Promise.resolve();
+ if(!qrScriptPromise)qrScriptPromise=new Promise((res,rej)=>{
+  const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';s.crossOrigin='anonymous';
+  s.onload=res;s.onerror=()=>{qrScriptPromise=null;rej(Error('Could not load QR generator'))};document.head.appendChild(s);
+ });
+ return qrScriptPromise;
+}
+
+function isFinderCell(r,c2,n){
+ return (r<7&&c2<7)||(r<7&&c2>=n-7)||(r>=n-7&&c2<7);
+}
+
+function renderCreativeQrCanvas(size=600){
+ const text=($('qr-text')?.value||'https://totone.studio').trim()||'https://totone.studio';
+ const style=$('qr-style')?.value||'dots';
+ const fg1=$('qr-fg')?.value||'#ffffff',fg2=$('qr-fg2')?.value||'#38bdf8',bg=$('qr-bg')?.value||'#050c1f';
+ const trans=!!$('qr-trans')?.checked;
+ const logoTxt=($('qr-logo-txt')?.value||'').trim();
+ const hasCenter=!!(logoTxt||qrLogoImg);
+ const caption=($('qr-caption')?.value||'SCAN ME').trim()||'SCAN ME';
+
+ const qr=window.qrcode(0,hasCenter?'H':'M');
+ qr.addData(text);qr.make();
+ const n=qr.getModuleCount();
+
+ const isSticker=style==='sticker';
+ const extraH=isSticker?Math.round(size*0.18):0;
+ const cv=bc(size,size+extraH),g=cv.getContext('2d');
+
+ // Background
+ if(isSticker){
+  g.fillStyle=trans?'#ffffff':bg;
+  g.beginPath();g.roundRect(8,8,size-16,size+extraH-16,32);g.fill();
+  g.strokeStyle=fg2;g.lineWidth=6;g.stroke();
+ }else if(!trans){
+  if(style==='aero'){
+   const gr=g.createLinearGradient(0,0,0,size);gr.addColorStop(0,'#0c3b66');gr.addColorStop(1,'#041326');
+   g.fillStyle=gr;
+  }else if(style==='cyber'){
+   g.fillStyle='#040814';
+  }else{
+   g.fillStyle=bg;
   }
+  g.beginPath();g.roundRect(0,0,size,size,28);g.fill();
+ }
+
+ const pad=isSticker?Math.round(size*0.09):Math.round(size*0.065);
+ const cell=(size-pad*2)/n;
+
+ // Build module fill brush
+ const makeInkBrush=()=>{
+  if(style==='gradient'||style==='aero'||style==='cyber'||style==='stars'){
+   const gr=g.createLinearGradient(pad,pad,size-pad,size-pad);
+   gr.addColorStop(0,fg1);gr.addColorStop(1,fg2);
+   return gr;
+  }
+  if(isSticker&&trans&&fg1.toLowerCase()==='#ffffff')return '#091534';
+  return fg1;
+ };
+ const ink=makeInkBrush();
+
+ // Cyber corner targeting brackets
+ if(style==='cyber'){
+  g.save();g.strokeStyle=fg2;g.lineWidth=Math.max(3,size*0.01);g.shadowColor=fg2;g.shadowBlur=14;
+  const m=pad*0.42,len=size*0.08;
+  [[m,m,1,1],[size-m,m,-1,1],[m,size-m,1,-1],[size-m,size-m,-1,-1]].forEach(([x,y,dx,dy])=>{
+   g.beginPath();g.moveTo(x+dx*len,y);g.lineTo(x,y);g.lineTo(x,y+dy*len);g.stroke();
+  });
+  g.restore();
+ }
+
+ // Center clearance box for logo/emoji
+ const centerCells=hasCenter?Math.ceil(n*0.24):0;
+ const cMin=Math.floor((n-centerCells)/2),cMax=cMin+centerCells-1;
+
+ // Draw data modules
+ g.save();
+ if(style==='cyber'){g.shadowColor=fg2;g.shadowBlur=8}
+ g.fillStyle=ink;
+ for(let r=0;r<n;r++){
+  for(let c2=0;c2<n;c2++){
+   if(!qr.isDark(r,c2))continue;
+   if(hasCenter&&r>=cMin&&r<=cMax&&c2>=cMin&&c2<=cMax)continue;
+   if(isFinderCell(r,c2,n)&&style!=='classic')continue; // custom stylized finders drawn below!
+   const x=pad+c2*cell,y=pad+r*cell,cx=x+cell/2,cy=y+cell/2;
+   if(style==='classic'){
+    g.fillRect(x,y,Math.ceil(cell),Math.ceil(cell));
+   }else if(style==='dots'||style==='gradient'||style==='sticker'){
+    g.beginPath();g.arc(cx,cy,cell*0.44,0,Math.PI*2);g.fill();
+   }else if(style==='liquid'){
+    const rd=cell*0.46;
+    g.beginPath();g.roundRect(x+0.4,y+0.4,cell-0.8,cell-0.8,rd);g.fill();
+    if(c2+1<n&&qr.isDark(r,c2+1)&&!isFinderCell(r,c2+1,n))g.fillRect(cx,y+cell*0.12,cell,cell*0.76);
+    if(r+1<n&&qr.isDark(r+1,c2)&&!isFinderCell(r+1,c2,n))g.fillRect(x+cell*0.12,cy,cell*0.76,cell);
+   }else if(style==='cyber'){
+    g.save();g.translate(cx,cy);g.rotate(Math.PI/4);
+    const s=cell*0.64;g.fillRect(-s/2,-s/2,s,s);g.restore();
+   }else if(style==='aero'){
+    g.beginPath();g.arc(cx,cy,cell*0.46,0,Math.PI*2);g.fill();
+    g.fillStyle='rgba(255,255,255,0.62)';
+    g.beginPath();g.ellipse(cx-cell*0.1,cy-cell*0.14,cell*0.2,cell*0.11,-0.4,0,Math.PI*2);g.fill();
+    g.fillStyle=ink;
+   }else if(style==='stars'){
+    const rad=cell*0.52,ir=cell*0.18;
+    g.beginPath();
+    for(let k=0;k<8;k++){
+     const a=k*Math.PI/4,rr=k%2?ir:rad;
+     const px=cx+Math.cos(a)*rr,py=cy+Math.sin(a)*rr;
+     if(k)g.lineTo(px,py);else g.moveTo(px,py);
+    }
+    g.closePath();g.fill();
+   }
+  }
+ }
+
+ // Draw crisp stylized Finder Eyes (guarantees instant phone camera scanning!)
+ if(style!=='classic'){
+  [[0,0],[0,n-7],[n-7,0]].forEach(([fr,fc])=>{
+   const fx=pad+fc*cell,fy=pad+fr*cell,fs=7*cell;
+   const outerR=style==='cyber'?cell*0.6:cell*1.85;
+   g.strokeStyle=ink;g.lineWidth=cell*1.02;
+   g.beginPath();g.roundRect(fx+cell*0.5,fy+cell*0.5,fs-cell,fs-cell,outerR);g.stroke();
+   g.fillStyle=style==='gradient'||style==='aero'||style==='cyber'?fg2:ink;
+   g.beginPath();g.roundRect(fx+cell*2,fy+cell*2,cell*3,cell*3,style==='cyber'?cell*0.35:cell*1.1);g.fill();
+   if(style==='aero'){
+    g.fillStyle='rgba(255,255,255,0.55)';
+    g.beginPath();g.ellipse(fx+cell*3.1,fy+cell*2.7,cell*0.8,cell*0.35,-0.3,0,Math.PI*2);g.fill();
+   }
+  });
+ }
+ g.restore();
+
+ // Center Badge (Uploaded Logo or Emoji / Text)
+ if(hasCenter){
+  const bw=centerCells*cell,bx=pad+cMin*cell,by=pad+cMin*cell;
+  g.save();
+  g.fillStyle=isSticker?(trans?'#ffffff':bg):(trans?'rgba(5,12,31,0.88)':bg);
+  g.strokeStyle=fg2;g.lineWidth=Math.max(2,cell*0.28);
+  g.beginPath();g.roundRect(bx+cell*0.15,by+cell*0.15,bw-cell*0.3,bw-cell*0.3,bw*0.24);g.fill();g.stroke();
+  if(qrLogoImg){
+   const padI=bw*0.14;
+   g.drawImage(qrLogoImg,bx+padI,by+padI,bw-padI*2,bw-padI*2);
+  }else if(logoTxt){
+   g.fillStyle=style==='sticker'&&trans?'#091534':fg1;
+   g.font=`800 ${Math.round(bw*0.52)}px Archivo,sans-serif`;
+   g.textAlign='center';g.textBaseline='middle';
+   g.fillText(logoTxt,bx+bw/2,by+bw/2+2);
+  }
+  g.restore();
+ }
+
+ // Sticker Card Caption
+ if(isSticker){
+  g.fillStyle=trans?'#091534':fg1;
+  g.font=`800 ${Math.round(extraH*0.48)}px Archivo,sans-serif`;
+  g.textAlign='center';g.textBaseline='middle';
+  g.fillText(caption.toUpperCase(),size/2,size+extraH*0.38);
+ }
+ return cv;
+}
+
+async function refreshQrPreview(){
+ const pv=$('qr-preview');if(!pv)return;
+ if($('qr-cap-row'))$('qr-cap-row').hidden=$('qr-style')?.value!=='sticker';
+ try{
+  await ensureQrLib();
+  const cv=renderCreativeQrCanvas(360);
+  pv.width=cv.width;pv.height=cv.height;
+  pv.getContext('2d').drawImage(cv,0,0);
+ }catch{}
+}
+
+['qr-text','qr-style','qr-fg','qr-fg2','qr-bg','qr-trans','qr-logo-txt','qr-caption'].forEach(id=>{
+ $(id)?.addEventListener('input',refreshQrPreview);
+ $(id)?.addEventListener('change',refreshQrPreview);
+});
+$('qr-logo-btn')?.addEventListener('click',()=>$('qr-logo-file')?.click());
+$('qr-logo-file')?.addEventListener('change',e=>{
+ const f=e.target.files?.[0];e.target.value='';if(!f)return;
+ const im=new Image(),u=URL.createObjectURL(f);
+ im.onload=()=>{URL.revokeObjectURL(u);qrLogoImg=im;refreshQrPreview();showToast('Loaded QR center logo!',1200)};
+ im.src=u;
+});
+
+$('qr-add').onclick=async()=>{
+ try{
+  await ensureQrLib();
   if(!base){
    const blank=bc(1080,1080),g0=blank.getContext('2d');g0.fillStyle='#0a1228';g0.fillRect(0,0,1080,1080);
    await load(new File([await toBlob(blank,'image/png')],'QR-Design.png',{type:'image/png'}));
   }
-  const qr=window.qrcode(0,'M');qr.addData(text);qr.make();
-  const count=qr.getModuleCount(),size=512,pad=32,cell=(size-pad*2)/count;
-  const cv=bc(size,size),g=cv.getContext('2d');
-  if(!$('qr-trans').checked){g.fillStyle=$('qr-bg').value;g.beginPath();g.roundRect(0,0,size,size,24);g.fill()}
-  g.fillStyle=$('qr-fg').value;
-  const rounded=$('qr-round').checked;
-  for(let r=0;r<count;r++)for(let c2=0;c2<count;c2++){
-   if(!qr.isDark(r,c2))continue;
-   const x=pad+c2*cell,y=pad+r*cell;
-   if(rounded){g.beginPath();g.roundRect(x+0.5,y+0.5,cell-1,cell-1,cell*0.35);g.fill()}
-   else g.fillRect(x,y,Math.ceil(cell),Math.ceil(cell));
-  }
-  const d=g.getImageData(0,0,size,size);
+  const cv=renderCreativeQrCanvas(640);
+  const d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height);
   pushU(mkSnap('p'));
-  const sc=Math.min(W*0.34/size,H*0.34/size);
-  const l={cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:sc,r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:'QR Code'};
+  const sc=Math.min(W*0.36/cv.width,H*0.36/cv.height);
+  const l={cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:sc,r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:'QR · '+($('qr-style')?.value||'Code')};
   layers.push(l);active=l;refreshLayers();draw();
-  showToast('Added QR Code layer!',1400);
+  showToast('Added Creative QR Code layer!',1400);
  }catch(e){showToast('QR failed: '+(e?.message||e),2200)}
 };
+$('qr-dl')?.addEventListener('click',async()=>{
+ try{
+  await ensureQrLib();
+  const cv=renderCreativeQrCanvas(1024);
+  const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='totone-qr.png';a.click();
+  showToast('Downloaded 1024px Creative QR PNG!',1400);
+ }catch(e){showToast('QR failed: '+(e?.message||e),2000)}
+});
+setTimeout(refreshQrPreview,600);
 
 toolCommands.push(
  ['AI Neural Background Remover (RMBG-1.4 / MODNet)','filters','rmbg-smart','withoutbg rembg rmbg modnet ai remove background cutout transparent hair'],

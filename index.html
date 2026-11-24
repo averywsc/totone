@@ -614,16 +614,25 @@
 <button type="button" class="studio-card" data-col="2x2"><span>2 × 2 Grid</span><small>4 Photos</small></button>
 </div>
 <input type="file" id="collage-files" accept="image/*" multiple hidden>
-<h3>QR Code Generator</h3>
-<p class="note">Create crisp custom QR codes for links, socials, or Spotify.</p>
+<h3>Creative QR Studio</h3>
+<p class="note">8 stylized QR modes with gradients, center emoji/logo badges &amp; live preview (100% scannable).</p>
 <div class="bar"><input type="text" id="qr-text" placeholder="https://example.com or @handle" style="flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:5px 7px;border-radius:3px"></div>
+<label>Creative mode <select id="qr-style"><option value="dots">Rounded Dots</option><option value="classic">Classic Crisp</option><option value="liquid">Liquid Squircle</option><option value="cyber">Y2K Cyber Matrix</option><option value="aero">Frutiger Aero Glass</option><option value="gradient">Gradient Spectrum</option><option value="stars">Starlight Sparkles</option><option value="sticker">Sticker Card ("SCAN ME")</option></select></label>
 <div class="bar" style="align-items:center">
-<label style="margin:0">Ink <input type="color" id="qr-fg" value="#ffffff"></label>
+<label style="margin:0">Ink 1 <input type="color" id="qr-fg" value="#ffffff"></label>
+<label style="margin:0">Ink 2 <input type="color" id="qr-fg2" value="#38bdf8"></label>
 <label style="margin:0">Bg <input type="color" id="qr-bg" value="#050c1f"></label>
 <label style="margin:0"><span><input type="checkbox" id="qr-trans" checked> Clear bg</span></label>
-<label style="margin:0"><span><input type="checkbox" id="qr-round" checked> Dots</span></label>
 </div>
-<div class="bar"><button type="button" id="qr-add" class="pri">Add QR code layer</button></div>
+<div class="bar" style="align-items:center">
+<input type="text" id="qr-logo-txt" maxlength="4" placeholder="Center emoji / text (e.g. ⚡)" style="flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:4px 7px;border-radius:3px">
+<button type="button" id="qr-logo-btn" title="Upload a small logo image for the QR center">Logo…</button>
+<input type="file" id="qr-logo-file" accept="image/*" hidden>
+</div>
+<div class="bar" id="qr-cap-row" hidden><input type="text" id="qr-caption" value="SCAN ME" placeholder="Sticker caption (e.g. SCAN ME)" style="flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:4px 7px;border-radius:3px"></div>
+<input type="checkbox" id="qr-round" checked hidden>
+<div class="qr-prev-wrap"><canvas id="qr-preview" width="220" height="220"></canvas></div>
+<div class="bar"><button type="button" id="qr-add" class="pri" style="flex:1">Add QR code layer</button><button type="button" id="qr-dl">Save PNG</button></div>
 <h3>Photo frames</h3>
 <p class="note">Clip the selected layer (or base photo) into a Canva-style frame.</p>
 <label><span><input type="checkbox" id="frame-outline"> Add crisp border</span><input type="color" id="frame-border-col" value="#ffffff" aria-label="Frame border colour"></label>
@@ -758,9 +767,14 @@
 </div>
 </aside>
 </main>
+<section id="pages-bar" aria-label="Document pages" hidden>
+<div id="pages-list"></div>
+<button type="button" id="page-add-btn" title="Add a new blank page">+ Page</button>
+</section>
 <footer id="status-bar" aria-label="Workspace status">
 <button type="button" id="sb-dims" class="sb-link" title="Click to resize canvas (Magic Resize)">No image open</button>
 <button type="button" id="sb-layers" class="sb-link" title="Click to open Layers panel"></button>
+<button type="button" id="sb-pages-btn" class="sb-chip" title="Toggle Pages strip (multi-page designs)">Pages: 1</button>
 <button type="button" id="sb-exif-btn" class="sb-pill" hidden title="View Camera EXIF Metadata">EXIF</button>
 <span id="sb-cursor" hidden><i id="sb-swatch"></i><span id="sb-xy"></span></span>
 <span class="sp"></span>
@@ -785,6 +799,10 @@
 </div>
 <div id="exp" hidden role="dialog" aria-label="Export"><div class="hbox exp-pro-box"><h2>Export Studio</h2>
 <label>What <select id="exw"><option value="all">Whole image</option><option value="layer">Selected layer (transparent)</option><option value="sel">Selection only (cut out)</option><option value="print">Four-panel poster (2 × 2)</option></select></label>
+<div id="ex-pages-wrap" hidden>
+<label>Pages <select id="ex-pages-mode"><option value="current">Current page only</option><option value="all">All pages</option><option value="custom">Custom pages…</option></select></label>
+<label id="ex-pages-custom-row" hidden>Page numbers <input type="text" id="ex-pages-range" placeholder="e.g. 1, 3-5" value="1"></label>
+</div>
 <label>Format <select id="exf"><option value="png">PNG (Lossless · Transparent)</option><option value="jpg">JPEG (Universal Photo)</option><option value="webp">WebP (Smallest · Transparent)</option><option value="avif">AVIF (Next-Gen Ultra-Small)</option><option value="ico">ICO (Favicon 256×256)</option><option value="svg">SVG (Scalable Wrapper)</option><option value="pdf">PDF (Print-Ready Document)</option></select></label>
 <label>Size preset <select id="exs"><option value="0.25">25%</option><option value="0.5">50%</option><option value="1" selected>100% (Original)</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option><option value="4">400%</option><option value="-2048">Medium · max 2048 px</option><option value="-4096">Large · max 4096 px</option><option value="custom">Custom Width × Height</option></select></label>
 <div id="ex-custom-dims" class="exp-dims-row" hidden>
@@ -1324,5 +1342,6 @@
 <script defer src="js/studio-polish.js"></script>
 <script defer src="js/studio-cutout-pro.js"></script>
 <script defer src="js/studio-sessions.js"></script>
+<script defer src="js/studio-pages.js"></script>
 </body>
 </html>
