@@ -67,14 +67,13 @@ function escapeHtml(s){
 }
 
 function captureThumbnail(){
- render(false);
- const maxW=360,sc=Math.min(1,maxW/Math.max(W,H,1));
- const tw=Math.max(1,Math.round(W*sc)),th=Math.max(1,Math.round(H*sc));
+ if(!c.width||!c.height)return '';
+ const maxW=320,sc=Math.min(1,maxW/Math.max(c.width,c.height,1));
+ const tw=Math.max(1,Math.round(c.width*sc)),th=Math.max(1,Math.round(c.height*sc));
  const cv=bc(tw,th),g=cv.getContext('2d');
- g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+ g.imageSmoothingEnabled=true;
  g.drawImage(c,0,0,tw,th);
- draw(true);
- return cv.toDataURL('image/webp',0.82);
+ return cv.toDataURL('image/webp',0.78);
 }
 
 function captureExtraState(){

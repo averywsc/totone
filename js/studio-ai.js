@@ -488,7 +488,8 @@ $('qr-dl')?.addEventListener('click',async()=>{
   showToast('Downloaded 1024px Creative QR PNG!',1400);
  }catch(e){showToast('QR failed: '+(e?.message||e),2000)}
 });
-setTimeout(refreshQrPreview,600);
+let qrPrevInit=false;
+document.querySelector('.tabs [data-t="design"]')?.addEventListener('click',()=>{if(!qrPrevInit){qrPrevInit=true;refreshQrPreview()}});
 
 toolCommands.push(
  ['AI Neural Background Remover (RMBG-1.4 / MODNet)','filters','rmbg-smart','withoutbg rembg rmbg modnet ai remove background cutout transparent hair'],

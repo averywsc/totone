@@ -12,14 +12,13 @@ function loadScriptOnce(url,checkFn){
  });
 }
 function captureThumbUrl(){
- if(!base)return '';
- render(false);
- const sc=Math.min(1,160/Math.max(W,H,1));
- const cv=bc(Math.max(1,Math.round(W*sc)),Math.max(1,Math.round(H*sc)));
- const g=cv.getContext('2d');g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
- g.drawImage(c,0,0,cv.width,cv.height);
- draw(true);
- return cv.toDataURL('image/webp',0.78);
+ if(!base||!c.width||!c.height)return '';
+ const sc=Math.min(1,140/Math.max(c.width,c.height,1));
+ const tw=Math.max(1,Math.round(c.width*sc)),th=Math.max(1,Math.round(c.height*sc));
+ const cv=bc(tw,th),g=cv.getContext('2d');
+ g.imageSmoothingEnabled=true;
+ g.drawImage(c,0,0,tw,th);
+ return cv.toDataURL('image/webp',0.72);
 }
 function captureLr(){
  const lr={};LR_IDS.forEach(id=>{const el=$(id);if(el)lr[id]=el.value});return lr;
@@ -196,20 +195,30 @@ if(origLoad){
  };
 }
 
-// Keep current page thumbnail fresh when user edits
+// Keep current page thumbnail fresh cleanly (debounced, NEVER triggers draw())
 const origDrawPages=draw;
 draw=function(...args){
  const r=origDrawPages.apply(this,args);
- if(base&&!pages.length)ensureInitialPage();
+ if(base&&!pages.length&&!internalLoad){
+  pages.push({
+   id:'pg_'+Date.now().toString(36),
+   name:(typeof projectTitle==='string'&&projectTitle&&projectTitle!=='Totone')?projectTitle:'Page 1',
+   w:W,h:H,thumb:'',bundle:null,lr:captureLr()
+  });
+  activeIdx=0;
+  renderPagesBar();
+ }
  if(base&&activeIdx>=0&&pages[activeIdx]){
   clearTimeout(thumbTimer);
   thumbTimer=setTimeout(()=>{
-   if(!base||!pages[activeIdx])return;
+   if(!base||!pages[activeIdx]||!c.width)return;
    pages[activeIdx].w=W;pages[activeIdx].h=H;
-   pages[activeIdx].thumb=captureThumbUrl();
-   const imgEl=document.querySelector(`.page-card[data-pi="${activeIdx}"] .page-thumb`);
-   if(imgEl)imgEl.src=pages[activeIdx].thumb;
-  },650);
+   if(barVisible||pages.length>1){
+    pages[activeIdx].thumb=captureThumbUrl();
+    const imgEl=document.querySelector(`.page-card[data-pi="${activeIdx}"] .page-thumb`);
+    if(imgEl)imgEl.src=pages[activeIdx].thumb;
+   }
+  },900);
  }
  return r;
 };

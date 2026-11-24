@@ -392,5 +392,12 @@ $('sov-hue')?.addEventListener('input',e=>{e.target.nextElementSibling.value=e.t
 $('sov-rand')?.addEventListener('click',()=>{ovSeed=Math.floor(Math.random()*999999);buildOverlayGrid();showToast('Generated fresh overlay seed!',1000)});
 $('sov-flip')?.addEventListener('click',e=>{ovFlip=!ovFlip;e.currentTarget.setAttribute('aria-pressed',String(ovFlip))});
 
-buildOverlayGrid();
+let ovBuilt=false;
+function ensureOverlaysBuilt(){
+ if(!ovBuilt){ovBuilt=true;buildOverlayGrid()}
+}
+document.querySelector('.tabs [data-t="glints"]')?.addEventListener('click',ensureOverlaysBuilt);
+$('cat-tabs')?.addEventListener('click',e=>{
+ if(e.target.closest('[data-cat="design"]'))setTimeout(()=>{if($('p-glints')?.classList.contains('on'))ensureOverlaysBuilt()},50);
+});
 })();
