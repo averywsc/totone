@@ -276,31 +276,148 @@ $('rmbg-next')?.addEventListener('click',e=>{
  else if(k==='trim'){e.stopImmediatePropagation();window.runSmartAutoTrim?.()}
 },true);
 
-/* ========== 3. 1-Click Cinematic Develop Recipes (Lightroom Tab) ========== */
-const RECIPES=[
- {name:'Natural Pop',v:{'lr-exp':10,'lr-con':14,'lr-hi':-18,'lr-sh':22,'lr-cla':12,'lr-vib':18,'lr-sat':4}},
- {name:'Kodak Warm',v:{'lr-temp':18,'lr-tint':6,'lr-con':10,'lr-hi':-20,'lr-sh':16,'lr-bl':12,'lr-vib':14,'lr-sat':-4}},
- {name:'Teal & Orange',v:{'lr-temp':12,'lr-con':22,'lr-hi':-16,'lr-sh':14,'lr-cla':18,'lr-deh':10,'lr-vib':20}},
- {name:'Concert Fix',v:{'lr-temp':-22,'lr-tint':-14,'lr-exp':14,'lr-hi':-28,'lr-sh':34,'lr-sat':-14,'lr-vib':16}},
- {name:'Editorial B&W',v:{'lr-con':28,'lr-hi':-12,'lr-sh':18,'lr-wh':16,'lr-bl':-14,'lr-cla':24,'lr-sat':-100}},
- {name:'Golden Hour',v:{'lr-temp':28,'lr-tint':8,'lr-exp':8,'lr-hi':-22,'lr-sh':20,'lr-deh':-8,'lr-vib':22}},
- {name:'Clean Studio',v:{'lr-exp':12,'lr-con':8,'lr-wh':14,'lr-sh':18,'lr-tex':10,'lr-cla':8,'lr-vib':8}},
- {name:'Cyber Neon',v:{'lr-temp':-20,'lr-tint':24,'lr-con':26,'lr-bl':-12,'lr-cla':20,'lr-vib':36,'lr-sat':14}}
+/* ========== 3. 24 Cinema Grade Presets (Calibrated Basic Develop + 3-Way Color Grading Wheels + Live Intensity) ========== */
+const GRADE_PRESETS=[
+ // Night & Neon
+ {id:'neon-city',name:'Neon City',sub:'Electric Cyan & Magenta',cat:'neon',sw:'linear-gradient(90deg,#0a194e,#22d3ee,#ec4899)',
+  b:{temp:-14,tint:16,exp:0.05,con:22,hi:-14,sh:12,wh:14,bl:-14,cla:22,deh:10,vib:32,sat:6},
+  z:{shadows:{hue:215,sat:52,lum:-6},midtones:{hue:312,sat:28,lum:0},highlights:{hue:188,sat:34,lum:6}},mix:78,bal:-10},
+ {id:'tokyo-rain',name:'Tokyo Rain',sub:'Teal Asphalt & Sodium Gold',cat:'neon',sw:'linear-gradient(90deg,#082f49,#06b6d4,#f59e0b)',
+  b:{temp:-10,tint:-4,exp:-0.05,con:20,hi:-18,sh:16,wh:8,bl:-12,cla:18,deh:14,vib:20,sat:-4},
+  z:{shadows:{hue:202,sat:58,lum:-8},midtones:{hue:196,sat:18,lum:0},highlights:{hue:36,sat:46,lum:6}},mix:80,bal:-6},
+ {id:'cyber-2099',name:'Cyberpunk 2099',sub:'Ultraviolet & Hot Aqua',cat:'neon',sw:'linear-gradient(90deg,#1e1b4b,#a855f7,#22d3ee)',
+  b:{temp:-18,tint:22,exp:0.05,con:28,hi:-12,sh:8,wh:16,bl:-16,cla:26,deh:12,vib:36,sat:10},
+  z:{shadows:{hue:268,sat:54,lum:-6},midtones:{hue:324,sat:32,lum:0},highlights:{hue:182,sat:44,lum:8}},mix:84,bal:0},
+ {id:'midnight-drive',name:'Midnight Drive',sub:'Indigo Night & Crimson Glow',cat:'neon',sw:'linear-gradient(90deg,#090d28,#3730a3,#e11d48)',
+  b:{temp:-16,tint:8,exp:-0.15,con:24,hi:-20,sh:6,wh:8,bl:-18,cla:16,deh:14,vib:18,sat:-6},
+  z:{shadows:{hue:228,sat:52,lum:-10},midtones:{hue:350,sat:24,lum:-2},highlights:{hue:206,sat:20,lum:4}},mix:76,bal:-14},
+ {id:'vapor-dusk',name:'Vaporwave Dusk',sub:'Violet Haze & Pink Sunset',cat:'neon',sw:'linear-gradient(90deg,#312e81,#c084fc,#fb7185)',
+  b:{temp:-6,tint:20,exp:0.12,con:-4,hi:-16,sh:20,wh:8,bl:16,cla:6,deh:-8,vib:24,sat:4},
+  z:{shadows:{hue:254,sat:44,lum:4},midtones:{hue:304,sat:22,lum:2},highlights:{hue:338,sat:44,lum:6}},mix:74,bal:10},
+ // Nature & Earth
+ {id:'warm-forest',name:'Warm Forest',sub:'Deep Pine & Golden Sun',cat:'nature',sw:'linear-gradient(90deg,#064e3b,#15803d,#f59e0b)',
+  b:{temp:16,tint:-4,exp:0.05,con:14,hi:-20,sh:18,wh:6,bl:10,cla:12,deh:6,vib:18,sat:-4},
+  z:{shadows:{hue:152,sat:40,lum:-8},midtones:{hue:95,sat:14,lum:0},highlights:{hue:42,sat:46,lum:6}},mix:78,bal:6},
+ {id:'emerald-moody',name:'Emerald Moody',sub:'Nordic Moss & Deep Shadows',cat:'nature',sw:'linear-gradient(90deg,#052e16,#0f766e,#a7f3d0)',
+  b:{temp:-6,tint:-10,exp:-0.1,con:18,hi:-22,sh:8,wh:4,bl:-12,cla:16,deh:10,vib:10,sat:-16},
+  z:{shadows:{hue:164,sat:48,lum:-12},midtones:{hue:150,sat:22,lum:-4},highlights:{hue:48,sat:16,lum:2}},mix:80,bal:-12},
+ {id:'golden-coast',name:'Golden Coast',sub:'Sunlit Amber & Aqua Surf',cat:'nature',sw:'linear-gradient(90deg,#0e7490,#38bdf8,#fbbf24)',
+  b:{temp:20,tint:4,exp:0.15,con:10,hi:-22,sh:20,wh:10,bl:6,cla:10,deh:4,vib:22,sat:4},
+  z:{shadows:{hue:188,sat:32,lum:-2},midtones:{hue:36,sat:16,lum:2},highlights:{hue:38,sat:48,lum:6}},mix:74,bal:10},
+ {id:'autumn-woods',name:'Autumn Woods',sub:'Copper Leaves & Espresso',cat:'nature',sw:'linear-gradient(90deg,#451a03,#c2410c,#facc15)',
+  b:{temp:24,tint:8,exp:0.05,con:16,hi:-18,sh:14,wh:8,bl:4,cla:14,deh:6,vib:20,sat:2},
+  z:{shadows:{hue:24,sat:36,lum:-8},midtones:{hue:28,sat:38,lum:0},highlights:{hue:44,sat:40,lum:4}},mix:76,bal:4},
+ {id:'nordic-frost',name:'Nordic Frost',sub:'Glacier Blue & Crisp Ice',cat:'nature',sw:'linear-gradient(90deg,#1e3a8a,#60a5fa,#e0f2fe)',
+  b:{temp:-22,tint:-4,exp:0.1,con:14,hi:-12,sh:16,wh:16,bl:-4,cla:16,deh:8,vib:12,sat:-14},
+  z:{shadows:{hue:210,sat:44,lum:-4},midtones:{hue:204,sat:16,lum:0},highlights:{hue:198,sat:22,lum:6}},mix:72,bal:-6},
+ {id:'desert-sunset',name:'Desert Sunset',sub:'Terracotta & Rose Gold',cat:'nature',sw:'linear-gradient(90deg,#7c2d12,#fb7185,#fde047)',
+  b:{temp:28,tint:10,exp:0.08,con:14,hi:-24,sh:18,wh:10,bl:6,cla:12,deh:4,vib:24,sat:4},
+  z:{shadows:{hue:18,sat:40,lum:-6},midtones:{hue:22,sat:24,lum:0},highlights:{hue:34,sat:54,lum:8}},mix:78,bal:8},
+ {id:'oceanic-deep',name:'Oceanic Deep',sub:'Abyssal Teal & Seafoam',cat:'nature',sw:'linear-gradient(90deg,#042f2e,#0284c7,#5eead4)',
+  b:{temp:-16,tint:-8,exp:0,con:18,hi:-16,sh:10,wh:10,bl:-10,cla:16,deh:12,vib:18,sat:-4},
+  z:{shadows:{hue:194,sat:54,lum:-10},midtones:{hue:178,sat:30,lum:-2},highlights:{hue:168,sat:20,lum:4}},mix:78,bal:-8},
+ // Cinema & Film
+ {id:'teal-orange',name:'Teal & Orange',sub:'Hollywood Blockbuster',cat:'cinema',sw:'linear-gradient(90deg,#0f4c5c,#0891b2,#f97316)',
+  b:{temp:8,tint:2,exp:0.05,con:22,hi:-18,sh:14,wh:12,bl:-10,cla:18,deh:10,vib:20,sat:0},
+  z:{shadows:{hue:194,sat:56,lum:-6},midtones:{hue:26,sat:14,lum:0},highlights:{hue:30,sat:48,lum:6}},mix:84,bal:0},
+ {id:'blade-amber',name:'Dune / Blade Amber',sub:'Smoky Charcoal & Gold',cat:'cinema',sw:'linear-gradient(90deg,#1c1917,#b45309,#fcd34d)',
+  b:{temp:26,tint:4,exp:-0.05,con:26,hi:-20,sh:6,wh:8,bl:-14,cla:20,deh:16,vib:14,sat:-8},
+  z:{shadows:{hue:200,sat:28,lum:-14},midtones:{hue:32,sat:34,lum:-2},highlights:{hue:36,sat:64,lum:6}},mix:86,bal:6},
+ {id:'a24-green',name:'A24 Indie Film',sub:'Wong Kar-Wai Olive & Cream',cat:'cinema',sw:'linear-gradient(90deg,#14532d,#4d7c0f,#fef3c7)',
+  b:{temp:6,tint:-12,exp:0,con:10,hi:-18,sh:14,wh:4,bl:18,cla:10,deh:4,vib:8,sat:-12},
+  z:{shadows:{hue:142,sat:38,lum:-4},midtones:{hue:128,sat:14,lum:0},highlights:{hue:44,sat:28,lum:4}},mix:76,bal:-4},
+ {id:'portra-400',name:'Kodak Portra 400',sub:'Warm Peach Skin & Matte',cat:'cinema',sw:'linear-gradient(90deg,#334155,#d99f7c,#fef3c7)',
+  b:{temp:10,tint:4,exp:0.12,con:6,hi:-22,sh:20,wh:6,bl:14,cla:4,deh:-4,vib:14,sat:-8},
+  z:{shadows:{hue:212,sat:16,lum:2},midtones:{hue:32,sat:16,lum:2},highlights:{hue:36,sat:28,lum:4}},mix:68,bal:8},
+ {id:'fuji-velvia',name:'Fuji Velvia Lush',sub:'Vivid Slide Film Punch',cat:'cinema',sw:'linear-gradient(90deg,#1e3a8a,#16a34a,#f59e0b)',
+  b:{temp:4,tint:4,exp:0.05,con:22,hi:-14,sh:10,wh:14,bl:-10,cla:14,deh:10,vib:34,sat:14},
+  z:{shadows:{hue:204,sat:28,lum:-6},midtones:{hue:140,sat:12,lum:0},highlights:{hue:44,sat:24,lum:6}},mix:70,bal:0},
+ {id:'vintage-78',name:'Vintage 1978',sub:'Sun-Faded Retro Print',cat:'cinema',sw:'linear-gradient(90deg,#134e4a,#d97706,#fef08a)',
+  b:{temp:16,tint:2,exp:0.08,con:-6,hi:-16,sh:18,wh:-4,bl:24,cla:-4,deh:-6,vib:6,sat:-18},
+  z:{shadows:{hue:174,sat:32,lum:4},midtones:{hue:38,sat:20,lum:2},highlights:{hue:42,sat:44,lum:4}},mix:78,bal:6},
+ // Portrait & Clean
+ {id:'natural-pop',name:'Natural Pop',sub:'Crisp Balanced Editorial',cat:'portrait',sw:'linear-gradient(90deg,#1e293b,#64748b,#f8fafc)',
+  b:{temp:4,tint:0,exp:0.15,con:14,hi:-16,sh:18,wh:12,bl:-4,cla:10,deh:4,vib:18,sat:2},
+  z:{shadows:{hue:210,sat:8,lum:-2},midtones:{hue:34,sat:6,lum:0},highlights:{hue:40,sat:10,lum:4}},mix:50,bal:0},
+ {id:'dreamy-pastel',name:'Dreamy Pastel',sub:'Airy Rose & Lavender',cat:'portrait',sw:'linear-gradient(90deg,#818cf8,#f9a8d4,#fff1f2)',
+  b:{temp:6,tint:12,exp:0.22,con:-10,hi:-18,sh:24,wh:10,bl:20,cla:-6,deh:-10,vib:14,sat:-8},
+  z:{shadows:{hue:248,sat:22,lum:6},midtones:{hue:332,sat:14,lum:4},highlights:{hue:348,sat:26,lum:6}},mix:68,bal:12},
+ {id:'parisian-matte',name:'Parisian Matte',sub:'Soft Editorial Charcoal',cat:'portrait',sw:'linear-gradient(90deg,#292524,#78716c,#f5f5f4)',
+  b:{temp:8,tint:2,exp:0.1,con:8,hi:-20,sh:16,wh:4,bl:22,cla:8,deh:0,vib:4,sat:-20},
+  z:{shadows:{hue:28,sat:18,lum:2},midtones:{hue:34,sat:10,lum:0},highlights:{hue:40,sat:22,lum:4}},mix:64,bal:4},
+ {id:'concert-fix',name:'Concert Red Fix',sub:'Rescue Red Stage Lights',cat:'portrait',sw:'linear-gradient(90deg,#991b1b,#14b8a6,#f0c3a6)',
+  b:{temp:-24,tint:-20,exp:0.2,con:10,hi:-26,sh:30,wh:8,bl:4,cla:10,deh:6,vib:16,sat:-14},
+  z:{shadows:{hue:190,sat:24,lum:2},midtones:{hue:178,sat:28,lum:4},highlights:{hue:44,sat:14,lum:2}},mix:64,bal:0},
+ // B&W
+ {id:'silver-noir',name:'Silver Noir',sub:'Dramatic Leica B&W',cat:'bw',sw:'linear-gradient(90deg,#020617,#475569,#f8fafc)',
+  b:{temp:0,tint:0,exp:0.05,con:32,hi:-10,sh:8,wh:18,bl:-18,cla:26,deh:12,vib:0,sat:-100},
+  z:{shadows:{hue:212,sat:12,lum:-6},midtones:{hue:0,sat:0,lum:0},highlights:{hue:208,sat:8,lum:6}},mix:55,bal:0},
+ {id:'sepia-film',name:'Warm Sepia Film',sub:'Archival Darkroom Print',cat:'bw',sw:'linear-gradient(90deg,#292018,#78593c,#f5e6d3)',
+  b:{temp:12,tint:2,exp:0.08,con:18,hi:-14,sh:16,wh:6,bl:14,cla:12,deh:4,vib:0,sat:-100},
+  z:{shadows:{hue:28,sat:22,lum:-2},midtones:{hue:34,sat:20,lum:2},highlights:{hue:38,sat:30,lum:4}},mix:78,bal:6}
 ];
-const recBar=$('lr-recipes');
-if(recBar){
- recBar.innerHTML=RECIPES.map((r,i)=>`<button type="button" data-rec="${i}">${r.name}</button>`).join('');
- recBar.onclick=e=>{
-  const b=e.target.closest('[data-rec]');if(!b)return;
-  const r=RECIPES[+b.dataset.rec];if(!r)return;
-  ['lr-temp','lr-tint','lr-exp','lr-con','lr-hi','lr-sh','lr-wh','lr-bl','lr-tex','lr-cla','lr-deh','lr-vib','lr-sat'].forEach(id=>{
-   const el=$(id);if(!el)return;
-   el.value=r.v[id]??0;
-   el.dispatchEvent(new Event('input',{bubbles:true}));
-  });
-  showToast('Applied recipe: '+r.name,1200);
- };
+
+let activeGradePreset=null,activeGradeCat='all';
+const recBar=$('lr-recipes'),gpInt=$('gp-intensity'),gpIntOut=$('gp-int-out');
+
+function applyGradePreset(preset,scale=1,announce=false){
+ const keys=['temp','tint','exp','con','hi','sh','wh','bl','tex','cla','deh','vib','sat'];
+ keys.forEach(k=>{
+  const el=$('lr-'+k);if(!el)return;
+  let v=(preset?.b?.[k]??0);
+  // Keep B&W full desaturation crisp when sat === -100
+  if(k==='sat'&&v===-100)v=scale>0?-100:0;
+  else v=k==='exp'?+(v*scale).toFixed(2):Math.round(v*scale);
+  el.value=v;
+  el.dispatchEvent(new Event('input',{bubbles:true}));
+ });
+ if($('grading-on')){$('grading-on').checked=true;$('grading-on').dispatchEvent(new Event('change'))}
+ const z=preset?.z||{};
+ ['shadows','midtones','highlights'].forEach(zn=>{
+  const cfg=z[zn]||{hue:0,sat:0,lum:0};
+  film?.setZone?.(zn,{hue:cfg.hue||0,sat:Math.min(100,Math.round((cfg.sat||0)*scale)),lum:Math.round((cfg.lum||0)*scale)},false);
+ });
+ film?.setGradeProp?.('mix',preset?Math.min(100,Math.round((preset.mix??70)*scale)):100,false);
+ film?.setGradeProp?.('balance',preset?Math.round((preset.bal??0)*scale):0,true);
+ if(announce&&preset)showToast(`Grade: ${preset.name}`,1200);
 }
+
+function renderGradePresetGrid(){
+ if(!recBar)return;
+ const shown=GRADE_PRESETS.filter(p=>activeGradeCat==='all'||p.cat===activeGradeCat);
+ recBar.innerHTML=shown.map(p=>`<button type="button" class="gp-card${activeGradePreset?.id===p.id?' on':''}" data-gpid="${p.id}"><span class="gp-swatch" style="background:${p.sw}"></span><strong>${p.name}</strong><small>${p.sub}</small></button>`).join('');
+}
+
+$('gp-cats')?.addEventListener('click',e=>{
+ const b=e.target.closest('[data-gc]');if(!b)return;
+ activeGradeCat=b.dataset.gc;
+ document.querySelectorAll('#gp-cats button').forEach(x=>x.classList.toggle('on',x===b));
+ renderGradePresetGrid();
+});
+
+recBar?.addEventListener('click',e=>{
+ const b=e.target.closest('[data-gpid]');if(!b)return;
+ const p=GRADE_PRESETS.find(x=>x.id===b.dataset.gpid);if(!p)return;
+ activeGradePreset=p;
+ const sc=(+(gpInt?.value||100))/100;
+ renderGradePresetGrid();
+ applyGradePreset(p,sc,true);
+});
+
+gpInt?.addEventListener('input',()=>{
+ if(gpIntOut)gpIntOut.textContent=gpInt.value+'%';
+ if(activeGradePreset)applyGradePreset(activeGradePreset,(+gpInt.value)/100,false);
+});
+
+$('gp-reset')?.addEventListener('click',()=>{
+ activeGradePreset=null;
+ if(gpInt){gpInt.value='100';if(gpIntOut)gpIntOut.textContent='100%'}
+ applyGradePreset(null,0,false);
+ renderGradePresetGrid();
+ showToast('Reset Grade preset & wheels',1100);
+});
+
+renderGradePresetGrid();
 
 /* ========== 4. Figma/Canva Layer Alignment & Fit Bar ========== */
 $('layer-align-bar')?.addEventListener('click',e=>{

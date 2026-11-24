@@ -93,7 +93,7 @@
 <div class="tabs" role="tablist">
 <button role="tab" data-t="ai" data-cat="ai" hidden>AI Studio</button>
 <button role="tab" class="on" data-t="tone" data-cat="color" title="Tone presets &amp; gradient maps">Presets</button>
-<button role="tab" data-t="grade" data-cat="color" title="Lightroom develop, Point Color, curves &amp; LUTs">Develop</button>
+<button role="tab" data-t="grade" data-cat="color" title="Color Grading presets, 3D LUTs, Basic Develop, Point Color, curves &amp; wheels">Grade</button>
 <button role="tab" data-t="adjust" data-cat="color" title="Brightness, contrast, levels &amp; glow">Light</button>
 <button role="tab" data-t="colour" data-cat="color" title="Palette &amp; selective color edits">Palette</button>
 <button role="tab" data-t="film" data-cat="color" title="Film stocks, grain &amp; double exposure">Film</button>
@@ -282,8 +282,7 @@
 <h3>Quick styles</h3><div class="sty" id="tsty"></div></div>
 </div>
 <div class="pn" id="p-grade">
-<div class="lr-recipes" id="lr-recipes" aria-label="1-Click Develop Recipes"></div>
-<details id="lr-basic" open><summary>Basic Develop</summary>
+<details id="lr-basic" open><summary>Basic Light &amp; Tone</summary>
 <div class="bar lr-top-bar"><button type="button" id="lr-auto">Auto</button><button type="button" id="lr-bw" aria-pressed="false">B&amp;W</button><button type="button" id="lr-hdr" aria-pressed="false">HDR</button><button type="button" id="lr-basic-reset">Reset</button></div>
 <div class="bar" style="align-items:center"><label style="margin:0;flex:1">White Balance <select id="lr-wb"><option value="custom">As Shot</option><option value="daylight">Daylight</option><option value="cloudy">Cloudy</option><option value="shade">Shade</option><option value="tungsten">Tungsten</option><option value="fluorescent">Fluorescent</option><option value="concert">Concert Red Fix</option></select></label><button type="button" id="lr-wb-pick" aria-pressed="false" title="Click a neutral grey/white area on photo">Pick WB</button></div>
 <div class="lr-sliders">
@@ -301,6 +300,28 @@
 <label>Vibrance <input id="lr-vib" class="lr-track lr-sat" type="range" min="-100" max="100" value="0"><output>0</output></label>
 <label>Saturation <input id="lr-sat" class="lr-track lr-sat" type="range" min="-100" max="100" value="0"><output>0</output></label>
 </div>
+</details>
+<details id="grade-presets-panel" open><summary>Grade Presets (24 Cinema Looks)</summary>
+<div class="el-chips" id="gp-cats">
+<button type="button" class="on" data-gc="all">All</button>
+<button type="button" data-gc="neon">Night &amp; Neon</button>
+<button type="button" data-gc="nature">Nature</button>
+<button type="button" data-gc="cinema">Cinema</button>
+<button type="button" data-gc="portrait">Portrait</button>
+<button type="button" data-gc="bw">B&amp;W</button>
+</div>
+<div class="gp-grid" id="lr-recipes" aria-label="Cinema Grade Presets"></div>
+<div class="bar" style="align-items:center;margin-top:6px">
+<label style="margin:0;flex:1">Look intensity <input id="gp-intensity" type="range" min="0" max="150" value="100"><output id="gp-int-out">100%</output></label>
+<button type="button" id="gp-reset" title="Reset preset, basic sliders &amp; grading wheels">Reset</button>
+</div>
+</details>
+<details id="lr-lut-panel" open><summary>3D LUTs (.cube Import &amp; Export)</summary>
+<p class="note">Load any DaVinci Resolve, Premiere, or Lightroom <code>.cube</code> 3D LUT right here, or export your current Grade as a <code>.cube</code> file.</p>
+<div class="bar"><button type="button" id="lut-import" class="pri">Import .cube LUT…</button><button type="button" id="lut-clear" disabled>Remove</button><button type="button" id="lut-export">Export .cube</button></div>
+<input type="file" id="lut-file" accept=".cube,.txt" hidden>
+<label id="lut-str-row" hidden>LUT strength <input id="lut-str" type="range" min="0" max="100" value="100"><output>100%</output></label>
+<p class="note" id="lut-status" role="status">No 3D LUT loaded.</p>
 </details>
 <details id="lr-point-color" open><summary>Point Color · Stage Light &amp; Skin Fix</summary>
 <p class="note">Pick any colour on the photo (e.g. red concert lighting on skin) and remap it cleanly to natural skin tones or any target colour.</p>
@@ -337,13 +358,6 @@
 </div>
 </div>
 <p class="note" id="pc-msg" role="status">Click "Pick colour in photo" then click on the image to sample a colour.</p>
-</details>
-<details id="lr-lut-panel"><summary>3D LUT (.cube) Import &amp; Export</summary>
-<p class="note">Load any DaVinci Resolve, Premiere, or Lightroom <code>.cube</code> 3D LUT, or export your current Totone grade as a <code>.cube</code> file.</p>
-<div class="bar"><button type="button" id="lut-import" class="pri">Import .cube LUT…</button><button type="button" id="lut-clear" disabled>Remove</button><button type="button" id="lut-export">Export .cube</button></div>
-<input type="file" id="lut-file" accept=".cube,.txt" hidden>
-<label id="lut-str-row" hidden>LUT strength <input id="lut-str" type="range" min="0" max="100" value="100"><output>100%</output></label>
-<p class="note" id="lut-status" role="status">No 3D LUT loaded.</p>
 </details>
 <details id="reference-panel"><summary>Match a reference photo</summary><button id="ref-choose">Choose reference photo…</button><input type="file" accept="image/*" id="ref-file" hidden><p class="note" role="status" id="ref-status"></p><div id="ref-controls" hidden><label>Shadows <input id="ref-zone-0" type="range" data-ref-zone="0" min="0" max="100"><output></output></label><label>Midtones <input id="ref-zone-1" type="range" data-ref-zone="1" min="0" max="100"><output></output></label><label>Highlights <input id="ref-zone-2" type="range" data-ref-zone="2" min="0" max="100"><output></output></label><label>Protect skin tones <input id="ref-skin" type="checkbox" ></label><button id="ref-clear">Remove match</button></div></details>
 <details id="local-tools"><summary>Local grading masks</summary><div class="bar"><button id="mask-linear">Add linear</button><button id="mask-radial">Add radial</button></div><label>Mask <select id="local-list"></select></label><div id="local-edit" hidden>
