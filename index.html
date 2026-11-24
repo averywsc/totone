@@ -11,20 +11,174 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=Monoton&family=Rubik+Mono+One&family=DM+Serif+Display&family=Cormorant+Garamond&family=Poppins&family=Archivo+Black&family=Shrikhand&family=Satisfy&family=Staatliches&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Black+Ops+One&family=Bungee&family=Special+Elite&family=Yeseva+One&family=Major+Mono+Display&family=Rock+Salt&family=Gloria+Hallelujah&family=Sacramento&family=Great+Vibes&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:wght@100..900&family=Raleway:wght@100..900&family=Playfair+Display:wght@400..900&family=Oswald:wght@200..700&family=Fredoka:wght@300..700&family=Orbitron:wght@400..900&family=Cinzel:wght@400..900&family=Lora:wght@400..700&family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Syne:wght@400..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/core.css">
-<link rel="stylesheet" href="css/studio.css">
+<link rel="stylesheet" href="css/core.css?v=3">
+<link rel="stylesheet" href="css/studio.css?v=3">
 </head>
 <body>
 <header>
-<h1>Totone</h1><span class="sp"></span>
-<button id="cmp">Hold to compare</button><button id="undo">Undo</button><button id="redo">Redo</button><button id="reset">Reset warp</button>
-<label class="hd"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label><select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select><select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option><option value="4096">4096 px</option><option value="8192">Original · up to 8192 px / 18 MP</option></select><button id="open">Open image</button><button id="new-canvas-open" title="Create a new Canva-sized canvas or Magic Resize">New</button><button id="project-menu">Project</button><button id="version-open">Versions</button><button id="history-open" title="Visual edit history timeline">History</button><button id="grid-toggle" aria-pressed="false" title="Toggle canvas grid &amp; rulers">Grid</button><button id="upscale-open" title="AI &amp; detail image upscaler (Upscayl-style)">Upscale</button><button id="elements-open" title="Search cutouts, photos, icons, Pinterest &amp; Google">Elements</button><button id="toolbar-border" title="Add or edit an image border">Border</button><button id="htxt">Add text</button><button id="type-draw" aria-pressed="false">Draw text box</button><button id="rlook">Reset look</button><button id="tool-finder">Find tool <kbd>/</kbd></button><button id="helpb">Keys</button><button class="pri" id="export">Export</button>
+<h1>Totone</h1><a id="donate-btn" href="https://buymeacoffee.com/averyuwubaka" target="_blank" rel="noopener noreferrer" title="Support Totone on Buy Me a Coffee">♥ Donate</a>
+<button id="open" title="Open image or .totone project (O)">Open</button><button id="new-canvas-open" title="New blank design or Magic Resize">New</button><button id="project-menu" title="Save or open .totone project">Project</button>
+<button id="undo" title="Undo (Ctrl+Z)">Undo</button><button id="redo" title="Redo (Ctrl+Y)">Redo</button><button id="cmp" title="Hold to compare original (\)">Compare</button>
+<label class="hd" title="Before / after split slider"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label>
+<select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select>
+<select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option><option value="4096">4096 px</option><option value="8192">Original (8K)</option></select>
+<span class="sp"></span>
+<button id="cmd-open" title="Command Palette — search any tool (Ctrl+K)">Search <kbd>Ctrl+K</kbd></button>
+<div class="hdr-more-wrap">
+<button type="button" id="hdr-more-btn" title="More actions (History, Versions, Border, Reset, Shortcuts)">⋯</button>
+<div id="hdr-more-menu" hidden>
+<button id="elements-open" title="Search cutouts, photos, icons, Pinterest &amp; Google">Web Elements</button>
+<button id="upscale-open" title="AI &amp; detail image upscaler">AI Upscaler</button>
+<button id="htxt">Add text</button>
+<button id="type-draw" aria-pressed="false">Draw text box</button>
+<button id="toolbar-border" title="Add or edit an image border">Image Border</button>
+<button id="grid-toggle" aria-pressed="false" title="Toggle canvas grid &amp; rulers (Ctrl+')">Grid &amp; Rulers</button>
+<button id="history-open" title="Visual edit history timeline">History Timeline</button>
+<button id="version-open">Compare Versions</button>
+<button id="reset">Reset warp</button>
+<button id="rlook">Reset look</button>
+<button id="helpb">Keyboard Shortcuts</button>
+<button id="tool-finder" hidden>Find tool</button>
+</div>
+</div>
+<button id="settings-open" title="Settings &amp; UI Theme Customizer (Ctrl+,)">⚙</button>
+<button class="pri" id="export" title="Export image — format, size &amp; target MB (Ctrl+S)">Export</button>
 <input type="file" id="file" accept="image/*,.totone" hidden><input type="file" id="glint-image" accept="image/*" hidden><input type="file" id="border-image" accept="image/*" hidden><input type="file" id="file2" accept="image/*" multiple hidden>
 </header>
 <main>
-<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
+<nav id="tool-dock" aria-label="Quick tools">
+<button type="button" data-dock="layers" title="Move &amp; Layers (V)"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-7 2-3 7z"/></svg></button>
+<button type="button" data-dock="select" title="Select &amp; Cutout (W)"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" stroke-dasharray="3 2"/></svg></button>
+<button type="button" data-dock="rmbg" title="AI Remove Background (RMBG-1.4)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/><path d="M3 4l18 16" stroke-dasharray="2 2" opacity=".6"/></svg></button>
+<button type="button" data-dock="draw" title="Draw &amp; Brush (B)"><svg viewBox="0 0 24 24"><path d="M18.5 3.5a2.1 2.1 0 0 1 3 3L9 19l-5 1 1-5z"/></svg></button>
+<button type="button" data-dock="design" title="Shapes, Templates &amp; Y2K (U)"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="5"/><rect x="11" y="11" width="9" height="9" rx="1.5"/></svg></button>
+<button type="button" data-dock="text" title="Typography (T)"><svg viewBox="0 0 24 24"><path d="M4 6h16M12 6v13M8 19h8"/></svg></button>
+<button type="button" data-dock="crop" title="Crop &amp; Frame (C)"><svg viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14M18 22V8a2 2 0 0 0-2-2H2"/></svg></button>
+<button type="button" data-dock="grade" title="Lightroom Grade &amp; Point Color (G)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16" opacity=".45"/></svg></button>
+<button type="button" data-dock="filters" title="38 Filters &amp; AI FX"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg></button>
+<button type="button" data-dock="warp" title="Liquify &amp; Warp Brush (Q)"><svg viewBox="0 0 24 24"><path d="M4 12c3-5 5-5 8 0s5 5 8 0"/><path d="M4 7c3-4 5-4 8 0s5 4 8 0" opacity=".5"/><path d="M4 17c3-4 5-4 8 0s5 4 8 0" opacity=".5"/></svg></button>
+<span class="dock-sep"></span>
+<button type="button" data-dock="layerfx" title="Layer Styles: Die-Cut Sticker Outline, Drop Shadow &amp; Neon Glow"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="12" height="12" rx="2.5"/><path d="M8 16v3a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-3" opacity=".65"/></svg></button>
+<button type="button" data-dock="redact" title="Privacy Redact: Blur, Pixelate or Black-Bar Sensitive Info"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12h6" stroke-width="2.2"/></svg></button>
+<button type="button" data-dock="eraser" title="Magic Object Eraser (Offline Inpainting)"><svg viewBox="0 0 24 24"><path d="M20 20H7L3 16l9-9 8 8-4 5z"/><path d="M11 8l5 5"/></svg></button>
+<button type="button" data-dock="liquify" title="Liquify Sculpt (Push, Bloat, Pucker, Twirl)"><svg viewBox="0 0 24 24"><path d="M12 3c4 4 6 7 6 11a6 6 0 1 1-12 0c0-4 2-7 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5" opacity=".6"/></svg></button>
+<button type="button" data-dock="trim" title="Auto-Trim Transparent Borders"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/><rect x="8" y="8" width="8" height="8" opacity=".55"/></svg></button>
+<span class="dock-sep"></span>
+<button type="button" data-dock="elements" title="Search Web Elements (PNG / Icons / Pinterest / Google)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg></button>
+<button type="button" data-dock="upscale" title="AI Image Upscaler (2× / 4× ESRGAN)"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+<button type="button" data-dock="pro" title="Pro Tools: SVG Trace, GIF, Mockups, OCR, PDF, Batch ZIP"><svg viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><path d="M12 22V12M22 8.5L12 12 2 8.5"/></svg></button>
+<button type="button" data-dock="extras" title="Creative Lab: ASCII, Tile, Slicer &amp; 10 Open-Source Pro Tools"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+<button type="button" data-dock="lab10" title="Pro Lab (10 Open-Source Tools): Smart Crop, Low-Poly, Pixel Sort, Dither, CVD, Kaleidoscope, Scanner, PFP, Meme, CLAHE"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M8.5 14h7" opacity=".7"/></svg></button>
+<button type="button" data-dock="palette" title="Color Palette Extractor &amp; Saved Looks"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><circle cx="13" cy="8.5" r="1.3" fill="currentColor"/><circle cx="16" cy="11.5" r="1.3" fill="currentColor"/><circle cx="11" cy="15.5" r="1.5" fill="currentColor"/></svg></button>
+<button type="button" data-dock="ba" title="Before / After Comparison Export"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></svg></button>
+<span class="dock-sep"></span>
+<button type="button" data-dock="hist" title="Toggle Live RGB Histogram HUD"><svg viewBox="0 0 24 24"><path d="M3 19h18"/><path d="M5 19v-5l3-4 3 5 3-8 4 6v6"/></svg></button>
+<button type="button" data-dock="grid" title="Toggle Rulers &amp; Snap Grid (Ctrl+')"><svg viewBox="0 0 24 24"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
+<button type="button" data-dock="border" title="Add Image Border / Polaroid Frame"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5"/><rect x="7" y="7" width="10" height="10" rx=".5" opacity=".55"/></svg></button>
+<button type="button" data-dock="history" title="Visual Edit History Timeline"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></button>
+<button type="button" data-dock="auto" title="1-Click Smart Auto Enhance"><svg viewBox="0 0 24 24"><path d="M4 20L15 9M14 4v3M19 9h3M17.5 5.5l2-2M17.5 12.5l2 2"/></svg></button>
+<button type="button" data-dock="settings" title="Settings &amp; UI Theme Customizer (Ctrl+,)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.08a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+</nav>
+<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
 <aside>
-<button id="panel-height" aria-label="Change editing panel height">Panel height</button><div class="tabs" role="tablist"><button role="tab" class="on" data-t="tone">Tone</button><button role="tab" data-t="adjust">Adjust</button><button role="tab" data-t="colour">Colours</button><button role="tab" data-t="select">Select</button><button role="tab" data-t="warp">Warp</button><button role="tab" data-t="layers">Layers</button><button role="tab" data-t="design">Design</button><button role="tab" data-t="draw">Draw</button><button role="tab" data-t="filters">Filters</button><button role="tab" data-t="pixel">Pixel</button><button role="tab" data-t="crop">Crop</button><button role="tab" data-t="glints">Glints</button><button role="tab" data-t="film">Film</button><button role="tab" data-t="text">Text</button><button role="tab" data-t="grade">Grade</button></div>
+<button id="panel-height" aria-label="Change editing panel height">Panel height</button>
+<nav id="cat-tabs" aria-label="Workspace categories">
+<button type="button" data-cat="ai" title="AI Background Remover, ESRGAN Upscaler, Depth Bokeh, Magic Eraser &amp; Smart Tools">✦ AI</button>
+<button type="button" class="on" data-cat="color" title="Develop, Presets, Light, Color Palette &amp; Film Stocks">Color</button>
+<button type="button" data-cat="edit" title="Layers, Cutout Selections, Crop, Draw &amp; Warp">Edit</button>
+<button type="button" data-cat="design" title="Templates, Shapes, Stickers, Typography &amp; 30+ Overlays">Design</button>
+<button type="button" data-cat="fx" title="38 Filters, Retro/Pixel &amp; Pro Lab Tools">FX</button>
+</nav>
+<div class="tabs" role="tablist">
+<button role="tab" data-t="ai" data-cat="ai" hidden>AI Studio</button>
+<button role="tab" class="on" data-t="tone" data-cat="color" title="Tone presets &amp; gradient maps">Presets</button>
+<button role="tab" data-t="grade" data-cat="color" title="Lightroom develop, Point Color, curves &amp; LUTs">Develop</button>
+<button role="tab" data-t="adjust" data-cat="color" title="Brightness, contrast, levels &amp; glow">Light</button>
+<button role="tab" data-t="colour" data-cat="color" title="Palette &amp; selective color edits">Palette</button>
+<button role="tab" data-t="film" data-cat="color" title="Film stocks, grain &amp; double exposure">Film</button>
+<button role="tab" data-t="layers" data-cat="edit" hidden title="Layers, masks, blend modes &amp; retouch">Layers</button>
+<button role="tab" data-t="select" data-cat="edit" hidden title="Wand, lasso, color range &amp; cutout selections">Cutout</button>
+<button role="tab" data-t="crop" data-cat="edit" hidden title="Crop, rotate &amp; aspect ratios">Crop</button>
+<button role="tab" data-t="draw" data-cat="edit" hidden title="Brushes, paint, gradients &amp; shapes">Draw</button>
+<button role="tab" data-t="warp" data-cat="edit" hidden title="Warp &amp; liquify brushes">Warp</button>
+<button role="tab" data-t="design" data-cat="design" hidden title="Templates, shapes, stickers, frames &amp; QR">Studio</button>
+<button role="tab" data-t="text" data-cat="design" hidden title="Typography, warped text &amp; paths">Type</button>
+<button role="tab" data-t="glints" data-cat="design" hidden title="30+ Pro Overlays &amp; optical highlight glints">Overlays</button>
+<button role="tab" data-t="filters" data-cat="fx" hidden title="38 FX filters &amp; perspective skew">Filters</button>
+<button role="tab" data-t="pixel" data-cat="fx" hidden title="Pixel art, dithering &amp; retro effects">Retro</button>
+<button role="tab" data-t="lab" data-cat="fx" hidden title="SVG Trace, GIF, Mockups, Low-Poly, Pixel Sort, Scanner &amp; more">Pro Lab</button>
+</div>
+
+<div class="pn" id="p-ai">
+<div class="bg-rm-box ai-hero-card">
+<h4>AI Background Remover</h4>
+<p class="note">On-device neural cutout (RMBG-1.4 / MODNet) — runs locally in your browser with zero uploads and outputs an editable Layer Mask.</p>
+<label>Target <select id="rmbg-target"><option value="auto">Selected layer (or base photo)</option><option value="base">Base photo (lifts to layer)</option></select></label>
+<label>Engine <select id="rmbg-mode"><option value="ai-rmbg" selected>AI Neural · RMBG-1.4 (Studio Best)</option><option value="ai-modnet">AI Neural · MODNet (Fast Portrait)</option><option value="auto">Instant Offline · Border + Pockets</option><option value="center">Instant Offline · Center Subject</option><option value="white">Instant Offline · White / Solid Key</option></select></label>
+<label>Edge sensitivity <input type="range" id="rmbg-sens" min="10" max="95" value="48"></label>
+<label>Edge feather <input type="range" id="rmbg-feath" min="0" max="12" value="1"></label>
+<label><span><input type="checkbox" id="rmbg-decontam" checked> Decontaminate edge halo</span></label>
+<div id="rmbg-prog-wrap" class="mini-prog" hidden><div id="rmbg-prog-bar"></div></div>
+<div class="bar"><button id="rmbg-smart" class="pri">Remove Background</button><button id="rmbg-refine">Refine hair / edges</button></div>
+<div class="bar rmbg-next" id="rmbg-next" hidden>
+<button type="button" data-rn="outline">+ Sticker outline</button>
+<button type="button" data-rn="shadow">+ Drop shadow</button>
+<button type="button" data-rn="swapbg">Swap background</button>
+<button type="button" data-rn="frame">Photo frame</button>
+</div>
+<p class="note" id="rmbg-status" role="status"></p>
+</div>
+<div class="bg-rm-box">
+<h4>AI Image Upscaler (2× / 4× ESRGAN)</h4>
+<p class="note">Upscayl-style neural super-resolution with live before/after split preview, post-sharpen &amp; denoise.</p>
+<div class="bar"><button type="button" class="pri" data-ai-act="upscale">Open AI Upscaler…</button><button type="button" data-ai-act="auto">1-Click Smart Enhance</button></div>
+</div>
+<div class="bg-rm-box" id="ai-depth-box">
+<h4>AI Depth Map &amp; Portrait Bokeh</h4>
+<p class="note">Neural depth estimation (Depth Anything V2) for realistic DSLR background blur or depth masks.</p>
+<label>Bokeh blur <input type="range" id="depth-blur-amt" min="2" max="40" value="14"></label>
+<label>Focus depth <input type="range" id="depth-focus" min="0" max="100" value="80"></label>
+<div id="depth-prog-wrap" class="mini-prog" hidden><div id="depth-prog-bar"></div></div>
+<div class="bar"><button type="button" id="ai-depth-bokeh" class="pri">AI Portrait Bokeh</button><button type="button" id="ai-depth-mask">Save as Depth Mask</button></div>
+<p class="note" id="depth-ai-status" role="status"></p>
+</div>
+<h3>Smart AI &amp; Retouch Tools</h3>
+<div class="studio-grid two ai-tool-grid">
+<button type="button" class="studio-card" data-ai-act="eraser"><span>Magic Object Eraser</span><small>Offline Inpainting</small></button>
+<button type="button" class="studio-card" data-ai-act="ocr"><span>OCR Grab Text</span><small>Tesseract AI</small></button>
+<button type="button" class="studio-card" data-ai-act="smartcrop"><span>Smart AI Auto-Crop</span><small>Face &amp; Focal Framing</small></button>
+<button type="button" class="studio-card" data-ai-act="clahe"><span>Auto Restore (CLAHE)</span><small>Dehaze &amp; Auto WB</small></button>
+<button type="button" class="studio-card" data-ai-act="redact"><span>Privacy Redact</span><small>Blur / Pixelate Info</small></button>
+<button type="button" class="studio-card" data-ai-act="liquify"><span>Liquify Sculpt</span><small>Push / Bloat / Twirl</small></button>
+<button type="button" class="studio-card" data-ai-act="layerfx"><span>Sticker &amp; Layer FX</span><small>Die-Cut / Shadow / Glow</small></button>
+<button type="button" class="studio-card" data-ai-act="trim"><span>Auto-Trim Borders</span><small>Crop Transparency</small></button>
+</div>
+</div>
+
+<div class="pn" id="p-lab">
+<h3>Pro Studio Generators</h3>
+<div class="studio-grid two ai-tool-grid">
+<button type="button" class="studio-card" data-ai-act="svg"><span>SVG Vectorizer</span><small>Image Trace</small></button>
+<button type="button" class="studio-card" data-ai-act="gif"><span>Animated GIF Maker</span><small>Glitch / Spin / Loops</small></button>
+<button type="button" class="studio-card" data-ai-act="mockup"><span>Device Mockups</span><small>iPhone / Mac / CD / Vinyl</small></button>
+<button type="button" class="studio-card" data-ai-act="palette"><span>Palette &amp; Looks</span><small>6-Color + Saved Grades</small></button>
+<button type="button" class="studio-card" data-ai-act="batch"><span>PDF &amp; Batch ZIP</span><small>Bulk Convert / Compress</small></button>
+<button type="button" class="studio-card" data-ai-act="ba"><span>Before / After Split</span><small>Comparison PNG</small></button>
+<button type="button" class="studio-card" data-ai-act="wm"><span>Watermark &amp; EXIF</span><small>Tiled Mark + Camera Data</small></button>
+<button type="button" class="studio-card" data-ai-act="extras"><span>ASCII · Tile · Slicer</span><small>Matrix / Seamless / IG</small></button>
+</div>
+<h3>Open-Source Creative Lab</h3>
+<div class="studio-grid two ai-tool-grid">
+<button type="button" class="studio-card" data-ai-act="lowpoly"><span>Low-Poly Vector Art</span><small>Delaunay SVG</small></button>
+<button type="button" class="studio-card" data-ai-act="pxsort"><span>Pixel Sort Glitch</span><small>ASDFPixelSort</small></button>
+<button type="button" class="studio-card" data-ai-act="dither"><span>Retro Dither &amp; CMYK</span><small>Atkinson / Bayer / GB</small></button>
+<button type="button" class="studio-card" data-ai-act="kaleido"><span>Kaleidoscope Art</span><small>Mandala Symmetry</small></button>
+<button type="button" class="studio-card" data-ai-act="scanner"><span>4-Corner Scanner</span><small>Un-Skew Documents</small></button>
+<button type="button" class="studio-card" data-ai-act="pfp"><span>Avatar / PFP Studio</span><small>Circular Ring 512px</small></button>
+<button type="button" class="studio-card" data-ai-act="meme"><span>Meme &amp; Caption</span><small>Impact / Bar / Poster</small></button>
+<button type="button" class="studio-card" data-ai-act="cvd"><span>Color Blind &amp; WCAG</span><small>Accessibility Check</small></button>
+</div>
+</div>
 
 <div class="pn on" id="p-tone">
 <h3>Presets</h3>
@@ -102,10 +256,72 @@
 <h3>Quick styles</h3><div class="sty" id="tsty"></div></div>
 </div>
 <div class="pn" id="p-grade">
+<details id="lr-basic" open><summary>Basic Develop</summary>
+<div class="bar lr-top-bar"><button type="button" id="lr-auto">Auto</button><button type="button" id="lr-bw" aria-pressed="false">B&amp;W</button><button type="button" id="lr-hdr" aria-pressed="false">HDR</button><button type="button" id="lr-basic-reset">Reset</button></div>
+<div class="bar" style="align-items:center"><label style="margin:0;flex:1">White Balance <select id="lr-wb"><option value="custom">As Shot</option><option value="daylight">Daylight</option><option value="cloudy">Cloudy</option><option value="shade">Shade</option><option value="tungsten">Tungsten</option><option value="fluorescent">Fluorescent</option><option value="concert">Concert Red Fix</option></select></label><button type="button" id="lr-wb-pick" aria-pressed="false" title="Click a neutral grey/white area on photo">Pick WB</button></div>
+<div class="lr-sliders">
+<label>Temp <input id="lr-temp" class="lr-track lr-temp" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Tint <input id="lr-tint" class="lr-track lr-tint" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Exposure <input id="lr-exp" class="lr-track" type="range" min="-4" max="4" step="0.05" value="0"><output>0.00</output></label>
+<label>Contrast <input id="lr-con" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Highlights <input id="lr-hi" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Shadows <input id="lr-sh" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Whites <input id="lr-wh" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Blacks <input id="lr-bl" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Texture <input id="lr-tex" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Clarity <input id="lr-cla" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Dehaze <input id="lr-deh" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Vibrance <input id="lr-vib" class="lr-track lr-sat" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Saturation <input id="lr-sat" class="lr-track lr-sat" type="range" min="-100" max="100" value="0"><output>0</output></label>
+</div>
+</details>
+<details id="lr-point-color" open><summary>Point Color · Stage Light &amp; Skin Fix</summary>
+<p class="note">Pick any colour on the photo (e.g. red concert lighting on skin) and remap it cleanly to natural skin tones or any target colour.</p>
+<div class="bar"><button type="button" id="pc-pick" class="pri" aria-pressed="false">Pick colour in photo</button><button type="button" id="pc-add">+ New point</button><button type="button" id="pc-del" disabled>Remove</button></div>
+<div class="pc-swatches" id="pc-swatches" aria-label="Point Color swatches"></div>
+<div id="pc-editor" hidden>
+<div class="pc-remap-box">
+<div class="pc-pair">
+<label>Picked <input type="color" id="pc-src" value="#e02424"></label>
+<span class="pc-arrow">→</span>
+<label>Turn into <input type="color" id="pc-target" value="#d99f7c"></label>
+<button type="button" id="pc-match" class="pri">Match colour</button>
+</div>
+<div class="pc-skin-row" id="pc-skin-presets">
+<span class="note" style="margin:0">Skin / target:</span>
+<button type="button" data-skin="#f0c3a6" title="Fair natural skin" style="--sw:#f0c3a6">Fair</button>
+<button type="button" data-skin="#d99f7c" title="Warm medium skin" style="--sw:#d99f7c">Warm</button>
+<button type="button" data-skin="#b97b52" title="Golden tan skin" style="--sw:#b97b52">Tan</button>
+<button type="button" data-skin="#7b4b32" title="Rich deep skin" style="--sw:#7b4b32">Deep</button>
+<button type="button" data-skin="#f4f6fa" title="Clean neutral white" style="--sw:#f4f6fa">White</button>
+</div>
+</div>
+<div class="lr-sliders">
+<label>Hue Shift <input id="pc-hue" class="lr-track lr-hue" type="range" min="-180" max="180" value="0"><output>0</output></label>
+<label>Saturation Shift <input id="pc-sat" class="lr-track lr-sat" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Luminance Shift <input id="pc-lum" class="lr-track" type="range" min="-100" max="100" value="0"><output>0</output></label>
+<label>Color Unify / Variance <input id="pc-var" class="lr-track" type="range" min="0" max="100" value="55"><output>55</output></label>
+<label>Range <input id="pc-range" class="lr-track" type="range" min="5" max="100" value="52"><output>52</output></label>
+</div>
+<div class="bar" style="align-items:center;justify-content:space-between">
+<label style="margin:0"><span><input type="checkbox" id="pc-viz"> Visualize Range</span></label>
+<label style="margin:0"><span><input type="checkbox" id="pc-on" checked> Enabled</span></label>
+<button type="button" id="pc-reset">Reset point</button>
+</div>
+</div>
+<p class="note" id="pc-msg" role="status">Click "Pick colour in photo" then click on the image to sample a colour.</p>
+</details>
+<details id="lr-lut-panel"><summary>3D LUT (.cube) Import &amp; Export</summary>
+<p class="note">Load any DaVinci Resolve, Premiere, or Lightroom <code>.cube</code> 3D LUT, or export your current Totone grade as a <code>.cube</code> file.</p>
+<div class="bar"><button type="button" id="lut-import" class="pri">Import .cube LUT…</button><button type="button" id="lut-clear" disabled>Remove</button><button type="button" id="lut-export">Export .cube</button></div>
+<input type="file" id="lut-file" accept=".cube,.txt" hidden>
+<label id="lut-str-row" hidden>LUT strength <input id="lut-str" type="range" min="0" max="100" value="100"><output>100%</output></label>
+<p class="note" id="lut-status" role="status">No 3D LUT loaded.</p>
+</details>
 <details id="reference-panel"><summary>Match a reference photo</summary><button id="ref-choose">Choose reference photo…</button><input type="file" accept="image/*" id="ref-file" hidden><p class="note" role="status" id="ref-status"></p><div id="ref-controls" hidden><label>Shadows <input id="ref-zone-0" type="range" data-ref-zone="0" min="0" max="100"><output></output></label><label>Midtones <input id="ref-zone-1" type="range" data-ref-zone="1" min="0" max="100"><output></output></label><label>Highlights <input id="ref-zone-2" type="range" data-ref-zone="2" min="0" max="100"><output></output></label><label>Protect skin tones <input id="ref-skin" type="checkbox" ></label><button id="ref-clear">Remove match</button></div></details>
 <details id="local-tools"><summary>Local grading masks</summary><div class="bar"><button id="mask-linear">Add linear</button><button id="mask-radial">Add radial</button></div><label>Mask <select id="local-list"></select></label><div id="local-edit" hidden>
 <label>Name <input id="mask-name" maxlength="80"></label><div class="bar"><button id="mask-place" aria-pressed="false">Place on canvas</button><button id="mask-remove">Remove mask</button></div><p class="note">Drag to place a mask. Drag its center to move it or its end to resize.</p><label>Enabled <input type="checkbox" id="mask-on"></label><label>Invert <input type="checkbox" id="mask-invert"></label><label id="mask-feather-row">Feather <input id="mask-feather" type="range" min="0" max="100" step="1"><output></output></label><label id="mask-aspect-row">Ellipse height <input id="mask-aspect" type="range" min="20" max="300" step="1"><output></output></label><label id="mask-exposure-row">Exposure <input id="mask-exposure" type="range" min="-2" max="2" step="0.05"><output></output></label><label id="mask-warmth-row">Warmth <input id="mask-warmth" type="range" min="-100" max="100" step="1"><output></output></label><label id="mask-tint-row">Tint <input id="mask-tint" type="range" min="-100" max="100" step="1"><output></output></label><label id="mask-saturation-row">Saturation <input id="mask-saturation" type="range" min="-100" max="100" step="1"><output></output></label></div></details>
-<details id="hsl-tools"><summary>HSL color mixer</summary><label>Color band <select id="hsl-band"></select></label><div class="bar"><button id="hsl-pick" aria-pressed="false">Pick from image</button><button id="hsl-reset">Reset band</button></div><p class="note" id="hsl-msg"></p><label id="hsl-center-row">Target hue <input id="hsl-center" type="range" min="0" max="359" step="1"><output></output></label><label id="hsl-width-row">Hue range <input id="hsl-width" type="range" min="5" max="120" step="1"><output></output></label><label id="hsl-h-row">Hue shift <input id="hsl-h" type="range" min="-180" max="180" step="1"><output></output></label><label id="hsl-s-row">Saturation <input id="hsl-s" type="range" min="-100" max="100" step="1"><output></output></label><label id="hsl-l-row">Lightness <input id="hsl-l" type="range" min="-100" max="100" step="1"><output></output></label></details><h3>Light graph</h3>
+<details id="hsl-tools" open><summary>Color Mixer (HSL)</summary><div class="hsl-dots" id="hsl-dots" role="group" aria-label="Color band dots"></div><label>Color band <select id="hsl-band"></select></label><div class="bar"><button id="hsl-pick" aria-pressed="false">Pick from image</button><button id="hsl-reset">Reset band</button></div><p class="note" id="hsl-msg"></p><label id="hsl-center-row">Target hue <input id="hsl-center" type="range" min="0" max="359" step="1"><output></output></label><label id="hsl-width-row">Hue range <input id="hsl-width" type="range" min="5" max="120" step="1"><output></output></label><label id="hsl-h-row">Hue shift <input id="hsl-h" class="lr-track lr-hue" type="range" min="-180" max="180" step="1"><output></output></label><label id="hsl-s-row">Saturation <input id="hsl-s" class="lr-track lr-sat" type="range" min="-100" max="100" step="1"><output></output></label><label id="hsl-l-row">Lightness <input id="hsl-l" class="lr-track" type="range" min="-100" max="100" step="1"><output></output></label></details><h3>Light graph</h3>
 <label>Graph source <select id="scope-source"><option value="preview">Current preview</option><option value="original">Original photo</option></select></label>
 <label>Display <select id="scope-kind"><option value="rgb">RGB histogram</option><option value="luma">Luminance histogram</option><option value="wave">Luma waveform</option></select></label>
 <canvas id="scope-plot" width="480" height="168" role="img" aria-label="Live image histogram"></canvas>
@@ -120,13 +336,25 @@
 <label>Curve preset <select id="curve-look"><option value="">Choose a curve</option><option value="contrast">Soft S-curve</option><option value="matte">Lifted blacks</option><option value="shoulder">Highlight roll-off</option><option value="negative">Negative</option></select></label>
 <div class="bar"><button id="curve-add">Add point</button><button id="curve-remove">Remove point</button><button id="curve-reset">Reset channel</button></div>
 <h3>Color grading</h3>
+<div class="bar lr-wheel-modes" id="lr-wheel-mode-bar"><button type="button" class="on" data-wmode="3up">3-Up Wheels</button><button type="button" data-wmode="single">Single Wheel</button></div>
+<div id="lr-wheels-3up">
+<div class="lr-wheel-top">
+<div class="lr-wheel-cell"><small>Midtones</small><canvas class="lr-mini-wheel" data-wzone="midtones" width="160" height="160" title="Drag to tint midtones · Double-click to reset"></canvas><input class="lr-mini-lum" data-wzone="midtones" type="range" min="-100" max="100" value="0" aria-label="Midtones luminance"></div>
+</div>
+<div class="lr-wheel-bot">
+<div class="lr-wheel-cell"><small>Shadows</small><canvas class="lr-mini-wheel" data-wzone="shadows" width="150" height="150" title="Drag to tint shadows · Double-click to reset"></canvas><input class="lr-mini-lum" data-wzone="shadows" type="range" min="-100" max="100" value="0" aria-label="Shadows luminance"></div>
+<div class="lr-wheel-cell"><small>Highlights</small><canvas class="lr-mini-wheel" data-wzone="highlights" width="150" height="150" title="Drag to tint highlights · Double-click to reset"></canvas><input class="lr-mini-lum" data-wzone="highlights" type="range" min="-100" max="100" value="0" aria-label="Highlights luminance"></div>
+</div>
+</div>
+<div id="lr-wheel-single" hidden>
 <div class="bar grade-zones" id="grade-zones" role="group" aria-label="Tonal range"><button data-zone="shadows">Shadows</button><button data-zone="midtones">Midtones</button><button data-zone="highlights">Highlights</button></div>
 <canvas id="grade-wheel" width="224" height="224" tabindex="0" role="group" aria-label="Color grading wheel. Left and right change hue. Up and down change saturation."></canvas>
 <label>Hue <input id="zone-hue" type="range" min="0" max="359"><output></output></label>
 <label>Saturation <input id="zone-sat" type="range" min="0" max="100"><output></output></label>
 <label>Luminance <input id="zone-lum" type="range" min="-100" max="100"><output></output></label>
-<label>Tonal balance <input id="zone-balance" type="range" min="-100" max="100"><output></output></label>
-<label>Grading strength <input id="zone-mix" type="range" min="0" max="100"><output></output></label>
+</div>
+<label>Balance <input id="zone-balance" type="range" min="-100" max="100"><output></output></label>
+<label>Blending / Strength <input id="zone-mix" type="range" min="0" max="100"><output></output></label>
 <label>Grading preset <select id="zone-look"><option value="">Choose a grade</option><option value="teal">Teal shadows / amber light</option><option value="rose">Violet shadows / peach light</option><option value="night">Steel blue night</option></select></label>
 <div class="bar"><button id="zone-reset">Reset tonal range</button><button id="grade-reset">Reset curves and grading</button></div>
 </div>
@@ -140,7 +368,26 @@
 <input type="file" accept="image/*" id="exposure-files" multiple hidden>
 </div>
 <div class="pn" id="p-glints">
-<h3>Highlight glints</h3>
+<div id="studio-overlays-box">
+<h3 style="margin-top:0;border-top:0;padding-top:0">Studio Overlays (30+ HD)</h3>
+<p class="note">Procedural light leaks, bokeh, film burns, dust, rain, fog, scanlines &amp; frames. Click any overlay to add as an editable layer.</p>
+<div class="el-chips" id="sov-cats">
+<button type="button" class="on" data-oc="all">All</button>
+<button type="button" data-oc="leaks">Leaks</button>
+<button type="button" data-oc="bokeh">Bokeh</button>
+<button type="button" data-oc="grunge">Textures</button>
+<button type="button" data-oc="weather">Weather</button>
+<button type="button" data-oc="frames">Frames</button>
+</div>
+<div class="up-grid" style="margin:6px 0">
+<label>Blend <select id="sov-bm"><option value="auto" selected>Auto (Best)</option><option value="screen">Screen</option><option value="overlay">Overlay</option><option value="soft-light">Soft Light</option><option value="lighten">Lighten</option><option value="color-dodge">Color Dodge</option><option value="multiply">Multiply</option><option value="source-over">Normal</option></select></label>
+<label>Opacity <input id="sov-op" type="range" min="10" max="100" value="85"><output>85%</output></label>
+<label>Hue tint <input id="sov-hue" type="range" min="-180" max="180" value="0"><output>0°</output></label>
+<div class="bar" style="margin:0;align-items:center"><button type="button" id="sov-rand" title="Generate new random pattern seed">🎲 New seed</button><button type="button" id="sov-flip" aria-pressed="false" title="Flip overlay horizontally">⇄ Flip</button></div>
+</div>
+<div id="sov-grid" class="sov-grid"></div>
+</div>
+<h3>Optical Highlight Glints</h3>
 <div class="bar"><button class="pri" id="glint-toggle">Add glints</button><button id="glint-reset">Reset settings</button></div>
 <p class="note" id="glint-status" role="status"></p>
 <label>Look <select id="glint-look"><option value="">Custom</option><option value="chrome">Chrome reflections</option><option value="filter">Six-point star filter</option><option value="cinema">Anamorphic blue</option><option value="prism">Prism burst</option><option value="motion">Motion halation</option><option value="mist">Soft diffusion</option><option value="sunstar">Stopped-down sunstar</option><option value="jewelry">Jewellery sparkle</option><option value="glass">Window reflection</option></select></label>
@@ -303,8 +550,8 @@
 <label id="sh-pts-row" hidden>Points / Sides <input type="range" id="sh-pts" min="3" max="16" value="5"></label>
 <label><span><input type="checkbox" id="sh-shadow"> Drop shadow</span><input type="range" id="sh-shblur" min="4" max="60" value="22" aria-label="Shape shadow blur"></label>
 </div>
-<h3>Y2K · Frutiger Aero · Cybercore</h3>
-<p class="note">One-click authentic retro graphics, glossy glass orbs, OS windows &amp; energy flares.</p>
+<h3>Graphics &amp; Stickers</h3>
+<p class="note">One-click stickers, badges, glass orbs, chrome accents, retro frames &amp; overlays.</p>
 <div class="bar" style="align-items:center">
 <label style="margin:0;flex:1">Accent <input type="color" id="y2k-col" value="#2b6cff"></label>
 <button type="button" class="y2k-chip" data-yc="#22ff44" title="Xbox 2001 Green" style="background:#22ff44"></button>
@@ -315,6 +562,27 @@
 <button type="button" class="y2k-chip" data-yc="#ff2e97" title="Cyber Magenta" style="background:#ff2e97"></button>
 </div>
 <div class="studio-grid two" id="y2k-grid"></div>
+<h3>Photo Collage Grids</h3>
+<p class="note">Select multiple photos to build a clean grid collage instantly.</p>
+<label>Grid gap <input id="collage-gap" type="range" min="0" max="48" value="14"></label>
+<label>Corner radius <input id="collage-rad" type="range" min="0" max="40" value="12"></label>
+<div class="studio-grid two" id="collage-grid">
+<button type="button" class="studio-card" data-col="2h"><span>2-Up Side</span><small>Left · Right</small></button>
+<button type="button" class="studio-card" data-col="2v"><span>2-Up Stack</span><small>Top · Bottom</small></button>
+<button type="button" class="studio-card" data-col="3h"><span>3-Panel</span><small>Triptych</small></button>
+<button type="button" class="studio-card" data-col="2x2"><span>2 × 2 Grid</span><small>4 Photos</small></button>
+</div>
+<input type="file" id="collage-files" accept="image/*" multiple hidden>
+<h3>QR Code Generator</h3>
+<p class="note">Create crisp custom QR codes for links, socials, or Spotify.</p>
+<div class="bar"><input type="text" id="qr-text" placeholder="https://example.com or @handle" style="flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);padding:5px 7px;border-radius:3px"></div>
+<div class="bar" style="align-items:center">
+<label style="margin:0">Ink <input type="color" id="qr-fg" value="#ffffff"></label>
+<label style="margin:0">Bg <input type="color" id="qr-bg" value="#050c1f"></label>
+<label style="margin:0"><span><input type="checkbox" id="qr-trans" checked> Clear bg</span></label>
+<label style="margin:0"><span><input type="checkbox" id="qr-round" checked> Dots</span></label>
+</div>
+<div class="bar"><button type="button" id="qr-add" class="pri">Add QR code layer</button></div>
 <h3>Photo frames</h3>
 <p class="note">Clip the selected layer (or base photo) into a Canva-style frame.</p>
 <label><span><input type="checkbox" id="frame-outline"> Add crisp border</span><input type="color" id="frame-border-col" value="#ffffff" aria-label="Frame border colour"></label>
@@ -376,18 +644,7 @@
 </div>
 
 <div class="pn" id="p-filters">
-<div class="bg-rm-box">
-<h4>One-Click Background Remover</h4>
-<p class="note">Extracts the subject onto a non-destructive Layer Mask with pocket cleanup &amp; fringe decontamination.</p>
-<label>Target <select id="rmbg-target"><option value="auto">Selected layer (or base photo)</option><option value="base">Base photo (lifts to layer)</option></select></label>
-<label>Mode <select id="rmbg-mode"><option value="auto">Smart Border + Pockets</option><option value="center">Center Subject Bias</option><option value="white">White / Solid Backdrop Key</option></select></label>
-<label>Edge sensitivity <input type="range" id="rmbg-sens" min="10" max="95" value="48"></label>
-<label>Edge feather <input type="range" id="rmbg-feath" min="0" max="12" value="2"></label>
-<label><span><input type="checkbox" id="rmbg-decontam" checked> Decontaminate edge halo</span></label>
-<div class="bar"><button id="rmbg-smart" class="pri">Remove Background</button><button id="rmbg-refine">Refine hair / edges</button></div>
-<p class="note" id="rmbg-status" role="status"></p>
-</div>
-<h3>Photoshop Filter Studio</h3>
+<h3>Filter Studio (38 Live FX)</h3>
 <label>Apply filter to <select id="psfx-target"><option value="all-layer" selected>Everything · New FX layer (keeps layers)</option><option value="all-flat">Everything · Flatten &amp; bake</option><option value="layer">Selected layer only</option><option value="base">Base photo only</option></select></label>
 <label><span><input type="checkbox" id="psfx-live" checked> Live preview while adjusting</span></label>
 <div class="bar" style="align-items:center">
@@ -398,30 +655,54 @@
 <button type="button" class="y2k-chip" data-fc="#dbeafe" title="Liquid Chrome" style="background:#dbeafe"></button>
 <button type="button" class="y2k-chip" data-fc="#ff2e97" title="Cyber Pink" style="background:#ff2e97"></button>
 </div>
-<p class="note" style="margin:4px 0 2px">Y2K · Frutiger Aero · Cybercore FX</p>
+<input type="search" id="psfx-search" placeholder="Search 38 filters…" aria-label="Search filters" style="width:100%;margin:6px 0 4px">
+<div class="el-chips" id="psfx-cats" role="tablist" aria-label="Filter categories">
+<button type="button" class="on" data-fcat="all">All</button>
+<button type="button" data-fcat="cyber">Cyber</button>
+<button type="button" data-fcat="retro">Retro</button>
+<button type="button" data-fcat="glow">Glow</button>
+<button type="button" data-fcat="art">Art</button>
+<button type="button" data-fcat="blur">Blur / Lens</button>
+</div>
 <div class="fx-btn-grid" id="psfx-grid">
-<button type="button" class="on" data-fx="holoscan">Cybercore Holo-Scan</button>
-<button type="button" data-fx="chrome">Y2K Liquid Chrome</button>
-<button type="button" data-fx="aerogloss">Frutiger Aero Gloss</button>
-<button type="button" data-fx="y2kdither">Y2K Blue Dither</button>
-<button type="button" data-fx="crt">CRT Phosphor Grid</button>
-<button type="button" data-fx="xboxflare">Xbox Energy Streaks</button>
-<button type="button" data-fx="marble">Liquid Marble Swirl</button>
-<button type="button" data-fx="caustics">Aqua Caustic Glass</button>
-<button type="button" data-fx="glitch">VHS Glitch</button>
-<button type="button" data-fx="chroma">RGB Chromatic Split</button>
-<button type="button" data-fx="gaussian">Gaussian Blur</button>
-<button type="button" data-fx="motion">Motion Blur</button>
-<button type="button" data-fx="radial">Radial Zoom Blur</button>
-<button type="button" data-fx="tiltshift">Tilt-Shift Focus</button>
-<button type="button" data-fx="halftone">Halftone Pop</button>
-<button type="button" data-fx="oil">Oil Paint</button>
-<button type="button" data-fx="fisheye">Lens Fisheye</button>
-<button type="button" data-fx="bokeh">Lens Bokeh Blur</button>
-<button type="button" data-fx="highpass">High-Pass Sharpen</button>
-<button type="button" data-fx="emboss">Emboss Relief</button>
-<button type="button" data-fx="edges">Find Edges / Sketch</button>
-<button type="button" data-fx="thermal">Thermal Glow</button>
+<button type="button" class="on" data-fx="holoscan" data-cat="cyber">Holo-Scan</button>
+<button type="button" data-fx="chrome" data-cat="cyber">Liquid Chrome</button>
+<button type="button" data-fx="aerogloss" data-cat="glow">Aero Glass Gloss</button>
+<button type="button" data-fx="y2kdither" data-cat="retro">Blue Dither</button>
+<button type="button" data-fx="crt" data-cat="retro">CRT Phosphor</button>
+<button type="button" data-fx="xboxflare" data-cat="cyber">Energy Streaks</button>
+<button type="button" data-fx="marble" data-cat="cyber">Liquid Marble</button>
+<button type="button" data-fx="caustics" data-cat="glow">Aqua Caustics</button>
+<button type="button" data-fx="pixelsort" data-cat="cyber">Pixel Sort</button>
+<button type="button" data-fx="matrix" data-cat="cyber">Matrix Rain</button>
+<button type="button" data-fx="neonedge" data-cat="cyber">Cyber Neon Edges</button>
+<button type="button" data-fx="glitch" data-cat="retro">VHS Glitch</button>
+<button type="button" data-fx="anaglyph" data-cat="retro">3D Anaglyph</button>
+<button type="button" data-fx="chroma" data-cat="retro">RGB Split</button>
+<button type="button" data-fx="nightvision" data-cat="retro">Night Vision CCTV</button>
+<button type="button" data-fx="crossproc" data-cat="retro">Cross-Process 90s</button>
+<button type="button" data-fx="aerochrome" data-cat="art">Infrared Aerochrome</button>
+<button type="button" data-fx="solarize" data-cat="art">Solarize Darkroom</button>
+<button type="button" data-fx="riso" data-cat="art">Riso Print Offset</button>
+<button type="button" data-fx="comic" data-cat="art">Comic Cel-Shade</button>
+<button type="button" data-fx="watercolor" data-cat="art">Watercolor Wash</button>
+<button type="button" data-fx="halftone" data-cat="art">Halftone Pop</button>
+<button type="button" data-fx="oil" data-cat="art">Oil Paint</button>
+<button type="button" data-fx="kaleido" data-cat="art">Kaleidoscope</button>
+<button type="button" data-fx="swirl" data-cat="blur">Vortex Swirl</button>
+<button type="button" data-fx="frosted" data-cat="blur">Frosted Glass</button>
+<button type="button" data-fx="orton" data-cat="glow">Dreamy Orton Glow</button>
+<button type="button" data-fx="godrays" data-cat="glow">Sunburst Rays</button>
+<button type="button" data-fx="thermal" data-cat="glow">Thermal FLIR</button>
+<button type="button" data-fx="gaussian" data-cat="blur">Gaussian Blur</button>
+<button type="button" data-fx="motion" data-cat="blur">Motion Blur</button>
+<button type="button" data-fx="radial" data-cat="blur">Radial Zoom Blur</button>
+<button type="button" data-fx="tiltshift" data-cat="blur">Tilt-Shift Focus</button>
+<button type="button" data-fx="fisheye" data-cat="blur">Lens Fisheye</button>
+<button type="button" data-fx="bokeh" data-cat="glow">Lens Bokeh Blur</button>
+<button type="button" data-fx="highpass" data-cat="blur">High-Pass Sharpen</button>
+<button type="button" data-fx="emboss" data-cat="art">Emboss Relief</button>
+<button type="button" data-fx="edges" data-cat="art">Find Edges / Sketch</button>
 </div>
 <label>Amount / Radius <input type="range" id="psfx-amt" min="1" max="100" value="32"></label>
 <label id="psfx-angle-row">Angle / Focus Y <input type="range" id="psfx-angle" min="0" max="360" value="0"></label>
@@ -436,20 +717,61 @@
 </div>
 </aside>
 </main>
-<div id="exp" hidden role="dialog" aria-label="Export"><div class="hbox"><h2>Export</h2>
+<footer id="status-bar" aria-label="Workspace status">
+<button type="button" id="sb-dims" class="sb-link" title="Click to resize canvas (Magic Resize)">No image open</button>
+<button type="button" id="sb-layers" class="sb-link" title="Click to open Layers panel"></button>
+<button type="button" id="sb-exif-btn" class="sb-pill" hidden title="View Camera EXIF Metadata">EXIF</button>
+<span id="sb-cursor" hidden><i id="sb-swatch"></i><span id="sb-xy"></span></span>
+<span class="sp"></span>
+<button type="button" id="sb-guide-btn" class="sb-chip" title="Cycle composition &amp; social safe-zone overlay">Guides: Off</button>
+<button type="button" id="sb-hist-btn" class="sb-chip" title="Toggle Live Floating RGB Histogram HUD">Histogram</button>
+<div class="sb-zoom"><button type="button" id="sb-zout" title="Zoom out">−</button><button type="button" id="sb-zfit" title="Fit to screen">Fit</button><button type="button" id="sb-zin" title="Zoom in">+</button></div>
+</footer>
+<div id="canvas-menu" role="menu" hidden>
+<button type="button" data-cm="dup">Duplicate layer <span>Ctrl+J</span></button>
+<button type="button" data-cm="warp" hidden>Freeform mesh warp</button>
+<button type="button" data-cm="edit-text" hidden>Edit text</button>
+<button type="button" data-cm="flip">Flip horizontal</button>
+<button type="button" data-cm="rot90">Rotate 90°</button>
+<button type="button" data-cm="center">Centre on canvas</button>
+<button type="button" data-cm="rmbg">AI Remove background</button>
+<button type="button" data-cm="layerfx">Sticker outline &amp; Layer FX</button>
+<button type="button" data-cm="redact">Privacy redact (Blur / Pixelate)</button>
+<button type="button" data-cm="trim">Auto-trim transparency</button>
+<button type="button" data-cm="copy-img">Copy PNG to clipboard <span>Ctrl+Shift+C</span></button>
+<button type="button" data-cm="export">Export Studio… <span>Ctrl+S</span></button>
+<button type="button" data-cm="del" class="danger">Delete layer <span>Del</span></button>
+</div>
+<div id="exp" hidden role="dialog" aria-label="Export"><div class="hbox exp-pro-box"><h2>Export Studio</h2>
 <label>What <select id="exw"><option value="all">Whole image</option><option value="layer">Selected layer (transparent)</option><option value="sel">Selection only (cut out)</option><option value="print">Four-panel poster (2 × 2)</option></select></label>
-<label>Format <select id="exf"><option value="png">PNG</option><option value="jpg">JPG</option><option value="webp">WEBP</option></select></label>
-<label>Size <select id="exs"><option value="0.5">50%</option><option value="1" selected>100%</option><option value="2">200%</option><option value="3">300%</option><option value="-4096">Large · up to 4096 px</option><option value="-2048">Medium · up to 2048 px</option></select></label>
-<label>Quality <input type="range" id="exq" min="10" max="100" value="92"><output id="exqo">92</output></label>
+<label>Format <select id="exf"><option value="png">PNG (Lossless · Transparent)</option><option value="jpg">JPEG (Universal Photo)</option><option value="webp">WebP (Smallest · Transparent)</option><option value="avif">AVIF (Next-Gen Ultra-Small)</option><option value="ico">ICO (Favicon 256×256)</option><option value="svg">SVG (Scalable Wrapper)</option><option value="pdf">PDF (Print-Ready Document)</option></select></label>
+<label>Size preset <select id="exs"><option value="0.25">25%</option><option value="0.5">50%</option><option value="1" selected>100% (Original)</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option><option value="4">400%</option><option value="-2048">Medium · max 2048 px</option><option value="-4096">Large · max 4096 px</option><option value="custom">Custom Width × Height</option></select></label>
+<div id="ex-custom-dims" class="exp-dims-row" hidden>
+<label>W <input type="number" id="ex-cw" min="16" max="8192" value="1080"> px</label>
+<label>H <input type="number" id="ex-ch" min="16" max="8192" value="1080"> px</label>
+<label class="exp-lock"><input type="checkbox" id="ex-lock" checked> Lock ratio</label>
+</div>
+<label>Quality <input type="range" id="exq" min="10" max="100" value="92"><output id="exqo">92%</output></label>
+<div class="exp-limit-box">
+<label style="margin:0"><span style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" id="ex-limit-on"> Target max file size</span>
+<span class="exp-limit-inputs"><input type="number" id="ex-limit-val" min="0.05" max="500" step="0.1" value="8" style="width:68px"><select id="ex-limit-unit"><option value="MB" selected>MB</option><option value="KB">KB</option></select></span></label>
+<div class="el-chips exp-limit-chips" id="ex-limit-presets">
+<button type="button" data-lim="0">No limit</button>
+<button type="button" data-lim="10MB">Discord 10 MB</button>
+<button type="button" data-lim="2MB">2 MB</button>
+<button type="button" data-lim="500KB">Web 500 KB</button>
+<button type="button" data-lim="150KB">Tiny 150 KB</button>
+</div>
+</div>
 <label>File name <input type="text" id="exn" value="totone" aria-label="File name"></label>
-<p class="note" id="exinfo"></p>
-<div class="bar"><button class="pri" id="exgo">Save file</button><button id="excp">Copy to clipboard</button><button id="ex-upscale">AI Upscale…</button><button id="film-share" hidden>Share file</button><button id="exx">Close</button></div>
+<div class="exp-est-bar"><span id="exinfo"></span><span id="ex-est-size" class="exp-est-pill">Estimating…</span></div>
+<div class="bar"><button class="pri" id="exgo">Save file</button><button id="excp">Copy PNG</button><button id="ex-upscale">AI Upscale…</button><button id="film-share" hidden>Share</button><button id="exx">Close</button></div>
 <p class="note" id="exmsg" role="status"></p><img id="exprev" alt="Exported image" hidden></div></div>
 <div id="help" hidden role="dialog" aria-label="Keyboard shortcuts"><div class="hbox"><h2>Shortcuts</h2><table>
 <tr><td>1 to 9, F</td><td>Switch tabs, open Film</td></tr><tr><td>O, E, D</td><td>Open, export, double exposure</td></tr><tr><td>Hold &#92;</td><td>Compare original</td></tr><tr><td>0, +, −</td><td>Fit, zoom in, zoom out</td></tr><tr><td>T, Shift+T</td><td>Add text, draw a text box</td></tr><tr><td>Ctrl+Enter (text editor)</td><td>Apply text</td></tr><tr><td>Enter, Esc (Crop)</td><td>Apply the crop, reset the box</td></tr><tr><td>Ctrl+Z, Ctrl+Y</td><td>Undo, redo</td></tr><tr><td>[ and ]</td><td>Brush size</td></tr>
 <tr><td>Shift, Alt while selecting</td><td>Add to, subtract from selection</td></tr><tr><td>Ctrl+D, Esc</td><td>Clear selection, cancel shape</td></tr>
 <tr><td>Arrow keys</td><td>Nudge layer (Shift for 10 px)</td></tr><tr><td>Delete</td><td>Remove layer</td></tr><tr><td>Alt while dragging</td><td>Skip snapping</td></tr>
-<tr><td>Alt-click the eye</td><td>Show only that layer</td></tr><tr><td>Ctrl+S</td><td>Export</td></tr><tr><td>Paste an image</td><td>Add it as a layer</td></tr><tr><td>Ctrl + wheel</td><td>Zoom at the pointer</td></tr><tr><td>Space + drag</td><td>Pan the view</td></tr><tr><td>Ctrl+0</td><td>Fit to window</td></tr></table><p class="note">Click anywhere or press Esc to close.</p></div></div>
+<tr><td>Alt-click the eye</td><td>Show only that layer</td></tr><tr><td>Ctrl+S</td><td>Export</td></tr><tr><td>Paste an image</td><td>Add it as a layer</td></tr><tr><td>/ or Ctrl+K</td><td>Find any tool instantly</td></tr><tr><td>Ctrl+J</td><td>Layer via copy (selection or duplicate)</td></tr><tr><td>Ctrl+'</td><td>Toggle canvas grid &amp; rulers</td></tr><tr><td>X (Draw tab)</td><td>Swap foreground &amp; secondary colour</td></tr><tr><td>Alt + click (Draw)</td><td>Quick eyedropper colour picker</td></tr><tr><td>Double-click slider</td><td>Reset slider to default</td></tr><tr><td>Right-click canvas</td><td>Quick context actions menu</td></tr><tr><td>Ctrl + wheel</td><td>Zoom at the pointer</td></tr><tr><td>Space + drag</td><td>Pan the view</td></tr><tr><td>Ctrl+0</td><td>Fit to window</td></tr></table><p class="note">Click anywhere or press Esc to close.</p></div></div>
 <p id="type-hint" role="status" hidden>Drag on the image to draw a text box. Press Esc to cancel.</p>
 <dialog class="studio-dialog" aria-label="Find a tool" id="tool-dialog"><label>Find a tool <input id="tool-query" type="search" placeholder="Try heal, mask hair, or curve text"></label><div id="tool-results"></div><button id="tool-close">Close</button></dialog>
 <dialog aria-label="Project" id="project-dialog" class="studio-dialog"><h2>Project</h2><label>Name <input id="project-name" value="Totone"></label>
@@ -519,6 +841,21 @@
 <button type="button" id="el-import-url">Import URL</button>
 </div>
 </div>
+<div id="el-cors-popup" hidden role="alertdialog" aria-modal="true" aria-label="Direct import blocked by site">
+<div class="el-cors-card">
+<h3>Site Blocked Direct Import</h3>
+<p>That website blocks direct URL fetching (CORS protection). You can still import it in 2 seconds:</p>
+<ol>
+<li>Right-click the image on that site and choose <b>Copy image</b>.</li>
+<li>Press <b>Ctrl + V</b> right here — or click <b>Paste from Clipboard</b> below!</li>
+</ol>
+<div class="bar" style="justify-content:flex-end;margin-top:12px">
+<button type="button" id="el-cors-open" hidden>Open Image Tab ↗</button>
+<button type="button" id="el-cors-paste" class="pri">Paste from Clipboard</button>
+<button type="button" id="el-cors-ok">Got it</button>
+</div>
+</div>
+</div>
 </dialog>
 <dialog id="new-canvas-dialog" class="studio-dialog" aria-label="New Design or Magic Resize">
 <h2>New Design &amp; Magic Resize</h2>
@@ -542,10 +879,389 @@
 <div id="history-list"></div>
 <div class="bar"><button id="hist-undo">Undo</button><button id="hist-redo">Redo</button><span class="sp"></span><button id="hist-close">Close</button></div>
 </dialog>
+<dialog id="pro-studio-dialog" class="studio-dialog" aria-label="Totone Pro Studio Tools">
+<h2>Pro Studio Tools</h2>
+<div class="el-chips" id="pro-tabs" role="tablist">
+<button type="button" class="on" data-pt="svg">SVG Trace</button>
+<button type="button" data-pt="gif">GIF Maker</button>
+<button type="button" data-pt="mockup">Mockups</button>
+<button type="button" data-pt="ocr">OCR Text</button>
+<button type="button" data-pt="wm">Watermark &amp; EXIF</button>
+<button type="button" data-pt="liquify">Liquify Sculpt</button>
+<button type="button" data-pt="eraser">Magic Eraser</button>
+<button type="button" data-pt="palette">Palette &amp; Looks</button>
+<button type="button" data-pt="batch">PDF &amp; Batch ZIP</button>
+<button type="button" data-pt="ba">Before / After</button>
+<button type="button" data-pt="layerfx">Sticker &amp; Layer FX</button>
+<button type="button" data-pt="redact">Privacy Redact</button>
+<button type="button" data-pt="extras">ASCII · Tile · Slicer</button>
+</div>
+<div class="pro-pane" id="pt-svg">
+<p class="note">Illustrator-style Image Trace powered by open-source <code>imagetracerjs</code>. Convert any image or logo into scalable SVG vectors.</p>
+<div class="up-grid">
+<label>Style preset <select id="svg-preset"><option value="posterized2">Posterized (Clean)</option><option value="detailed">Detailed Photo</option><option value="sharp">Sharp Logo</option><option value="artistic2">Artistic Bold</option><option value="grayscale">Monochrome Ink</option></select></label>
+<label>Colours <input id="svg-colors" type="range" min="2" max="32" value="12"><output>12</output></label>
+</div>
+<div id="svg-preview" class="pro-preview-box"><span>Click Trace to SVG to preview vector output.</span></div>
+<p class="note" id="svg-status" role="status"></p>
+<div class="bar"><button type="button" id="svg-run" class="pri">Trace to SVG</button><button type="button" id="svg-add-layer" disabled>Add as layer</button><button type="button" id="svg-download" disabled>Download .SVG</button></div>
+</div>
+<div class="pro-pane" id="pt-gif" hidden>
+<p class="note">Create looping animated GIFs directly in your browser using open-source <code>gifenc</code>.</p>
+<div class="up-grid">
+<label>Animation <select id="gif-style"><option value="glitch">VHS Glitch Loop</option><option value="chroma">RGB Chromatic Pulse</option><option value="holo">Cyber Holo-Scan Pulse</option><option value="zoom">Cinematic Ken Burns Zoom</option><option value="spin">360° Smooth Spin</option><option value="layers">Layer Flipbook (1 layer = 1 frame)</option></select></label>
+<label>Frames <input id="gif-frames" type="range" min="4" max="20" value="10"><output>10</output></label>
+<label>Speed (FPS) <input id="gif-fps" type="range" min="3" max="20" value="10"><output>10</output></label>
+<label>Max width <select id="gif-width"><option value="360">360 px (Fast)</option><option value="540" selected>540 px (Balanced)</option><option value="720">720 px (HD)</option></select></label>
+</div>
+<div id="gif-prog-wrap" class="mini-prog" hidden><div id="gif-prog-bar"></div></div>
+<div id="gif-preview" class="pro-preview-box"><span>Click Render GIF to generate your animation.</span></div>
+<p class="note" id="gif-status" role="status"></p>
+<div class="bar"><button type="button" id="gif-run" class="pri">Render GIF</button><button type="button" id="gif-download" disabled>Download .GIF</button></div>
+</div>
+<div class="pro-pane" id="pt-mockup" hidden>
+<p class="note">Wrap your current canvas into a realistic studio device or physical media mockup.</p>
+<div class="up-grid">
+<label>Mockup <select id="mk-type"><option value="iphone">Smartphone Pro Frame</option><option value="laptop">MacBook Pro Display</option><option value="cdcase">Y2K CD Jewel Case</option><option value="vinyl">Vinyl Record &amp; Sleeve</option><option value="gallery">Framed Gallery Print</option></select></label>
+<label>Studio backdrop <input type="color" id="mk-bg" value="#0a1228"></label>
+</div>
+<div id="mk-preview" class="pro-preview-box"><canvas id="mk-canvas"></canvas></div>
+<div class="bar"><button type="button" id="mk-apply" class="pri">Apply mockup to canvas</button><button type="button" id="mk-download">Download PNG</button></div>
+</div>
+<div class="pro-pane" id="pt-ocr" hidden>
+<p class="note">Extract text locally from any screenshot, scan, or poster using open-source <code>Tesseract.js</code> OCR.</p>
+<div id="ocr-prog-wrap" class="mini-prog" hidden><div id="ocr-prog-bar"></div></div>
+<textarea id="ocr-out" rows="5" placeholder="Extracted text will appear here…"></textarea>
+<p class="note" id="ocr-status" role="status"></p>
+<div class="bar"><button type="button" id="ocr-run" class="pri">Extract text (OCR)</button><button type="button" id="ocr-copy" disabled>Copy text</button><button type="button" id="ocr-to-layer" disabled>Add as text layer</button></div>
+</div>
+<div class="pro-pane" id="pt-wm" hidden>
+<p class="note">Stamp a tiled copyright watermark layer or inspect camera EXIF metadata (exports automatically strip private GPS/EXIF).</p>
+<div class="up-grid">
+<label>Watermark text <input type="text" id="wm-text" value="© TOTONE STUDIO"></label>
+<label>Colour <input type="color" id="wm-col" value="#ffffff"></label>
+<label>Opacity <input type="range" id="wm-op" min="5" max="80" value="22"><output>22%</output></label>
+<label>Angle <input type="range" id="wm-ang" min="-60" max="60" value="-28"><output>-28°</output></label>
+</div>
+<div class="bar"><button type="button" id="wm-apply" class="pri">Add watermark layer</button></div>
+<h3 style="margin-top:12px">Camera EXIF Metadata</h3>
+<div id="exif-table" class="note">Open a JPEG/HEIC/TIFF photo to inspect camera, lens, ISO, shutter speed, and GPS metadata.</div>
+</div>
+<div class="pro-pane" id="pt-liquify" hidden>
+<p class="note">Interactive Photoshop-style Liquify studio — drag right on the preview to push, bloat, pucker, twirl, or reconstruct pixels.</p>
+<div class="el-chips" id="liq-tools">
+<button type="button" class="on" data-lt="push">Push</button>
+<button type="button" data-lt="bloat">Bloat</button>
+<button type="button" data-lt="pucker">Pucker</button>
+<button type="button" data-lt="twirl-cw">Twirl CW</button>
+<button type="button" data-lt="twirl-ccw">Twirl CCW</button>
+<button type="button" data-lt="reconstruct">Reconstruct</button>
+</div>
+<div class="up-grid">
+<label>Brush size <input id="liq-size" type="range" min="15" max="220" value="72"><output>72 px</output></label>
+<label>Strength <input id="liq-str" type="range" min="10" max="100" value="55"><output>55%</output></label>
+</div>
+<div class="pro-preview-box interactive-box"><canvas id="liq-canvas"></canvas></div>
+<div class="bar"><button type="button" id="liq-undo">Undo stroke</button><button type="button" id="liq-reset">Reset</button><span class="sp"></span><button type="button" id="liq-apply" class="pri">Apply as layer</button></div>
+</div>
+<div class="pro-pane" id="pt-eraser" hidden>
+<p class="note">Paint over unwanted objects, blemishes, or text, then click <b>Magic Erase</b> for instant offline content-aware inpainting.</p>
+<div class="up-grid">
+<label>Brush size <input id="me-size" type="range" min="6" max="120" value="28"><output>28 px</output></label>
+<label>Fill quality <select id="me-quality"><option value="fast">Fast (Smooth)</option><option value="high" selected>High (Detailed)</option></select></label>
+</div>
+<div class="pro-preview-box interactive-box"><canvas id="me-canvas"></canvas></div>
+<p class="note" id="me-status" role="status">Draw red mask strokes over anything you want removed.</p>
+<div class="bar"><button type="button" id="me-clear">Clear mask</button><button type="button" id="me-reset">Reset photo</button><span class="sp"></span><button type="button" id="me-run" class="pri">Magic Erase</button><button type="button" id="me-apply" disabled>Apply to canvas</button></div>
+</div>
+<div class="pro-pane" id="pt-palette" hidden>
+<p class="note">Extract the dominant color palette from your canvas, load it into Gradient Map, stamp a Pantone swatch card, or manage custom saved Lightroom/Color looks.</p>
+<div class="bar"><button type="button" id="pal-extract" class="pri">Extract 6-Color Palette</button><button type="button" id="pal-to-grad" disabled>Send to Gradient Map</button><button type="button" id="pal-card" disabled>Add Swatch Card layer</button></div>
+<div id="pal-swatches" class="pal-row"></div>
+<h3 style="margin-top:12px">Saved Custom Looks</h3>
+<div class="el-url-row"><input id="mlook-name" type="text" placeholder="Name your current grade/look (e.g. Concert Skin Fix)"><button type="button" id="mlook-save" class="pri">Save look</button></div>
+<div id="mlook-list" class="look-list"></div>
+<div class="bar"><button type="button" id="look-export">Export looks JSON</button><button type="button" id="look-import">Import looks JSON</button><input type="file" id="look-import-file" accept=".json,application/json" hidden></div>
+</div>
+<div class="pro-pane" id="pt-batch" hidden>
+<h3 style="margin-top:2px">Export Print-Ready PDF (jsPDF)</h3>
+<div class="up-grid">
+<label>Page size <select id="pdf-size"><option value="fit">Fit to Canvas</option><option value="a4">A4 Print</option><option value="letter">US Letter</option><option value="square">Square 210mm</option></select></label>
+<label>Margin (mm) <input id="pdf-margin" type="range" min="0" max="25" value="8"><output>8 mm</output></label>
+</div>
+<div class="bar"><button type="button" id="pdf-export" class="pri">Download .PDF</button></div>
+<h3 style="margin-top:12px">Batch Image Converter &amp; Compressor (JSZip)</h3>
+<p class="note">Convert, resize, and compress multiple images locally into a single `.zip` download.</p>
+<div class="up-grid">
+<label>Output format <select id="bz-fmt"><option value="image/webp">WebP (Smallest)</option><option value="image/jpeg">JPEG</option><option value="image/png">PNG (Lossless)</option></select></label>
+<label>Quality <input id="bz-qual" type="range" min="40" max="100" value="88"><output>88%</output></label>
+<label>Max width (0=keep) <input id="bz-maxw" type="number" min="0" max="8192" value="1920"></label>
+<label>Filename prefix <input id="bz-prefix" type="text" value="totone-"></label>
+</div>
+<div class="bar"><button type="button" id="bz-pick" class="pri">Select images &amp; convert to .ZIP</button><input type="file" id="bz-files" accept="image/*" multiple hidden></div>
+<div id="bz-prog-wrap" class="mini-prog" hidden><div id="bz-prog-bar"></div></div>
+<p class="note" id="bz-status" role="status"></p>
+</div>
+<div class="pro-pane" id="pt-ba" hidden>
+<p class="note">Generate a share-ready Before / After comparison image comparing your original base photo against your current edited canvas.</p>
+<div class="up-grid">
+<label>Layout <select id="ba-layout"><option value="side">Side-by-Side</option><option value="stack">Top / Bottom</option><option value="split">50/50 Split</option><option value="diag">Diagonal Split</option></select></label>
+<label><span><input type="checkbox" id="ba-labels" checked> Show BEFORE / AFTER badges</span></label>
+</div>
+<div class="pro-preview-box"><canvas id="ba-canvas"></canvas></div>
+<div class="bar"><button type="button" id="ba-render" class="pri">Refresh preview</button><button type="button" id="ba-copy">Copy PNG</button><button type="button" id="ba-download">Download PNG</button></div>
+</div>
+<div class="pro-pane" id="pt-layerfx" hidden>
+<p class="note">Photoshop-style Layer Styles for your active layer (awesome on cutouts, logos &amp; text!): die-cut sticker outline, drop shadow, and neon outer glow.</p>
+<div class="up-grid">
+<label>Sticker outline <input id="lfx-outline" type="range" min="0" max="42" value="10"><output>10 px</output></label>
+<label>Outline color <input id="lfx-ocol" type="color" value="#ffffff"></label>
+<label>Drop shadow blur <input id="lfx-sblur" type="range" min="0" max="60" value="18"><output>18 px</output></label>
+<label>Shadow color <input id="lfx-scol" type="color" value="#000000"></label>
+<label>Shadow Y offset <input id="lfx-sy" type="range" min="-40" max="60" value="12"><output>12 px</output></label>
+<label>Outer neon glow <input id="lfx-glow" type="range" min="0" max="50" value="0"><output>0 px</output></label>
+<label>Glow color <input id="lfx-gcol" type="color" value="#38bdf8"></label>
+</div>
+<div class="pro-preview-box"><canvas id="lfx-canvas"></canvas></div>
+<div class="bar"><button type="button" id="lfx-preset-sticker">Die-Cut Sticker</button><button type="button" id="lfx-preset-neon">Cyber Neon</button><button type="button" id="lfx-preset-float">Soft Float Shadow</button><span class="sp"></span><button type="button" id="lfx-apply" class="pri">Apply to layer</button></div>
+</div>
+<div class="pro-pane" id="pt-redact" hidden>
+<p class="note">Drag rectangles over emails, card numbers, faces, or personal details to instantly pixelate, blur, or black-bar them out.</p>
+<div class="el-chips" id="red-modes">
+<button type="button" class="on" data-rm="pixel">Pixelate</button>
+<button type="button" data-rm="blur">Heavy Blur</button>
+<button type="button" data-rm="bar">Black Bar</button>
+<button type="button" data-rm="match">Smart Color Fill</button>
+</div>
+<div class="up-grid">
+<label>Strength <input id="red-str" type="range" min="4" max="42" value="16"><output>16</output></label>
+<label>Bar color <input id="red-col" type="color" value="#000000"></label>
+</div>
+<div class="pro-preview-box interactive-box"><canvas id="red-canvas"></canvas></div>
+<div class="bar"><button type="button" id="red-undo">Undo box</button><button type="button" id="red-clear">Reset</button><span class="sp"></span><button type="button" id="red-apply" class="pri">Apply redactions</button></div>
+</div>
+<div class="pro-pane" id="pt-extras" hidden>
+<h3 style="margin-top:2px">ASCII &amp; Matrix Art Converter</h3>
+<div class="up-grid">
+<label>Style <select id="asc-style"><option value="color">Full-Color ASCII</option><option value="matrix">Matrix Neon Green</option><option value="mono">Classic Monochrome</option><option value="blocks">Dense Unicode Blocks</option></select></label>
+<label>Columns <input id="asc-cols" type="range" min="40" max="150" value="88"><output>88</output></label>
+</div>
+<div class="bar"><button type="button" id="asc-run" class="pri">Render ASCII Layer</button><button type="button" id="asc-copy">Copy ASCII Text</button></div>
+<h3 style="margin-top:12px">Seamless Texture / Pattern Tile</h3>
+<p class="note">Turn your canvas into a seamless mirrored or offset-blended tileable texture.</p>
+<div class="bar"><button type="button" id="tile-mirror">Seamless Mirror 2×2</button><button type="button" id="tile-offset">Offset Half-Wrap (Photoshop)</button></div>
+<h3 style="margin-top:12px">Instagram Carousel &amp; Grid Slicer (.ZIP)</h3>
+<div class="up-grid">
+<label>Grid layout <select id="sl-grid"><option value="2x1">2-Slide Carousel (2 × 1)</option><option value="3x1" selected>3-Slide Panorama (3 × 1)</option><option value="4x1">4-Slide Panorama (4 × 1)</option><option value="3x3">9-Post Profile Grid (3 × 3)</option><option value="2x2">4-Tile Square Grid (2 × 2)</option></select></label>
+</div>
+<div class="bar"><button type="button" id="sl-export" class="pri">Slice &amp; Download .ZIP</button></div>
+</div>
+<div class="bar" style="justify-content:flex-end;margin-top:10px"><button type="button" id="pro-close">Close</button></div>
+</dialog>
+<dialog id="lab10-dialog" class="studio-dialog" aria-label="Totone Pro Lab — 10 Open-Source Tools">
+<h2>Pro Lab · 10 Open-Source Tools</h2>
+<div class="el-chips" id="lab10-tabs" role="tablist">
+<button type="button" class="on" data-l10="smartcrop">1. Smart Crop</button>
+<button type="button" data-l10="lowpoly">2. Low-Poly SVG</button>
+<button type="button" data-l10="pxsort">3. Pixel Sort</button>
+<button type="button" data-l10="dither">4. Dither &amp; Halftone</button>
+<button type="button" data-l10="cvd">5. Color Blind &amp; WCAG</button>
+<button type="button" data-l10="kaleido">6. Kaleidoscope</button>
+<button type="button" data-l10="scanner">7. 4-Corner Scanner</button>
+<button type="button" data-l10="pfp">8. Avatar / PFP</button>
+<button type="button" data-l10="meme">9. Meme / Caption</button>
+<button type="button" data-l10="clahe">10. Auto Restore (CLAHE)</button>
+</div>
+<div class="l10-pane" id="l10-smartcrop">
+<p class="note">Content-aware AI saliency cropper powered by <code>jwagner/smartcrop.js</code> (MIT). Automatically frames faces &amp; focal points.</p>
+<div class="up-grid">
+<label>Aspect ratio <select id="sc-ratio"><option value="1:1">1:1 Square (Instagram / PFP)</option><option value="4:5">4:5 Portrait (IG Feed)</option><option value="16:9">16:9 Landscape (YouTube)</option><option value="9:16">9:16 Vertical (Reels / TikTok)</option><option value="3:2">3:2 Photo Print</option></select></label>
+</div>
+<div class="pro-preview-box"><canvas id="sc-canvas"></canvas></div>
+<p class="note" id="sc-status" role="status"></p>
+<div class="bar"><button type="button" id="sc-find" class="pri">Find Smart Crop</button><button type="button" id="sc-apply" disabled>Apply crop to canvas</button></div>
+</div>
+<div class="l10-pane" id="l10-lowpoly" hidden>
+<p class="note">Delaunay triangulation low-poly art powered by <code>mapbox/delaunator</code> (ISC). Export as crisp layer or scalable SVG.</p>
+<div class="up-grid">
+<label>Triangles detail <input id="lp-pts" type="range" min="120" max="1800" step="40" value="560"><output>560</output></label>
+<label>Edge bias <input id="lp-edge" type="range" min="0" max="100" value="70"><output>70%</output></label>
+<label><span><input type="checkbox" id="lp-wire"> Subtle wireframe lines</span></label>
+</div>
+<div class="pro-preview-box"><canvas id="lp-canvas"></canvas></div>
+<div class="bar"><button type="button" id="lp-run" class="pri">Generate Low-Poly</button><button type="button" id="lp-apply" disabled>Add as layer</button><button type="button" id="lp-svg" disabled>Download .SVG</button></div>
+</div>
+<div class="l10-pane" id="l10-pxsort" hidden>
+<p class="note">Authentic Kim Asendorf pixel sorting glitch engine adapted from <code>kimasendorf/ASDFPixelSort</code> (MIT).</p>
+<div class="up-grid">
+<label>Direction <select id="ps-dir"><option value="vertical">Vertical (Melting)</option><option value="horizontal">Horizontal (Streaks)</option></select></label>
+<label>Sort by <select id="ps-mode"><option value="luma">Brightness</option><option value="hue">Hue</option><option value="sat">Saturation</option></select></label>
+<label>Low threshold <input id="ps-lo" type="range" min="0" max="240" value="55"><output>55</output></label>
+<label>High threshold <input id="ps-hi" type="range" min="15" max="255" value="205"><output>205</output></label>
+</div>
+<div class="pro-preview-box"><canvas id="ps-canvas"></canvas></div>
+<div class="bar"><button type="button" id="ps-run" class="pri">Run Pixel Sort</button><button type="button" id="ps-apply" disabled>Add as layer</button></div>
+</div>
+<div class="l10-pane" id="l10-dither" hidden>
+<p class="note">Classic retro dithering &amp; CMYK print halftone adapted from Bill Atkinson's 1984 algorithm &amp; <code>danielepiccone/ditherjs</code>.</p>
+<div class="up-grid">
+<label>Algorithm <select id="dh-algo"><option value="atkinson">Atkinson 1-Bit (Classic Mac)</option><option value="floyd">Floyd-Steinberg (Color)</option><option value="bayer">Ordered Bayer 8×8</option><option value="gameboy">Game Boy 4-Shade LCD</option><option value="cmyk">Newspaper CMYK Halftone</option></select></label>
+<label>Pixel scale <input id="dh-scale" type="range" min="1" max="8" value="2"><output>2×</output></label>
+<label>Ink color <input id="dh-fg" type="color" value="#091534"></label>
+<label>Paper color <input id="dh-bg" type="color" value="#f4f7ff"></label>
+</div>
+<div class="pro-preview-box"><canvas id="dh-canvas"></canvas></div>
+<div class="bar"><button type="button" id="dh-run" class="pri">Render Dither</button><button type="button" id="dh-apply" disabled>Add as layer</button></div>
+</div>
+<div class="l10-pane" id="l10-cvd" hidden>
+<p class="note">Accessibility color-blindness simulator (Viénot/Machado matrices, adapted from <code>skratchdot/color-blind</code>) + WCAG 2.1 contrast checker.</p>
+<div class="up-grid">
+<label>Vision simulation <select id="cvd-type"><option value="normal">Normal Vision</option><option value="protanopia">Protanopia (No Red)</option><option value="deuteranopia">Deuteranopia (No Green)</option><option value="tritanopia">Tritanopia (No Blue)</option><option value="achromatopsia">Achromatopsia (Monochrome)</option></select></label>
+</div>
+<div class="pro-preview-box"><canvas id="cvd-canvas"></canvas></div>
+<h3 style="margin-top:8px">WCAG Contrast Ratio Checker</h3>
+<div class="bar" style="align-items:center">
+<label style="margin:0">Text <input type="color" id="wcag-fg" value="#ffffff"></label>
+<label style="margin:0">Bg <input type="color" id="wcag-bg" value="#091534"></label>
+<span id="wcag-badge" class="exp-est-pill ok">17.8:1 · AAA Pass</span>
+</div>
+</div>
+<div class="l10-pane" id="l10-kaleido" hidden>
+<p class="note">Turn any photo or texture into seamless radial symmetry kaleidoscope / mandala art.</p>
+<div class="up-grid">
+<label>Segments <input id="kal-seg" type="range" min="4" max="20" step="2" value="8"><output>8</output></label>
+<label>Angle offset <input id="kal-ang" type="range" min="0" max="360" value="0"><output>0°</output></label>
+<label>Zoom <input id="kal-zoom" type="range" min="50" max="220" value="100"><output>100%</output></label>
+</div>
+<div class="pro-preview-box"><canvas id="kal-canvas"></canvas></div>
+<div class="bar"><button type="button" id="kal-apply" class="pri">Add Kaleidoscope layer</button></div>
+</div>
+<div class="l10-pane" id="l10-scanner" hidden>
+<p class="note">Drag the 4 cyan corners around any crooked poster, receipt, book page, or whiteboard to flatten it straight with projective homography.</p>
+<div class="bar" style="margin:4px 0"><label style="margin:0"><input type="checkbox" id="scan-bw"> Crisp B&amp;W Document Enhance</label></div>
+<div class="pro-preview-box interactive-box"><canvas id="scan-canvas"></canvas></div>
+<div class="bar"><button type="button" id="scan-reset">Reset corners</button><span class="sp"></span><button type="button" id="scan-run" class="pri">Flatten &amp; Apply</button></div>
+</div>
+<div class="l10-pane" id="l10-pfp" hidden>
+<p class="note">Circular Avatar &amp; Profile Picture Studio (Discord, X, Steam, YouTube) with customizable neon/gradient ring border.</p>
+<div class="up-grid">
+<label>Zoom <input id="pfp-zoom" type="range" min="100" max="300" value="110"><output>110%</output></label>
+<label>Offset X <input id="pfp-x" type="range" min="-50" max="50" value="0"><output>0%</output></label>
+<label>Offset Y <input id="pfp-y" type="range" min="-50" max="50" value="0"><output>0%</output></label>
+<label>Ring width <input id="pfp-bw" type="range" min="0" max="36" value="14"><output>14 px</output></label>
+<label>Ring start <input id="pfp-c1" type="color" value="#38bdf8"></label>
+<label>Ring end <input id="pfp-c2" type="color" value="#a855f7"></label>
+</div>
+<div class="pro-preview-box"><canvas id="pfp-canvas" width="320" height="320"></canvas></div>
+<div class="bar"><button type="button" id="pfp-dl" class="pri">Download 512×512 PNG</button><button type="button" id="pfp-layer">Add as layer</button></div>
+</div>
+<div class="l10-pane" id="l10-meme" hidden>
+<p class="note">Instant Meme &amp; Social Caption generator with auto-wrapped typography.</p>
+<div class="up-grid">
+<label>Style <select id="mm-style"><option value="impact">Classic Impact (Top / Bottom)</option><option value="bar">Modern White Caption Header</option><option value="demot">Demotivational Black Frame</option></select></label>
+<label>Font size <input id="mm-sz" type="range" min="24" max="120" value="54"><output>54 px</output></label>
+<label>Top text <input id="mm-top" type="text" placeholder="TOP CAPTION…"></label>
+<label>Bottom text <input id="mm-bot" type="text" placeholder="BOTTOM TEXT…"></label>
+</div>
+<div class="pro-preview-box"><canvas id="mm-canvas"></canvas></div>
+<div class="bar"><button type="button" id="mm-apply" class="pri">Apply to canvas</button><button type="button" id="mm-dl">Download PNG</button></div>
+</div>
+<div class="l10-pane" id="l10-clahe" hidden>
+<p class="note">Computer-vision photo restoration: Contrast Limited Adaptive Histogram Equalization (Zuiderveld CLAHE) + Gray-World Auto White Balance.</p>
+<div class="up-grid">
+<label>CLAHE clip limit <input id="cl-clip" type="range" min="10" max="60" value="25"><output>2.5</output></label>
+<label>Blend strength <input id="cl-mix" type="range" min="10" max="100" value="70"><output>70%</output></label>
+<label><span><input type="checkbox" id="cl-wb" checked> Gray-World Auto White Balance</span></label>
+</div>
+<div class="pro-preview-box"><canvas id="cl-canvas"></canvas></div>
+<div class="bar"><button type="button" id="cl-run" class="pri">Preview Restore</button><button type="button" id="cl-apply" disabled>Add restored layer</button></div>
+</div>
+<div class="bar" style="justify-content:flex-end;margin-top:10px"><button type="button" id="lab10-close">Close</button></div>
+</dialog>
+<dialog id="settings-dialog" class="studio-dialog" aria-label="Totone Settings &amp; Customization">
+<h2>Settings &amp; Personalization</h2>
+<div class="el-chips" id="set-tabs" role="tablist">
+<button type="button" class="on" data-st="theme">Theme &amp; UI</button>
+<button type="button" data-st="canvas">Canvas &amp; Guides</button>
+<button type="button" data-st="workflow">Workflow &amp; Export</button>
+<button type="button" data-st="keys">Shortcuts</button>
+</div>
+<div class="set-pane" id="st-theme">
+<p class="note">Pick a preset theme or fine-tune any UI color, radius, density, font, and layout live. Changes save automatically.</p>
+<div id="set-themes" class="theme-grid"></div>
+<div class="up-grid">
+<label>Accent color <input type="color" id="set-acc" value="#ffffff"></label>
+<label>Background <input type="color" id="set-bg" value="#050c1f"></label>
+<label>Panel surface <input type="color" id="set-panel" value="#091534"></label>
+<label>Text color <input type="color" id="set-ink" value="#f4f7ff"></label>
+<label>Corner radius <select id="set-radius"><option value="0px">Sharp (0px)</option><option value="4px" selected>Standard (4px)</option><option value="8px">Soft (8px)</option><option value="13px">Pill / Aero (13px)</option></select></label>
+<label>UI density <select id="set-density"><option value="compact">Compact</option><option value="normal" selected>Standard</option><option value="cozy">Cozy</option></select></label>
+<label>Interface font <select id="set-font"><option value="Archivo">Archivo (Default)</option><option value="Inter">Inter (Clean)</option><option value="Poppins">Poppins (Rounded)</option><option value="Space Mono">Space Mono (Tech)</option><option value="system-ui">System Native</option></select></label>
+<label>Sidebar side <select id="set-side"><option value="right" selected>Right</option><option value="left">Left</option></select></label>
+</div>
+<label>Sidebar width <input type="range" id="set-panelw" min="290" max="460" value="360"><output id="set-panelw-out">360 px</output></label>
+<div class="bar">
+<label style="margin:0"><input type="checkbox" id="set-motion"> Reduce animations</label>
+<label style="margin:0"><input type="checkbox" id="set-glass"> Translucent glass popups</label>
+</div>
+</div>
+<div class="set-pane" id="st-canvas" hidden>
+<div class="up-grid">
+<label>Pixel rendering <select id="set-pixelated"><option value="smooth">Smooth (Photos)</option><option value="pixelated">Crisp / Pixelated (Pixel Art)</option></select></label>
+<label>Stage backdrop <select id="set-stagebg"><option value="theme">Match UI Theme</option><option value="#2b2b2b">18% Neutral Gray (Color Accurate)</option><option value="#000000">Pure Black</option><option value="#e5e7eb">Studio Light Gray</option><option value="custom">Custom Color</option></select></label>
+<label id="set-stagebg-custom-row" hidden>Custom stage color <input type="color" id="set-stagebg-custom" value="#111827"></label>
+<label>Transparency grid <select id="set-checker"><option value="dark">Dark Navy</option><option value="light">Classic Light</option><option value="contrast">High Contrast</option><option value="solid">Solid Dark</option></select></label>
+<label>Safe-zone overlay <select id="set-safezone"><option value="off">Off</option><option value="thirds">Rule of Thirds</option><option value="golden">Golden Ratio (Phi)</option><option value="cross">Center Crosshair</option><option value="reels">TikTok / Reels Safe Zone</option><option value="yt">YouTube Thumbnail Safe Zone</option><option value="square">1:1 Square Crop Guide</option></select></label>
+</div>
+<div class="set-checks">
+<label><input type="checkbox" id="set-dock" checked> Show Left Quick-Tool Dock</label>
+<label><input type="checkbox" id="set-statusbar" checked> Show Bottom Pro Status Bar</label>
+<label><input type="checkbox" id="set-floatbar" checked> Show Floating Layer Context Bar</label>
+<label><input type="checkbox" id="set-hist" > Show Floating RGB Histogram HUD</label>
+<label><input type="checkbox" id="set-border" checked> Show Canvas Outline Frame</label>
+<label><input type="checkbox" id="set-donate" checked> Show Donate Link in Header</label>
+</div>
+</div>
+<div class="set-pane" id="st-workflow" hidden>
+<div class="up-grid">
+<label>Mouse wheel on canvas <select id="set-wheel"><option value="zoom">Zoom Canvas (Photoshop-style)</option><option value="ctrl">Only Zoom with Ctrl+Wheel</option></select></label>
+<label>Paste image (Ctrl+V) <select id="set-paste"><option value="layer">Add as new layer (base if empty)</option><option value="base">Always replace base photo</option></select></label>
+<label>Default export prefix <input type="text" id="set-prefix" value="totone-"></label>
+<label>Toast duration <select id="set-toast"><option value="1800">Short (1.8s)</option><option value="2600" selected>Normal (2.6s)</option><option value="4200">Long (4.2s)</option></select></label>
+</div>
+<p class="note" id="set-storage-info">Calculating local storage usage…</p>
+<div class="bar">
+<button type="button" id="set-export">Export Settings JSON</button>
+<button type="button" id="set-import">Import Settings JSON</button>
+<input type="file" id="set-import-file" accept=".json,application/json" hidden>
+<span class="sp"></span>
+<button type="button" id="set-reset" class="danger-btn">Reset All Settings</button>
+</div>
+</div>
+<div class="set-pane" id="st-keys" hidden>
+<input type="search" id="set-key-q" placeholder="Filter shortcuts (e.g. zoom, mask, copy, settings…)">
+<div id="set-key-list" class="key-list"></div>
+</div>
+<div class="bar set-foot"><a id="set-credit" href="https://averybeuth.xyz" target="_blank" rel="noopener noreferrer">averybeuth.xyz</a><span class="sp"></span><button type="button" id="set-close" class="pri">Done</button></div>
+</dialog>
+<dialog id="cmd-dialog" class="studio-dialog" aria-label="Command Palette">
+<input type="search" id="cmd-input" placeholder="Type any tool, filter, theme, safe-zone, export, or action…" autocomplete="off">
+<div id="cmd-list" role="listbox"></div>
+<p class="note" style="margin:6px 0 0">↑↓ to navigate · Enter to run · Esc to close</p>
+</dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script defer src="js/core.js"></script>
 <script defer src="js/studio-canva.js"></script>
 <script defer src="js/studio-ps.js"></script>
 <script defer src="js/studio-ux.js"></script>
+<script defer src="js/studio-lightroom.js"></script>
+<script defer src="js/studio-ai.js"></script>
+<script defer src="js/studio-pro.js"></script>
+<script defer src="js/studio-settings.js"></script>
+<script defer src="js/studio-magic.js"></script>
+<script defer src="js/studio-power.js"></script>
+<script defer src="js/studio-overlays.js"></script>
+<script defer src="js/studio-lab10.js"></script>
+<script defer src="js/studio-polish.js"></script>
 </body>
 </html>

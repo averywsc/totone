@@ -874,6 +874,52 @@ if(y2kGrid){
 }
 document.querySelectorAll('[data-yc]').forEach(b=>b.onclick=()=>{$('y2k-col').value=b.dataset.yc});
 
+/* ---------- Photo Collage Grid Maker (2-Up, Stack, Triptych, 2x2) ---------- */
+let pendingCollageLayout='2x2';
+const COLLAGE_LAYOUTS={
+ '2h':{w:1400,h:900,slots:[[0,0,0.5,1],[0.5,0,0.5,1]]},
+ '2v':{w:1080,h:1350,slots:[[0,0,1,0.5],[0,0.5,1,0.5]]},
+ '3h':{w:1500,h:900,slots:[[0,0,1/3,1],[1/3,0,1/3,1],[2/3,0,1/3,1]]},
+ '2x2':{w:1200,h:1200,slots:[[0,0,0.5,0.5],[0.5,0,0.5,0.5],[0,0.5,0.5,0.5],[0.5,0.5,0.5,0.5]]}
+};
+async function buildCollageFromFiles(files,layoutKey){
+ const spec=COLLAGE_LAYOUTS[layoutKey]||COLLAGE_LAYOUTS['2x2'];
+ const gap=+$('collage-gap')?.value||14,rad=+$('collage-rad')?.value||12;
+ await createDesignCanvas(spec.w,spec.h,'solid',$('bg-c1')?.value||'#0a1228',$('bg-c2')?.value||'#1e293b','Collage');
+ const imgs=[];
+ for(const f of files.slice(0,spec.slots.length)){
+  try{imgs.push(await createImageBitmap(f))}catch{}
+ }
+ if(!imgs.length){showToast('Select 1 or more photos for the collage',1600);return}
+ for(let i=0;i<spec.slots.length;i++){
+  const [fx,fy,fw,fh]=spec.slots[i],bmp=imgs[i%imgs.length];
+  const sx=Math.round(fx*W+gap/2),sy=Math.round(fy*H+gap/2);
+  const sw=Math.max(40,Math.round(fw*W-gap)),sh=Math.max(40,Math.round(fh*H-gap));
+  const cv=bc(sw,sh),g=cv.getContext('2d');
+  g.save();g.beginPath();g.roundRect(0,0,sw,sh,rad);g.clip();
+  const cov=Math.max(sw/bmp.width,sh/bmp.height),dw=bmp.width*cov,dh=bmp.height*cov;
+  g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+  g.drawImage(bmp,(sw-dw)/2,(sh-dh)/2,dw,dh);
+  g.restore();
+  const d=g.getImageData(0,0,sw,sh);
+  layers.push({cv,d,o:null,lk:false,sh:null,ol:null,x:sx+sw/2,y:sy+sh/2,s:1,r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:`Photo ${i+1}`});
+ }
+ imgs.forEach(b=>b.close());
+ active=layers.at(-1)||null;refreshLayers();draw();
+ showToast(`Built ${spec.slots.length}-slot photo collage!`,1800);
+}
+if($('collage-grid')){
+ $('collage-grid').onclick=e=>{
+  const b=e.target.closest('[data-col]');if(!b)return;
+  pendingCollageLayout=b.dataset.col;
+  $('collage-files').click();
+ };
+ $('collage-files').onchange=e=>{
+  const files=[...e.target.files];e.target.value='';
+  if(files.length)buildCollageFromFiles(files,pendingCollageLayout);
+ };
+}
+
 /* ---------- 12 Canva Photo Frames (Non-Destructive Mask Shapes + Optional Border) ---------- */
 const FRAMES=[
  {id:'circle',name:'Circle',svg:'<circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="2.5"/>'},
@@ -921,158 +967,195 @@ for(const f of FRAMES){
  frameGrid.append(b);
 }
 
-/* ---------- 12 Canva + Y2K / Frutiger Aero / Cybercore Multi-Layer Design Templates ---------- */
+/* ---------- 12 Studio-Crafted Multi-Layer Design Templates ---------- */
+function addAmbientGlowLayer(cx,cy,radius,colHex,opacity=0.65){
+ const cv=bc(W,H),g=cv.getContext('2d'),[r,gr,b]=rgb(colHex);
+ const rad=g.createRadialGradient(cx,cy,4,cx,cy,radius);
+ rad.addColorStop(0,`rgba(${r},${gr},${b},${opacity})`);
+ rad.addColorStop(0.5,`rgba(${r},${gr},${b},${opacity*0.32})`);
+ rad.addColorStop(1,`rgba(${r},${gr},${b},0)`);
+ g.fillStyle=rad;g.fillRect(0,0,W,H);
+ const d=g.getImageData(0,0,W,H);
+ layers.push({cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:1,r:0,op:1,bm:'screen',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:'Ambient Glow'});
+}
+
 const TEMPLATES=[
  {
-  name:'Cyberworld 2000',w:1080,h:1350,bg:'solid',c1:'#03050a',c2:'#03050a',
+  name:'Cyberworld 2000',w:1080,h:1350,bg:'solid',c1:'#03050c',c2:'#070e24',
   previewBg:'linear-gradient(135deg,#03050a,#2b6cff 60%,#dbeafe)',previewTxt:'CYBER 2000',
   async build(){
-   await addY2KElement('win98','#2b6cff');active.x=W*0.36;active.y=H*0.47;active.s=0.88;
-   await addY2KElement('cd','#2b6cff');active.x=W*0.81;active.y=H*0.26;active.s=0.56;
-   await addY2KElement('chrome-swirl','#2b6cff');active.x=W*0.79;active.y=H*0.56;active.s=0.62;
-   await addY2KElement('globe','#2b6cff');active.x=W*0.74;active.y=H*0.78;active.s=0.38;
-   await addY2KElement('globe','#2b6cff');active.x=W*0.89;active.y=H*0.78;active.s=0.38;
-   await addY2KElement('restricted','#2b6cff');active.x=W*0.23;active.y=H*0.91;active.s=0.58;
-   await addY2KElement('orbit-star','#2b6cff');active.x=W*0.52;active.y=H*0.91;active.s=0.4;
-   await addY2KElement('barcode','#2b6cff');active.x=W*0.82;active.y=H*0.91;active.s=0.52;
+   addAmbientGlowLayer(W*0.36,H*0.46,W*0.65,'#2b6cff',0.48);
+   await addY2KElement('win98','#2b6cff');active.x=W*0.37;active.y=H*0.46;active.s=0.84;
+   await addY2KElement('cd','#3b82f6');active.x=W*0.81;active.y=H*0.27;active.s=0.52;
+   await addY2KElement('chrome-swirl','#2b6cff');active.x=W*0.80;active.y=H*0.56;active.s=0.56;
+   await addY2KElement('globe','#2b6cff');active.x=W*0.74;active.y=H*0.78;active.s=0.35;
+   await addY2KElement('globe','#60a5fa');active.x=W*0.89;active.y=H*0.78;active.s=0.35;
+   await addY2KElement('restricted','#3b82f6');active.x=W*0.24;active.y=H*0.91;active.s=0.54;
+   await addY2KElement('orbit-star','#60a5fa');active.x=W*0.53;active.y=H*0.91;active.s=0.36;
+   await addY2KElement('barcode','#3b82f6');active.x=W*0.82;active.y=H*0.91;active.s=0.48;
+   await addY2KElement('sparkles','#60a5fa');active.x=W*0.37;active.y=H*0.46;active.s=0.95;active.op=0.85;
    await ensureFont('Orbitron');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'CYBERWORLD',f:'Orbitron',sz:118,c:'#60a5fa',w:900,ls:4,stroke:'#ffffff',strokeWidth:3});t.y=H*0.09;
-   t=newTextLayer({t:'VIRTUAL REALITY // 2000',f:'Space Mono',sz:30,c:'#60a5fa',w:700,ls:10});t.x=W*0.36;t.y=H*0.81;
+   let t=newTextLayer({t:'CYBERWORLD',f:'Orbitron',sz:112,c:'#93c5fd',w:900,ls:4,stroke:'#2563eb',strokeWidth:4});t.y=H*0.095;
+   t=newTextLayer({t:'VIRTUAL REALITY // 2000',f:'Space Mono',sz:26,c:'#93c5fd',w:700,ls:10});t.x=W*0.37;t.y=H*0.79;
   }
  },
  {
   name:'Xbox 2001 Energy',w:1200,h:1200,bg:'solid',c1:'#010402',c2:'#010402',
   previewBg:'radial-gradient(circle at 60% 45%,#22ff44,#021506 60%,#000)',previewTxt:'X · 2001',
   async build(){
+   addAmbientGlowLayer(W*0.58,H*0.48,W*0.58,'#22ff44',0.58);
    await addY2KElement('xbox-arc','#22ff44');active.x=W*0.56;active.y=H*0.48;active.s=1.35;
-   await addY2KElement('hud','#22ff44');active.x=W/2;active.y=H/2;active.s=1.32;
+   await addY2KElement('xbox-arc','#86efac');active.x=W*0.48;active.y=H*0.52;active.s=0.95;active.r=1.8;active.op=0.62;
+   await addY2KElement('hud','#22ff44');active.x=W/2;active.y=H/2;active.s=1.34;
    await addY2KElement('sparkles','#22ff44');active.x=W*0.5;active.y=H*0.5;active.s=1.35;
    await ensureFont('Orbitron');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'DIRECT·X',f:'Orbitron',sz:148,c:'#ffffff',w:900,ls:10,stroke:'#22ff44',strokeWidth:4});t.x=W*0.42;t.y=H*0.52;
-   t=newTextLayer({t:'NOVEMBER 2001 // NEXT-GEN ENGINE',f:'Space Mono',sz:24,c:'#86efac',w:700,ls:12});t.x=W*0.42;t.y=H*0.64;
+   let t=newTextLayer({t:'DIRECT·X',f:'Orbitron',sz:140,c:'#ffffff',w:900,ls:12,stroke:'#16a34a',strokeWidth:5});t.x=W*0.44;t.y=H*0.50;
+   t=newTextLayer({t:'NOVEMBER 2001 // NEXT-GEN ENGINE',f:'Space Mono',sz:22,c:'#86efac',w:700,ls:12});t.x=W*0.44;t.y=H*0.61;
   }
  },
  {
-  name:'Frutiger Aero 06',w:1080,h:1350,bg:'gradient',c1:'#0284c7',c2:'#84cc16',
+  name:'Frutiger Aero 06',w:1080,h:1350,bg:'gradient',c1:'#0284c7',c2:'#65a30d',
   previewBg:'linear-gradient(155deg,#0ea5e9,#38bdf8 48%,#84cc16)',previewTxt:'AERO 06',
   async build(){
-   await addY2KElement('aurora','#00e5ff');active.x=W*0.5;active.y=H*0.56;active.s=1.35;
-   await addY2KElement('aero-orb','#00d8ff');active.x=W*0.28;active.y=H*0.36;active.s=0.92;
-   await addY2KElement('aero-orb','#a3e635');active.x=W*0.74;active.y=H*0.44;active.s=0.68;
-   await addY2KElement('droplets','#38bdf8');active.x=W*0.52;active.y=H*0.54;active.s=1.3;
-   await addY2KElement('aero-pill','#00d8ff');active.x=W*0.5;active.y=H*0.84;active.s=0.88;
+   addAmbientGlowLayer(W*0.5,H*0.18,W*0.75,'#e0f2fe',0.55);
+   await addY2KElement('aurora','#00e5ff');active.x=W*0.5;active.y=H*0.56;active.s=1.38;
+   await addY2KElement('aero-orb','#00d8ff');active.x=W*0.28;active.y=H*0.39;active.s=0.92;
+   await addY2KElement('aero-orb','#a3e635');active.x=W*0.74;active.y=H*0.47;active.s=0.66;
+   await addY2KElement('aero-orb','#ffffff');active.x=W*0.64;active.y=H*0.28;active.s=0.34;active.op=0.85;
+   await addY2KElement('droplets','#38bdf8');active.x=W*0.52;active.y=H*0.56;active.s=1.28;
+   await addY2KElement('aero-pill','#00d8ff');active.x=W*0.5;active.y=H*0.84;active.s=0.92;
    await ensureFont('Poppins');await ensureFont('Inter');
-   let t=newTextLayer({t:'PURE FUTURE',f:'Poppins',sz:116,c:'#ffffff',w:800,ls:4});t.y=H*0.18;
-   t=newTextLayer({t:'HUMAN · NATURE · TECHNOLOGY',f:'Inter',sz:28,c:'#ecfeff',w:700,ls:16});t.y=H*0.84;
+   let t=newTextLayer({t:'PURE FUTURE',f:'Poppins',sz:112,c:'#ffffff',w:800,ls:4});t.y=H*0.15;t.sh={x:0,y:6,b:18,a:0.28,c:'#0c4a6e'};
+   t=newTextLayer({t:'HUMAN · NATURE · TECHNOLOGY',f:'Inter',sz:26,c:'#ffffff',w:700,ls:14});t.y=H*0.84;
   }
  },
  {
   name:'Cybercore Holo',w:1080,h:1080,bg:'solid',c1:'#01030a',c2:'#01030a',
   previewBg:'radial-gradient(circle,#2b6cff,#020617 70%)',previewTxt:'HOLO 00',
   async build(){
+   addAmbientGlowLayer(W/2,H*0.44,W*0.58,'#2563eb',0.55);
    await addY2KElement('sparkles','#3b82f6');active.x=W/2;active.y=H/2;active.s=1.48;
-   await addY2KElement('orbit-star','#3b82f6');active.x=W/2;active.y=H*0.46;active.s=1.15;
+   await addY2KElement('globe','#2563eb');active.x=W/2;active.y=H*0.44;active.s=0.95;active.op=0.72;
+   await addY2KElement('orbit-star','#60a5fa');active.x=W/2;active.y=H*0.44;active.s=1.12;
    await addY2KElement('hud','#3b82f6');active.x=W/2;active.y=H/2;active.s=1.25;
    await ensureFont('VT323');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'connected to the wired',f:'VT323',sz:78,c:'#93c5fd',w:400,ls:6});t.y=H*0.76;
+   let t=newTextLayer({t:'connected to the wired',f:'VT323',sz:78,c:'#dbeafe',w:400,ls:6});t.y=H*0.77;
    t=newTextLayer({t:'// SIGNAL LOCKED · 00:00',f:'Space Mono',sz:22,c:'#60a5fa',w:600,ls:10});t.y=H*0.86;
   }
  },
  {
-  name:'Magazine Cover',w:1080,h:1350,bg:'gradient',c1:'#141226',c2:'#3b1636',
-  previewBg:'linear-gradient(135deg,#141226,#581c4a)',previewTxt:'VOGUE',
+  name:'Magazine Cover',w:1080,h:1350,bg:'gradient',c1:'#0e0c1e',c2:'#3a1235',
+  previewBg:'linear-gradient(135deg,#0e0c1e,#701a5c)',previewTxt:'ATELIER',
   async build(){
-   await addShapeLayer('rect',{w:960,h:1230,fillType:'none',stroke:'#f5e6d3',sw:6,radius:0});
+   addAmbientGlowLayer(W*0.5,H*0.45,W*0.62,'#f472b6',0.38);
+   await addShapeLayer('arch',{w:660,h:760,fillType:'linear',fill:'#fb7185',fill2:'#4c1d95',angle:170,shadow:true});
+   active.x=W/2;active.y=H*0.52;active.s=0.88;active.name='Editorial arch';
+   await addShapeLayer('rect',{w:960,h:1230,fillType:'none',stroke:'#f5e6d3',sw:4,radius:0});
    active.x=W/2;active.y=H/2;active.s=1;active.name='Cover border';
-   await addShapeLayer('pill',{w:340,h:84,fillType:'solid',fill:'#f5c542'});
-   active.x=W/2;active.y=H*0.84;active.s=0.9;active.name='Issue pill';
+   await addShapeLayer('pill',{w:360,h:76,fillType:'solid',fill:'#f5c542',shadow:true});
+   active.x=W/2;active.y=H*0.86;active.s=0.9;active.name='Issue pill';
    await ensureFont('Playfair Display');await ensureFont('Montserrat');
-   let t=newTextLayer({t:'ATELIER',f:'Playfair Display',sz:185,c:'#fdf6ec',w:900,ls:10});t.y=H*0.16;
-   t=newTextLayer({t:'THE FUTURE OF LIGHT & COLOUR',f:'Montserrat',sz:36,c:'#f5d0c5',w:700,ls:16});t.y=H*0.74;
-   t=newTextLayer({t:'ISSUE 09 · AUTUMN',f:'Montserrat',sz:28,c:'#141226',w:800,ls:10});t.y=H*0.84;
+   let t=newTextLayer({t:'ATELIER',f:'Playfair Display',sz:182,c:'#fdf6ec',w:900,ls:10});t.y=H*0.15;
+   t=newTextLayer({t:'THE FUTURE OF LIGHT & COLOUR',f:'Montserrat',sz:30,c:'#fde68a',w:700,ls:14});t.y=H*0.76;
+   t=newTextLayer({t:'ISSUE 09 · AUTUMN',f:'Montserrat',sz:24,c:'#141226',w:800,ls:10});t.y=H*0.86;
   }
  },
  {
-  name:'YouTube Thumb',w:1280,h:720,bg:'gradient',c1:'#080c1c',c2:'#19285a',
-  previewBg:'linear-gradient(135deg,#080c1c,#e11d48)',previewTxt:'WATCH NOW',
+  name:'YouTube Thumb',w:1280,h:720,bg:'gradient',c1:'#070b1a',c2:'#1d2b64',
+  previewBg:'linear-gradient(135deg,#070b1a,#e11d48)',previewTxt:'WATCH NOW',
   async build(){
-   await addShapeLayer('burst',{w:320,h:320,fillType:'linear',fill:'#ff2e55',fill2:'#ff8a00',points:14});
-   active.x=W*0.82;active.y=H*0.24;active.s=0.8;active.name='Burst badge';
-   await addShapeLayer('arrow',{w:340,h:190,fillType:'solid',fill:'#ffd60a',warp:'arc',bend:35});
-   active.x=W*0.64;active.y=H*0.6;active.s=0.65;active.r=-0.22;active.name='Curved arrow';
+   addAmbientGlowLayer(W*0.78,H*0.45,W*0.52,'#ff2e55',0.58);
+   addAmbientGlowLayer(W*0.22,H*0.5,W*0.45,'#38bdf8',0.38);
+   await addShapeLayer('burst',{w:310,h:310,fillType:'linear',finish:'aero',fill:'#ff2e55',fill2:'#ff8a00',points:14,shadow:true});
+   active.x=W*0.82;active.y=H*0.26;active.s=0.82;active.name='Burst badge';
+   await addShapeLayer('arrow',{w:340,h:190,fillType:'solid',fill:'#ffd60a',warp:'arc',bend:35,shadow:true});
+   active.x=W*0.64;active.y=H*0.62;active.s=0.65;active.r=-0.22;active.name='Curved arrow';
    await ensureFont('Anton');await ensureFont('Archivo Black');
-   let t=newTextLayer({t:'10X!',f:'Archivo Black',sz:54,c:'#ffffff',w:900});t.x=W*0.82;t.y=H*0.24;
-   t=newTextLayer({t:'INSANE\nRESULTS',f:'Anton',sz:165,c:'#ffffff',w:700,al:'left',lh:96,stroke:'#000000',strokeWidth:8});t.x=W*0.27;t.y=H*0.54;
+   let t=newTextLayer({t:'10X!',f:'Archivo Black',sz:54,c:'#ffffff',w:900});t.x=W*0.82;t.y=H*0.26;
+   t=newTextLayer({t:'INSANE\nRESULTS',f:'Anton',sz:168,c:'#ffffff',w:700,al:'left',lh:94,stroke:'#000000',strokeWidth:9});t.x=W*0.28;t.y=H*0.52;
   }
  },
  {
-  name:'Streetwear Poster',w:1080,h:1350,bg:'solid',c1:'#0b0b0c',c2:'#0b0b0c',
-  previewBg:'linear-gradient(135deg,#0b0b0c,#bef264)',previewTxt:'RAW 01',
+  name:'Streetwear Poster',w:1080,h:1350,bg:'solid',c1:'#09090b',c2:'#09090b',
+  previewBg:'linear-gradient(135deg,#09090b,#bef264)',previewTxt:'RAW 01',
   async build(){
-   await addShapeLayer('circle',{w:620,h:620,fillType:'linear',fill:'#c6ff3d',fill2:'#22d3ee',angle:120,warp:'bulge',bend:30});
-   active.x=W*0.5;active.y=H*0.48;active.s=0.9;active.name='Neon orb';
-   await addShapeLayer('star',{w:220,h:220,fillType:'solid',fill:'#ffffff',points:8});
-   active.x=W*0.82;active.y=H*0.18;active.s=0.72;active.name='Star stamp';
+   addAmbientGlowLayer(W*0.5,H*0.48,W*0.62,'#a3e635',0.38);
+   await addShapeLayer('circle',{w:620,h:620,fillType:'linear',finish:'chrome',fill:'#c6ff3d',fill2:'#22d3ee',angle:120,warp:'bulge',bend:32});
+   active.x=W*0.5;active.y=H*0.48;active.s=0.88;active.name='Chrome orb';
+   await addShapeLayer('star',{w:220,h:220,fillType:'solid',fill:'#c6ff3d',points:8});
+   active.x=W*0.82;active.y=H*0.18;active.s=0.68;active.name='Star stamp';
+   await addY2KElement('barcode','#c6ff3d');active.x=W*0.26;active.y=H*0.16;active.s=0.45;
    await ensureFont('Syne');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'KINETIC\nSTUDIO',f:'Syne',sz:148,c:'#ffffff',w:800,lh:94});t.y=H*0.46;
-   t=newTextLayer({t:'LIMITED EDITION · DROP 04 · TOKYO / NYC',f:'Space Mono',sz:26,c:'#c6ff3d',w:700,ls:12});t.y=H*0.88;
+   let t=newTextLayer({t:'KINETIC\nSTUDIO',f:'Syne',sz:148,c:'#ffffff',w:800,lh:94,stroke:'#09090b',strokeWidth:4});t.y=H*0.48;
+   t=newTextLayer({t:'LIMITED EDITION · DROP 04 · TOKYO / NYC',f:'Space Mono',sz:24,c:'#c6ff3d',w:700,ls:10});t.y=H*0.88;
   }
  },
  {
   name:'Album Cover',w:1400,h:1400,bg:'gradient',c1:'#0f172a',c2:'#4c1d95',
   previewBg:'linear-gradient(135deg,#0f172a,#7c3aed)',previewTxt:'MIDNIGHT',
   async build(){
-   await addShapeLayer('arch',{w:720,h:880,fillType:'linear',fill:'#f472b6',fill2:'#fb923c',angle:180});
-   active.x=W/2;active.y=H*0.52;active.s=0.92;active.name='Sunset arch';
+   addAmbientGlowLayer(W*0.5,H*0.52,W*0.64,'#f472b6',0.46);
+   await addShapeLayer('arch',{w:720,h:880,fillType:'linear',finish:'aero',fill:'#f472b6',fill2:'#fb923c',angle:180,shadow:true});
+   active.x=W/2;active.y=H*0.53;active.s=0.88;active.name='Sunset arch';
+   await addY2KElement('sparkles','#fde68a');active.x=W/2;active.y=H*0.5;active.s=1.45;active.op=0.75;
    await ensureFont('Unbounded');await ensureFont('Raleway');
-   let t=newTextLayer({t:'AFTERHOURS',f:'Unbounded',sz:108,c:'#ffffff',w:700,ls:8});t.y=H*0.15;
-   t=newTextLayer({t:'DELUXE EDITION',f:'Raleway',sz:34,c:'#fde68a',w:600,ls:24});t.y=H*0.89;
+   let t=newTextLayer({t:'AFTERHOURS',f:'Unbounded',sz:106,c:'#ffffff',w:700,ls:8});t.y=H*0.14;
+   t=newTextLayer({t:'DELUXE EDITION',f:'Raleway',sz:32,c:'#fde68a',w:600,ls:24});t.y=H*0.90;
   }
  },
  {
   name:'Minimal Quote',w:1080,h:1080,bg:'solid',c1:'#f3efe6',c2:'#f3efe6',
   previewBg:'#f3efe6;color:#1b1b1b',previewTxt:'“CREATE”',
   async build(){
-   await addShapeLayer('line',{w:240,h:40,fillType:'solid',fill:'#18181b'});
-   active.x=W/2;active.y=H*0.66;active.s=0.7;active.name='Divider rule';
+   await addShapeLayer('rect',{w:960,h:960,fillType:'none',stroke:'#d6cfc2',sw:4,radius:18});
+   active.x=W/2;active.y=H/2;active.s=1;active.name='Subtle frame';
+   await addShapeLayer('line',{w:240,h:36,fillType:'solid',fill:'#18181b'});
+   active.x=W/2;active.y=H*0.65;active.s=0.65;active.name='Divider rule';
    await ensureFont('Playfair Display');await ensureFont('Inter');
-   let t=newTextLayer({t:'“Make things\nworth staring at.”',f:'Playfair Display',sz:88,c:'#18181b',w:700,it:true,lh:115});t.y=H*0.44;
-   t=newTextLayer({t:'TOTONE STUDIO',f:'Inter',sz:26,c:'#52525b',w:700,ls:22});t.y=H*0.74;
+   let t=newTextLayer({t:'“Make things\nworth staring at.”',f:'Playfair Display',sz:86,c:'#18181b',w:700,it:true,lh:115});t.y=H*0.43;
+   t=newTextLayer({t:'TOTONE STUDIO',f:'Inter',sz:24,c:'#52525b',w:700,ls:22});t.y=H*0.74;
   }
  },
  {
-  name:'Story / Reel Promo',w:1080,h:1920,bg:'gradient',c1:'#100926',c2:'#064e3b',
-  previewBg:'linear-gradient(160deg,#100926,#10b981)',previewTxt:'STORY',
+  name:'Story / Reel Promo',w:1080,h:1920,bg:'gradient',c1:'#0f0726',c2:'#064e3b',
+  previewBg:'linear-gradient(160deg,#0f0726,#10b981)',previewTxt:'STORY',
   async build(){
-   await addShapeLayer('pill',{w:580,h:124,fillType:'solid',fill:'#ffffff',shadow:true});
-   active.x=W/2;active.y=H*0.82;active.s=0.9;active.name='CTA Button';
+   addAmbientGlowLayer(W*0.5,H*0.36,W*0.78,'#10b981',0.48);
+   await addShapeLayer('pill',{w:620,h:128,fillType:'linear',finish:'aero',fill:'#ffffff',fill2:'#d1fae5',shadow:true});
+   active.x=W/2;active.y=H*0.82;active.s=0.92;active.name='CTA Button';
+   await addY2KElement('sparkles','#6ee7b7');active.x=W/2;active.y=H*0.38;active.s=1.35;
    await ensureFont('Bebas Neue');await ensureFont('Poppins');
-   let t=newTextLayer({t:'WEEKEND\nCOLLECTION',f:'Bebas Neue',sz:195,c:'#ffffff',w:700,lh:96,ls:6});t.y=H*0.36;
-   t=newTextLayer({t:'SWIPE UP TO EXPLORE',f:'Poppins',sz:34,c:'#0f172a',w:700,ls:8});t.y=H*0.82;
+   let t=newTextLayer({t:'WEEKEND\nCOLLECTION',f:'Bebas Neue',sz:192,c:'#ffffff',w:700,lh:96,ls:6});t.y=H*0.36;
+   t=newTextLayer({t:'SWIPE UP TO EXPLORE',f:'Poppins',sz:32,c:'#064e3b',w:800,ls:6});t.y=H*0.82;
   }
  },
  {
   name:'Y2K Cyber Flyer',w:1080,h:1350,bg:'gradient',c1:'#090418',c2:'#2e1065',
   previewBg:'linear-gradient(135deg,#090418,#06b6d4)',previewTxt:'Y2K LIVE',
   async build(){
-   await addShapeLayer('rect',{w:720,h:340,fillType:'linear',fill:'#06b6d4',fill2:'#a855f7',warp:'wave',bend:48,slant:20});
-   active.x=W/2;active.y=H*0.52;active.s=0.95;active.name='Warped ribbon';
-   await addShapeLayer('bolt',{w:180,h:240,fillType:'solid',fill:'#fde047'});
-   active.x=W*0.18;active.y=H*0.2;active.s=0.65;active.name='Cyber bolt';
+   addAmbientGlowLayer(W*0.5,H*0.5,W*0.65,'#06b6d4',0.5);
+   await addShapeLayer('rect',{w:740,h:340,fillType:'linear',finish:'chrome',fill:'#06b6d4',fill2:'#a855f7',warp:'wave',bend:48,slant:20});
+   active.x=W/2;active.y=H*0.52;active.s=0.96;active.name='Chrome wave ribbon';
+   await addShapeLayer('bolt',{w:180,h:240,fillType:'solid',finish:'neon',fill:'#fde047'});
+   active.x=W*0.18;active.y=H*0.2;active.s=0.62;active.name='Neon bolt';
+   await addY2KElement('orbit-star','#22d3ee');active.x=W*0.82;active.y=H*0.74;active.s=0.52;
    await ensureFont('Orbitron');await ensureFont('VT323');
-   let t=newTextLayer({t:'HYPER\nCLUB',f:'Orbitron',sz:132,c:'#ffffff',w:900,lh:98});t.y=H*0.28;
-   t=newTextLayer({t:'SAT NOV 28 // DOORS 22:00 // LEVEL 09',f:'VT323',sz:46,c:'#67e8f9',w:400,ls:8});t.y=H*0.84;
+   let t=newTextLayer({t:'HYPER\nCLUB',f:'Orbitron',sz:130,c:'#ffffff',w:900,lh:96});t.y=H*0.27;
+   t=newTextLayer({t:'SAT NOV 28 // DOORS 22:00 // LEVEL 09',f:'VT323',sz:44,c:'#67e8f9',w:400,ls:6});t.y=H*0.86;
   }
  },
  {
-  name:'Product Launch',w:1080,h:1080,bg:'gradient',c1:'#18181b',c2:'#27272a',
-  previewBg:'linear-gradient(135deg,#18181b,#f97316)',previewTxt:'LAUNCH',
+  name:'Product Launch',w:1080,h:1080,bg:'gradient',c1:'#141418',c2:'#27272f',
+  previewBg:'linear-gradient(135deg,#141418,#f97316)',previewTxt:'LAUNCH',
   async build(){
-   await addShapeLayer('blob',{w:640,h:640,fillType:'linear',fill:'#f97316',fill2:'#ec4899',angle:45,shadow:true});
-   active.x=W*0.52;active.y=H*0.54;active.s=0.88;active.name='Hero blob';
+   addAmbientGlowLayer(W*0.52,H*0.54,W*0.6,'#f97316',0.48);
+   await addShapeLayer('blob',{w:640,h:640,fillType:'linear',finish:'aero',fill:'#f97316',fill2:'#ec4899',angle:45,shadow:true});
+   active.x=W*0.52;active.y=H*0.54;active.s=0.86;active.name='Glossy hero blob';
+   await addShapeLayer('pill',{w:320,h:72,fillType:'solid',fill:'#ffffff'});
+   active.x=W*0.5;active.y=H*0.86;active.s=0.88;active.name='Release badge';
    await ensureFont('Unbounded');await ensureFont('Inter');
-   let t=newTextLayer({t:'SERIES X',f:'Unbounded',sz:118,c:'#ffffff',w:800});t.y=H*0.2;
-   t=newTextLayer({t:'AVAILABLE WORLDWIDE',f:'Inter',sz:30,c:'#fed7aa',w:700,ls:18});t.y=H*0.86;
+   let t=newTextLayer({t:'SERIES X',f:'Unbounded',sz:116,c:'#ffffff',w:800});t.y=H*0.17;
+   t=newTextLayer({t:'OUT NOW · 2026',f:'Inter',sz:26,c:'#18181b',w:800,ls:12});t.y=H*0.86;
   }
  }
 ];

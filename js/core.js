@@ -324,7 +324,8 @@ function render(ov=true,rect,printTable=null){
    frameOK=false;return;
   }
   const useFilm=!original&&mask<0&&film?.enabled();
-  const ident=!useFilm&&!printTable&&isIdent(original,mask,spl),st=rect?1:ov?stride:1,LG=$('lgrade').checked&&layers.length>0&&!original&&!ident,input=original?orig:LG?flat(rect?[X0,Y0,X1,Y1]:undefined):base,s=(useFilm?film.image(input):input).data,raw=input.data,out=getOut(),o=out.data,str=$('str').value/100,red=$('reduce').checked&&palette.length;
+  const usePro=!original&&mask<0&&typeof window.proDevelopActive==='function'&&window.proDevelopActive();
+  const ident=!useFilm&&!usePro&&!printTable&&isIdent(original,mask,spl),st=rect?1:ov?stride:1,LG=$('lgrade').checked&&layers.length>0&&!original&&!ident,input=original?orig:LG?flat(rect?[X0,Y0,X1,Y1]:undefined):base,s=(useFilm?film.image(input):input).data,raw=input.data,out=getOut(),o=out.data,str=$('str').value/100,red=$('reduce').checked&&palette.length;
   const toneTable=printTable||LUT, mapTone=toneTable&&str&&(printTable||$('gradient-enabled').checked)?mapSampler():null;
   const E=edits.map(e=>({f:e.f,d:[e.t[0]-e.f[0],e.t[1]-e.f[1],e.t[2]-e.f[2]],tol:e.tol,t2:e.tol*e.tol}));
   const N=id=>+$(id).value,br=N('ab')*2.55,ct=1+N('ac')/100,sa=1+N('as')/100,hu=N('ah')*Math.PI/180,tp=N('at')*.6,vg=N('av')/100,gr=N('ag')/100,po=N('ap'),inv=$('ai').checked,hc=Math.cos(hu),hs=Math.sin(hu),lvl=N('lb')>0||N('lw')<255||N('lg')!==100,bp=N('lb'),wp=N('lw'),gm=N('lg')/100,stn=N('sn')/100,dt=N('dt')/100,S1=rgb($('s1').value),S2=rgb($('s2').value),spx=W*N('spr')/100,adj=br||ct!==1||sa!==1||hu||tp||lvl;
@@ -354,6 +355,7 @@ function render(ov=true,rect,printTable=null){
     o[i]=r;o[i+1]=g;o[i+2]=b;o[i+3]=m<1?raw[i+3]+(s[i+3]-raw[i+3])*m:s[i+3];
   }
   if(st>1)fillStride(o,st);
+  if(usePro&&typeof window.applyProDevelop==='function')window.applyProDevelop(out,ov,spl?spx:0,raw);
   {const P_=N('apx');if(P_>1&&!original&&mask<0)pixelFx(o,P_,spl,spx,X0,Y0,X1,Y1)}
   const SV=$('sov').value;if(ov&&sel&&SV!=='off')for(let y=Y0;y<Y1;y++)for(let x=X0;x<X1;x++){const j=y*W+x,i=j*4,m=sel[j]/255;
     if(SV==='bw'){o[i]=o[i+1]=o[i+2]=sel[j];continue}
@@ -3765,7 +3767,7 @@ function syncGrade(){if(suiteReady)syncReference();
  $('curve-in').min=endpoint?0:points[pointIndex-1][0]+1;$('curve-in').max=endpoint?255:points[pointIndex+1][0]-1;
  const zone=grade.zones[zoneKey];for(const k of ['hue','sat','lum','balance','mix']){const input=$('zone-'+k),v=k==='mix'||k==='balance'?grade[k]:zone[k];input.value=v;input.nextElementSibling.value=v+(k==='hue'?'°':'%')}
  for(const b of $('grade-zones').children)b.setAttribute('aria-pressed',String(b.dataset.zone===zoneKey));
- paintCurve();paintWheel(zone);
+ paintCurve();paintWheel(zone);if(typeof window.onSyncGrade==='function')window.onSyncGrade(grade);
 }
 function moveCurvePoint(x,y,key){
  const points=currentGrade().curves[curveChannel],i=pointIndex,prior=points[i];
@@ -3967,7 +3969,7 @@ function renderLook(im,settings){return develop(im,{...defaults(),...settings,d:
 function applySavedLook(settings){state={...defaults(),...structuredClone(settings),d:state.d};save();changed(true)}
 function setReference(ref,record=true){command(()=>{state.reference=ref;state.id=-1},false,record);syncReference()}
 $('fx-film').replaceChildren(...PR.flatMap((p,i)=>p[6]?[]:[new Option(p[0],i)]));
-return {effectPixels,renderLook,applySavedLook,setReference,gradeMask,fillMask,image,enabled,showSubjectMask,openExposureFiles,inDouble:()=>tab==='film'&&section==='double',reset,build,afterOpen,paintFrame,maskGuides,projectState:()=>({state:structuredClone(state),second,anchor,paper,layoutOrigin,section}),restoreProject,syncGrade,updateScopes,space:()=>({bank:maskBank,anchor,layoutOrigin,paper,masks:state.grading?.masks}),restoreSpace:value=>{if(value){maskBank=value.bank||[];if(state.grading)state.grading.masks=value.masks;anchor=value.anchor;layoutOrigin=value.layoutOrigin;paper=value.paper;cached=null}},transformSpace,rememberPixels,filmRows,openRecipe,loadSecond,invalidate:()=>{cached=null},isDouble:()=>tab==='film'&&section==='double'&&!!base,focusDouble:()=>{document.querySelector('[data-t="film"]').click();setSection('double')},get state(){return state}};
+return {effectPixels,renderLook,applySavedLook,setReference,gradeMask,fillMask,image,enabled,showSubjectMask,openExposureFiles,inDouble:()=>tab==='film'&&section==='double',reset,build,afterOpen,paintFrame,maskGuides,projectState:()=>({state:structuredClone(state),second,anchor,paper,layoutOrigin,section}),restoreProject,syncGrade,updateScopes,getGrade:currentGrade,setZone:(z,p,fin)=>{mutateGrade('3wheel-'+z,s=>Object.assign(s.zones[z],p));if(fin)finishGradeEdit()},setGradeProp:(k,v,fin)=>{mutateGrade('3wheel-'+k,s=>{s[k]=v});if(fin)finishGradeEdit()},finishGradeEdit,space:()=>({bank:maskBank,anchor,layoutOrigin,paper,masks:state.grading?.masks}),restoreSpace:value=>{if(value){maskBank=value.bank||[];if(state.grading)state.grading.masks=value.masks;anchor=value.anchor;layoutOrigin=value.layoutOrigin;paper=value.paper;cached=null}},transformSpace,rememberPixels,filmRows,openRecipe,loadSecond,invalidate:()=>{cached=null},isDouble:()=>tab==='film'&&section==='double'&&!!base,focusDouble:()=>{document.querySelector('[data-t="film"]').click();setSection('double')},get state(){return state}};
 })();
 let panelSize=1;
 $('panel-height').onclick=()=>{panelSize=(panelSize+1)%3;document.querySelector('aside').style.setProperty('--panel-height',['36%','52%','68%'][panelSize])};
@@ -5266,7 +5268,8 @@ async function importImageFromUrl(url,mode='layer',name='Web image',removeWhite=
  }catch(e){
   const msg='That site blocks direct URL import — right-click the image → "Copy image", then press Ctrl+V right here!';
   if(statusEl&&$('elements-dialog').open)statusEl.textContent=msg;
-  showToast(msg,3400);
+  if(typeof window.showElementsBlockedPopup==='function')window.showElementsBlockedPopup(url);
+  else showToast(msg,3400);
   return false;
  }
 }

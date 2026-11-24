@@ -226,14 +226,128 @@ syncActionStates=function(){
  origSyncStatesUX();
  $('history-open').disabled=!base;
  syncHistoryLabels();
+ updateStatusBar();
 };
 const origDrawUX=draw;
 draw=function(keep){
  origDrawUX(keep);
- requestAnimationFrame(()=>{positionFloatBar();drawStageGuides()});
+ requestAnimationFrame(()=>{positionFloatBar();drawStageGuides();updateStatusBar()});
 };
 stage.addEventListener('scroll',()=>{positionFloatBar();drawStageGuides()},{passive:true});
 window.addEventListener('resize',()=>{positionFloatBar();drawStageGuides()});
-document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(()=>{positionFloatBar();drawStageGuides()})));
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(()=>{positionFloatBar();drawStageGuides();updateStatusBar()})));
+
+/* ---------- Bottom Pro Status Bar (Dims, Layers, Live Cursor XY + Hex, Quick Zoom) ---------- */
+function updateStatusBar(){
+ const dims=$('sb-dims'),ly=$('sb-layers'),zfit=$('sb-zfit');
+ if(!dims)return;
+ if(!base){dims.textContent='No image open';if(ly)ly.textContent='';return}
+ dims.textContent=`${W} × ${H} px`;
+ if(ly)ly.textContent=`${layers.length} layer${layers.length===1?'':'s'}${active?' · '+active.name:''}`;
+ if(zfit)zfit.textContent=zoomV?Math.round(zoomV*100)+'%':'Fit';
+}
+let sbMoveThrottle=0;
+c.addEventListener('pointermove',e=>{
+ const curEl=$('sb-cursor');if(!curEl||!base)return;
+ const now=performance.now();if(now-sbMoveThrottle<32)return;sbMoveThrottle=now;
+ const [px0,py0]=pos(e),x=Math.max(0,Math.min(W-1,Math.floor(px0))),y=Math.max(0,Math.min(H-1,Math.floor(py0)));
+ curEl.hidden=false;
+ try{
+  const pxData=ctx.getImageData(x,y,1,1).data,hx=hex(pxData[0],pxData[1],pxData[2]);
+  $('sb-swatch').style.background=hx;
+  $('sb-xy').textContent=`${x}, ${y} · ${hx}`;
+ }catch{$('sb-xy').textContent=`${x}, ${y}`}
+});
+c.addEventListener('pointerleave',()=>{if($('sb-cursor'))$('sb-cursor').hidden=true});
+if($('sb-zin'))$('sb-zin').onclick=()=>{if(!base)return;const r=c.getBoundingClientRect();applyZoom(Math.min(8,(zoomV||r.width/W)*1.25),r.left+r.width/2,r.top+r.height/2);updateStatusBar()};
+if($('sb-zout'))$('sb-zout').onclick=()=>{if(!base)return;const r=c.getBoundingClientRect();applyZoom(Math.max(0.1,(zoomV||r.width/W)/1.25),r.left+r.width/2,r.top+r.height/2);updateStatusBar()};
+if($('sb-zfit'))$('sb-zfit').onclick=()=>{if(!base)return;$('zoom').value='0';$('zoom').onchange();updateStatusBar()};
+
+/* ---------- Canvas Right-Click Context Menu ---------- */
+const cMenu=$('canvas-menu');
+function hideCanvasMenu(){if(cMenu)cMenu.hidden=true}
+if(cMenu){
+ c.addEventListener('contextmenu',e=>{
+  if(!base)return;
+  e.preventDefault();
+  const hasL=!!active;
+  for(const act of ['dup','flip','rot90','center','del']){
+   const btn=cMenu.querySelector(`[data-cm="${act}"]`);if(btn)btn.disabled=!hasL;
+  }
+  const wb=cMenu.querySelector('[data-cm="warp"]');if(wb)wb.hidden=!active?.shape;
+  const tb=cMenu.querySelector('[data-cm="edit-text"]');if(tb)tb.hidden=!active?.tx;
+  cMenu.hidden=false;
+  const mw=cMenu.offsetWidth||200,mh=cMenu.offsetHeight||280;
+  cMenu.style.left=Math.min(innerWidth-mw-8,Math.max(8,e.clientX))+'px';
+  cMenu.style.top=Math.min(innerHeight-mh-8,Math.max(8,e.clientY))+'px';
+ });
+ cMenu.onclick=e=>{
+  const b=e.target.closest('[data-cm]');if(!b)return;
+  const cmd=b.dataset.cm;hideCanvasMenu();
+  if(cmd==='dup')layerViaCopy();
+  else if(cmd==='warp'){document.querySelector('.tabs [data-t="design"]')?.click();$('sh-warp-custom-btn')?.click()}
+  else if(cmd==='edit-text'){$('type-edit')?.click()}
+  else if(cmd==='flip')$('lflip')?.click();
+  else if(cmd==='rot90')$('lr90')?.click();
+  else if(cmd==='center')$('lcen')?.click();
+  else if(cmd==='rmbg'&&typeof runSmartBackgroundRemover==='function')runSmartBackgroundRemover();
+  else if(cmd==='copy-img'){if(typeof doExport==='function')doExport(true)}
+  else if(cmd==='export')$('export')?.click();
+  else if(cmd==='del')$('ldel')?.click();
+ };
+ document.addEventListener('pointerdown',e=>{if(!cMenu.hidden&&!e.target.closest('#canvas-menu'))hideCanvasMenu()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!cMenu.hidden)hideCanvasMenu()});
+}
+
+toolCommands.push(
+ ['Photo Collage Grids (2-Up / Triptych / 2×2)','design','collage-grid','collage grid split multi photo layout instagram'],
+ ['38 Creative Filters (Pixel Sort / Matrix / Riso / Comic / Kaleidoscope)','filters','psfx-search','filter pixel sort matrix comic watercolor aerochrome solarize riso orton godrays kaleidoscope swirl frosted']
+);
+
+/* ---------- Left Vertical Quick-Tool Dock + Pro Single-Key Shortcuts (V/W/B/U/C/G/Q) ---------- */
+const dock=$('tool-dock');
+function syncToolDock(){
+ if(!dock)return;
+ dock.querySelectorAll('[data-dock]').forEach(b=>b.classList.toggle('on',b.dataset.dock===tab));
+}
+if(dock){
+ dock.onclick=e=>{
+  const b=e.target.closest('[data-dock]');if(!b)return;
+  const k=b.dataset.dock;
+  if(k==='rmbg'){jumpTool('filters','rmbg-smart');return}
+  if(k==='elements'){openElements?.();return}
+  if(k==='upscale'){openUpscaler?.();return}
+  if(k==='auto'){
+   if(!base){showToast('Open an image first',1400);return}
+   document.querySelector('.tabs [data-t="grade"]')?.click();
+   $('lr-auto')?.click();return;
+  }
+  const tBtn=document.querySelector('.tabs [data-t="'+k+'"]');
+  if(tBtn){tBtn.click();syncToolDock()}
+ };
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',syncToolDock));
+
+const PRO_TAB_KEYS={v:'layers',w:'select',b:'draw',u:'design',c:'crop',g:'grade',q:'warp'};
+document.addEventListener('keydown',e=>{
+ if(e.ctrlKey||e.metaKey||e.altKey||document.querySelector('dialog[open]'))return;
+ if(e.target.matches?.('input,select,textarea,[contenteditable="true"]'))return;
+ const k=e.key.toLowerCase();
+ if(PRO_TAB_KEYS[k]){
+  const btn=document.querySelector('.tabs [data-t="'+PRO_TAB_KEYS[k]+'"]');
+  if(btn){e.preventDefault();btn.click();syncToolDock()}
+ }
+});
+
+// Auto-scroll active layer row into view smoothly when selecting layers on canvas
+const prevRefreshUXScroll=refreshLayers;
+refreshLayers=function(){
+ prevRefreshUXScroll();
+ const onRow=$('llist')?.querySelector('.lrow.on');
+ if(onRow&&tab==='layers')onRow.scrollIntoView({block:'nearest'});
+ syncToolDock();
+};
+
+syncToolDock();
 syncActionStates();
 })();
