@@ -400,7 +400,7 @@ let cmdItems=[],cmdSel=0;
 
 function buildCommandItems(){
  const items=[
-  {label:'⚙ Open Settings & Theme Customizer',cat:'Settings',run:()=>openSettings('theme')},
+  {label:'Open Settings & Theme Customizer',cat:'Settings',run:()=>openSettings('theme')},
   {label:'Liquify Sculpt Studio (Push / Bloat / Pucker / Twirl)',cat:'Magic Studio',run:()=>window.openProStudioTab?.('liquify')},
   {label:'Magic Object Eraser (Offline Inpainting)',cat:'Magic Studio',run:()=>window.openProStudioTab?.('eraser')},
   {label:'Extract Dominant Color Palette & Swatch Card',cat:'Magic Studio',run:()=>window.openProStudioTab?.('palette')},
