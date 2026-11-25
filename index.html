@@ -101,7 +101,7 @@
 <button type="button" data-dock="auto" title="1-Click Smart Auto Enhance"><svg viewBox="0 0 24 24"><path d="M4 20L15 9M14 4v3M19 9h3M17.5 5.5l2-2M17.5 12.5l2 2"/></svg></button>
 <button type="button" data-dock="settings" title="Settings &amp; UI Theme Customizer (Ctrl+,)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.08a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </nav>
-<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sessions">Previous sessions</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="nav-minimap" hidden aria-label="Zoom Navigator"><canvas id="nav-mini-cv" width="144" height="108"></canvas><div id="nav-mini-box"></div></div><div id="split-handle" hidden title="Drag left/right to compare before &amp; after"><span>⇄</span></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
+<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sessions">Previous sessions</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small><nav class="empty-seo-links" aria-label="Quick tools"><a href="discord-image-compressor/">Discord 10MB Compressor</a> · <a href="fix-concert-lighting/">Fix Concert Lighting</a> · <a href="open-psd-online/">Open PSD</a> · <a href="ai-background-remover/">AI Remove BG</a> · <a href="strip-exif-data/">Strip EXIF</a></nav></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="nav-minimap" hidden aria-label="Zoom Navigator"><canvas id="nav-mini-cv" width="144" height="108"></canvas><div id="nav-mini-box"></div></div><div id="split-handle" hidden title="Drag left/right to compare before &amp; after"><span>⇄</span></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
 <aside>
 <button id="panel-height" aria-label="Change editing panel height">Panel height</button>
 <nav id="cat-tabs" aria-label="Workspace categories">
@@ -739,6 +739,21 @@
 </div>
 <label>Paint target <select id="draw-target"><option value="auto">Active / New paint layer</option><option value="base">Base photo directly</option></select></label>
 <div class="bar"><button id="draw-clear-layer">Clear paint layer</button></div>
+<h3>Custom Stamp Brushes</h3>
+<p class="note">Use built-in stamp brushes or upload any transparent PNG as a custom brush.</p>
+<div class="el-chips" id="cb-presets">
+<button type="button" class="on" data-cb="off">Off</button>
+<button type="button" data-cb="star">Star</button>
+<button type="button" data-cb="sparkle">Sparkle</button>
+<button type="button" data-cb="heart">Heart</button>
+<button type="button" data-cb="cloud">Cloud</button>
+<button type="button" data-cb="splatter">Splatter</button>
+</div>
+<div class="bar"><button type="button" id="cb-upload-btn" style="flex:1">Upload Custom Brush (.PNG)</button><input type="file" id="cb-upload-file" accept="image/png,image/webp,image/svg+xml" hidden></div>
+<label>Scatter <input id="cb-scatter" type="range" min="0" max="100" value="35"><output>35%</output></label>
+<label>Rotation jitter <input id="cb-jitter" type="range" min="0" max="100" value="45"><output>45%</output></label>
+<label><span><input type="checkbox" id="cb-tint" checked> Tint stamp with foreground color</span></label>
+<p class="note" id="cb-status" role="status">Custom stamp brush off.</p>
 </div>
 
 <div class="pn" id="p-filters">
@@ -1350,6 +1365,7 @@
 <button type="button" class="on" data-st="theme">Theme &amp; UI</button>
 <button type="button" data-st="canvas">Canvas &amp; Guides</button>
 <button type="button" data-st="workflow">Workflow &amp; Export</button>
+<button type="button" data-st="scripts">Plugins &amp; Scripts</button>
 <button type="button" data-st="keys">Shortcuts</button>
 </div>
 <div class="set-pane" id="st-theme">
@@ -1404,6 +1420,14 @@
 <button type="button" id="set-reset" class="danger-btn">Reset All Settings</button>
 </div>
 </div>
+<div class="set-pane" id="st-scripts" hidden>
+<p class="note">Automate edits with JavaScript macros or install community <code>.js</code> plugins using <code>TotoneAPI</code>.</p>
+<div class="bar"><select id="script-preset" style="flex:1"><option value="">Load example macro…</option><option value="neon-export">Apply Neon City Grade</option><option value="invert-red">Warm Pixel Script</option><option value="cinema-bars">Add 2.39:1 Cinema Bars</option></select><button type="button" id="plug-upload-btn">Load .js Plugin…</button><input type="file" id="plug-upload-file" accept=".js,text/javascript" hidden></div>
+<textarea id="script-code" rows="5" placeholder="// Example: TotoneAPI.applyGradePreset('neon-city');"></textarea>
+<div class="el-url-row"><input id="script-name" type="text" placeholder="Save macro name…"><button type="button" id="script-save">Save</button><button type="button" id="script-run" class="pri">Run Script</button></div>
+<p class="note" id="script-status" role="status"></p>
+<div id="plug-list" class="look-list"></div>
+</div>
 <div class="set-pane" id="st-keys" hidden>
 <input type="search" id="set-key-q" placeholder="Filter shortcuts (e.g. zoom, mask, copy, settings…)">
 <div id="set-key-list" class="key-list"></div>
@@ -1430,7 +1454,14 @@
 </dialog>
 <dialog id="patch-notes-dialog" class="studio-dialog" aria-label="Patch Notes">
 <h2>Patch Notes</h2>
-<pre id="patch-notes-text" class="patch-notes-pre">v5.3.0
+<pre id="patch-notes-text" class="patch-notes-pre">v5.4.0
+- Added MIT LICENSE (officially open-source!)
+- Added Custom PNG Stamp Brushes in Draw (built-in Star/Sparkle/Heart/Cloud/Splatter + upload any PNG with scatter, rotation jitter &amp; color tint)
+- Added Scripting, Macros &amp; Plugin System (window.TotoneAPI) in Settings -&gt; Plugins &amp; Scripts
+- Added 5 zero-duplication SEO landing routes (/discord-image-compressor, /fix-concert-lighting, /open-psd-online, /ai-background-remover, /strip-exif-data) with JSON-LD schema, FAQs &amp; instant ?tool= auto-launch
+- Added sitemap.xml and robots.txt for Google indexing
+
+v5.3.0
 - Upgraded Crop tab into a Lightroom-style Crop &amp; Straighten studio
 - Added 1-click Auto Crop (AI focal-point box placed interactively on canvas so you can adjust before applying)
 - Added 1-click Auto Straighten (automatic horizon/edge tilt detection)
@@ -1735,5 +1766,6 @@ v1.0.0
 <script defer src="js/studio-wave6.js"></script>
 <script defer src="js/studio-wave7.js"></script>
 <script defer src="js/studio-crop-pro.js"></script>
+<script defer src="js/studio-extend.js"></script>
 </body>
 </html>
