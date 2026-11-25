@@ -1,0 +1,19 @@
+{
+  "name": "Totone Studio",
+  "short_name": "Totone",
+  "description": "Free browser photo editor, Lightroom-style color grader, AI studio & Canva design tool.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050c1f",
+  "theme_color": "#050c1f",
+  "orientation": "any",
+  "categories": ["photo", "graphics", "design", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23050c1f'/%3E%3Cpath d='M112 128h288v80H296v208h-80V208H112z' fill='%23ffffff'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

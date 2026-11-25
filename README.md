@@ -141,6 +141,7 @@ Totone builds on and adapts algorithms from incredible free, open-source project
 - [**naptha/tesseract.js**](https://github.com/naptha/tesseract.js) (Apache-2.0) — Local in-browser OCR text extraction
 - [**Stuk/jszip**](https://github.com/Stuk/jszip) (MIT / GPLv3) — Client-side `.zip` generation for Batch Image Converter & Instagram Carousel Slicer
 - [**parallax/jsPDF**](https://github.com/parallax/jsPDF) (MIT) — Client-side print-ready `.pdf` export
+- [**Agamnentzar/ag-psd**](https://github.com/Agamnentzar/ag-psd) (MIT) — Adobe Photoshop `.PSD` multi-layer file importer
 - [**MikeKovarik/exifr**](https://github.com/MikeKovarik/exifr) (MIT) — Camera EXIF, lens, exposure & GPS metadata reader
 - [**kazuhikoarase/qrcode-generator**](https://github.com/kazuhikoarase/qrcode-generator) (MIT) — Client-side custom QR code generator
 - [**kimasendorf/ASDFPixelSort**](https://github.com/kimasendorf/ASDFPixelSort) (MIT) — Interval-based brightness/hue/saturation pixel sorting algorithm adapted for the Pixel Sort tool

@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Totone</title>
 <meta name="description" content="A free browser photo editor, Lightroom-style color grader, and design studio with on-device AI background removal, ESRGAN upscaling, depth bokeh, 3D LUTs, Point Color, warpable shapes &amp; text, 30+ overlays, 38 filters, Liquify, Magic Eraser, multi-format export with MB size caps, customizable UI themes, and editable project files.">
+<meta name="theme-color" content="#050c1f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050c1f'/%3E%3Cpath d='M14 16h36v10H37v26H27V26H14z' fill='%23ffffff'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Lobster&family=Pacifico&family=Permanent+Marker&family=Bangers&family=Abril+Fatface&family=Righteous&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -43,6 +47,7 @@
 <button id="reset">Reset warp</button>
 <button id="rlook">Reset look</button>
 <button id="helpb">Keyboard Shortcuts</button>
+<button type="button" id="pwa-install-btn" hidden>📲 Install Totone App</button>
 <button id="tool-finder" hidden>Find tool</button>
 </div>
 </div>
@@ -182,6 +187,7 @@
 <button type="button" class="studio-card" data-ai-act="redact"><span>Privacy Redact</span><small>Blur / Pixelate Info</small></button>
 <button type="button" class="studio-card" data-ai-act="liquify"><span>Liquify Sculpt</span><small>Push / Bloat / Twirl</small></button>
 <button type="button" class="studio-card" data-ai-act="layerfx"><span>Sticker &amp; Layer FX</span><small>Die-Cut / Shadow / Glow</small></button>
+<button type="button" class="studio-card" data-ai-act="portrait"><span>Portrait Retouch</span><small>Skin / Eyes / Teeth</small></button>
 <button type="button" class="studio-card" data-ai-act="trim"><span>Auto-Trim Borders</span><small>Crop Transparency</small></button>
 </div>
 </div>
@@ -190,6 +196,9 @@
 <h3>Pro Studio Generators</h3>
 <div class="studio-grid two ai-tool-grid">
 <button type="button" class="studio-card" data-ai-act="svg"><span>SVG Vectorizer</span><small>Image Trace</small></button>
+<button type="button" class="studio-card" data-ai-act="shots"><span>Screenshot Beautifier</span><small>macOS / Glass / Mesh</small></button>
+<button type="button" class="studio-card" data-ai-act="video"><span>Slideshow / Reels Video</span><small>Multi-Page .WebM / .MP4</small></button>
+<button type="button" class="studio-card" data-ai-act="annotate"><span>Arrows &amp; Callouts</span><small>Steps / Boxes / Tutorials</small></button>
 <button type="button" class="studio-card" data-ai-act="gif"><span>Animated GIF Maker</span><small>Glitch / Spin / Loops</small></button>
 <button type="button" class="studio-card" data-ai-act="mockup"><span>Device Mockups</span><small>iPhone / Mac / CD / Vinyl</small></button>
 <button type="button" class="studio-card" data-ai-act="palette"><span>Palette &amp; Looks</span><small>6-Color + Saved Grades</small></button>
@@ -256,7 +265,7 @@
 </div><div id="type-shapes" aria-label="Warp shapes"></div><label>Slant <input id="letter-slant" data-prop="slant" type="range" min="-40" max="40" data-unit="°"><output></output></label></details>
 <details><summary>Stretch and repeat</summary><label>Stretch band <select data-prop="band" id="letter-band"><option value="off">Off</option><option value="x">Horizontal slice</option><option value="y">Vertical slice</option><option value="letter">Stretch one letter</option></select></label>
 <div id="band-options"><label>Band position <input id="letter-cut" data-prop="cut" type="range" min="0" max="100" data-unit="%"><output></output></label><label>Extension <input id="letter-pull" data-prop="pull" type="range" min="0" max="300" data-unit="%"><output></output></label></div><label>Rows <input id="letter-rows" data-prop="rows" type="range" min="1" max="8" data-unit=""><output></output></label><div id="stack-options"><label>Row spacing <input id="letter-gap" data-prop="rowGap" type="range" min="-35" max="100" data-unit="%"><output></output></label><label>Band travel across rows <input id="letter-travel" data-prop="travel" type="range" min="-100" max="100" data-unit="%"><output></output></label></div></details>
-<details><summary>3D extrusion</summary><label>Depth <input id="letter-depth" data-prop="depth" type="range" min="0" max="120" data-unit="%"><output></output></label><div id="depth-options"><label>Miniature trees <input id="letter-trees" data-prop="trees" type="checkbox"></label><label>Direction <input id="letter-direction" data-prop="direction" type="range" min="-180" max="180" data-unit="°"><output></output></label><label>Side color <input id="letter-side" data-prop="side" type="color"></label><label>Side lighting <input id="letter-light" data-prop="lighting" type="range" min="0" max="100" data-unit="%"><output></output></label></div></details></div><h3>Typeface</h3><input type="search" id="fq" placeholder="Search fonts" aria-label="Search fonts"><div class="chips7" id="fcat"><button class="on" data-c="all">All</button><button data-c="Sans">Sans</button><button data-c="Serif">Serif</button><button data-c="Display">Display</button><button data-c="Script">Script</button><button data-c="Mono">Mono</button><button data-c="Fun">Fun</button></div><div id="flist" role="listbox" aria-label="Fonts"></div><select id="tfont" hidden aria-label="Font"></select><label>Size <input type="range" id="tsz" min="6" max="800" value="100" aria-label="Text size slider"><input type="number" id="type-size" min="6" max="800" value="100" aria-label="Text size in pixels"></label><label>Colour <input type="color" id="tcol" value="#ffffff"></label><label>Weight <select id="tw"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label><label><span><input type="checkbox" id="tit"> Italic</span></label><div class="chips" id="tal" style="grid-template-columns:repeat(4,1fr)"><button data-a="left">Left</button><button data-a="center">Centre</button><button data-a="right">Right</button><button data-a="justify">Justify</button></div><label>Letter spacing <input type="range" id="tls" min="-10" max="60" value="0"><output id="tx-letter-value">0%</output></label><label>Word spacing <input id="tx-word" type="number" min="-20" max="200" value="0" aria-label="Extra word spacing as a percentage of font size">%</label><label>Line spacing <input type="range" id="tlh" min="70" max="220" value="120"><output id="tx-line-value">120%</output></label><h3>Text layout</h3>
+<details><summary>3D extrusion</summary><label>Depth <input id="letter-depth" data-prop="depth" type="range" min="0" max="120" data-unit="%"><output></output></label><div id="depth-options"><label>Miniature trees <input id="letter-trees" data-prop="trees" type="checkbox"></label><label>Direction <input id="letter-direction" data-prop="direction" type="range" min="-180" max="180" data-unit="°"><output></output></label><label>Side color <input id="letter-side" data-prop="side" type="color"></label><label>Side lighting <input id="letter-light" data-prop="lighting" type="range" min="0" max="100" data-unit="%"><output></output></label></div></details></div><h3>Typeface</h3><div class="bar" style="margin:4px 0"><button type="button" id="font-upload-btn" style="flex:1">⬆ Upload Custom Font (.ttf / .otf / .woff2)</button><input type="file" id="font-upload-file" accept=".ttf,.otf,.woff,.woff2" multiple hidden></div><input type="search" id="fq" placeholder="Search fonts" aria-label="Search fonts"><div class="chips7" id="fcat"><button class="on" data-c="all">All</button><button data-c="Sans">Sans</button><button data-c="Serif">Serif</button><button data-c="Display">Display</button><button data-c="Script">Script</button><button data-c="Mono">Mono</button><button data-c="Fun">Fun</button></div><div id="flist" role="listbox" aria-label="Fonts"></div><select id="tfont" hidden aria-label="Font"></select><label>Size <input type="range" id="tsz" min="6" max="800" value="100" aria-label="Text size slider"><input type="number" id="type-size" min="6" max="800" value="100" aria-label="Text size in pixels"></label><label>Colour <input type="color" id="tcol" value="#ffffff"></label><label>Weight <select id="tw"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label><label><span><input type="checkbox" id="tit"> Italic</span></label><div class="chips" id="tal" style="grid-template-columns:repeat(4,1fr)"><button data-a="left">Left</button><button data-a="center">Centre</button><button data-a="right">Right</button><button data-a="justify">Justify</button></div><label>Letter spacing <input type="range" id="tls" min="-10" max="60" value="0"><output id="tx-letter-value">0%</output></label><label>Word spacing <input id="tx-word" type="number" min="-20" max="200" value="0" aria-label="Extra word spacing as a percentage of font size">%</label><label>Line spacing <input type="range" id="tlh" min="70" max="220" value="120"><output id="tx-line-value">120%</output></label><h3>Text layout</h3>
 <label>Width stretch <input type="range" id="tx-width" min="25" max="300" value="100"><output id="tx-width-value">100%</output></label>
 <label>Height stretch <input type="range" id="tx-height" min="25" max="300" value="100"><output id="tx-height-value">100%</output></label>
 <label>Wrap width in px (0 = off) <input type="number" id="tx-wrap" min="0" max="4000" step="1" value="0"></label>
@@ -505,7 +514,7 @@
 
 <div class="pn" id="p-warp"><label>Brush <select id="mode"></select></label><label>Size <input type="range" id="size" min="10" max="300" value="90"></label><label>Strength <input type="range" id="pow" min="1" max="100" value="40"></label><label>Hardness <input type="range" id="hard" min="0" max="100" value="50"></label><h3>Brush options</h3><label>Pixel size <input type="range" id="bpx" min="2" max="80" value="10"></label><label>Colour levels <input type="range" id="blv" min="2" max="16" value="4"></label><label>Paint colour <input type="color" id="bpc" value="#ffb347"></label><h3>Stroke</h3><label>Spacing <input type="range" id="spc" min="5" max="100" value="25"></label><label>Smoothing <input type="range" id="smo" min="0" max="100" value="0"></label><label>Apply to <select id="bt"><option value="all">Photo and layers</option><option value="layer">Selected layer</option><option value="bg">Photo only</option></select></label><label><span><input type="checkbox" id="warp-extend" checked> Warp past layer edges</span></label><p class="note">Warp can pull pixels past a layer edge within the canvas.</p><label><span><input type="checkbox" id="sym"> Mirror stroke left to right</span></label><p class="note">Drag on the image. Hold still to keep applying swirl, bloat and similar brushes. Pen pressure is supported. Strokes carry across the photo and every layer. Combine brushes work between the photo and the selected layer (the top layer if none is selected): erase or dissolve it to reveal the photo, reveal only in highlights or shadows, mix colours, colourise it from the photo, or bake it into the photo. Pixel, Colour and Texture brushes paint effects onto the photo and layers.</p></div>
 
-<div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div class="layer-align-bar" id="layer-align-bar" aria-label="Align active layer"><button type="button" data-al="left" title="Align left">⇤</button><button type="button" data-al="cx" title="Center horizontally">↔</button><button type="button" data-al="right" title="Align right">⇥</button><button type="button" data-al="top" title="Align top">⤒</button><button type="button" data-al="cy" title="Center vertically">↕</button><button type="button" data-al="bottom" title="Align bottom">⤓</button><button type="button" data-al="fit" title="Fit layer inside canvas">Fit</button><button type="button" data-al="fill" title="Fill canvas with layer">Fill</button></div><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button id="layers-elements">Search elements</button><button id="add-border">Add border</button><button id="edit-glints" hidden>Edit glints</button><button id="ltxt">Add text</button><button id="edit-text-layer" hidden>Edit text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="edge-start">Smooth edges</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><details id="fx-panel"><summary>Layer effects stack</summary><label>Effect <select id="fx-kind"><option value="curve">Tone curve</option><option value="film">Film look</option><option value="grain">Film grain</option><option value="halation">Halation</option></select></label><button id="fx-add">Add effect</button><div id="fx-list" aria-label="Effects in rendering order"></div><fieldset id="fx-controls"><label>Enabled <input id="fx-on" type="checkbox" ></label><label>Strength <input id="fx-amount" type="range" min="0" max="100"><output></output></label><label id="fx-param-row"><span id="fx-param-name"></span> <input type="range" min="1" max="254" id="fx-param"><output></output></label><label id="fx-film-row">Film recipe <select id="fx-film"></select></label><label>Effect mask <select id="fx-mask"></select></label><div class="bar"><button id="fx-up">Earlier</button><button id="fx-down">Later</button><button id="fx-remove">Remove</button></div></fieldset></details>
+<div class="pn" id="p-layers"><label>Blend <select id="bm"></select></label><label>Opacity <input type="range" id="bo" min="0" max="100" value="100"><output id="bov">100%</output></label><div class="layer-align-bar" id="layer-align-bar" aria-label="Align active layer"><button type="button" data-al="left" title="Align left">⇤</button><button type="button" data-al="cx" title="Center horizontally">↔</button><button type="button" data-al="right" title="Align right">⇥</button><button type="button" data-al="top" title="Align top">⤒</button><button type="button" data-al="cy" title="Center vertically">↕</button><button type="button" data-al="bottom" title="Align bottom">⤓</button><button type="button" data-al="fit" title="Fit layer inside canvas">Fit</button><button type="button" data-al="fill" title="Fill canvas with layer">Fill</button></div><div id="llist" role="list"></div><p class="note" id="lnote">Add an image to place it on top of the photo. You can also paste or drop one.</p><div class="bar"><button id="open2">Add image</button><button type="button" id="psd-import-btn" title="Import multi-layer Photoshop .PSD file">Import .PSD</button><input type="file" id="psd-import-file" accept=".psd" hidden><button type="button" id="layers-export-zip" title="Export every layer as separate transparent PNGs in a .ZIP">Export layers .ZIP</button><button id="layers-elements">Search elements</button><button id="add-border">Add border</button><button id="edit-glints" hidden>Edit glints</button><button id="ltxt">Add text</button><button id="edit-text-layer" hidden>Edit text</button><button id="type-draw-side" aria-pressed="false">Draw text box</button><button id="edge-start">Smooth edges</button><button id="ldup">Duplicate</button><button id="lmrg">Merge down</button><button id="lflt">Flatten</button><button id="ldel">Delete</button></div><details id="fx-panel"><summary>Layer effects stack</summary><label>Effect <select id="fx-kind"><option value="curve">Tone curve</option><option value="film">Film look</option><option value="grain">Film grain</option><option value="halation">Halation</option></select></label><button id="fx-add">Add effect</button><div id="fx-list" aria-label="Effects in rendering order"></div><fieldset id="fx-controls"><label>Enabled <input id="fx-on" type="checkbox" ></label><label>Strength <input id="fx-amount" type="range" min="0" max="100"><output></output></label><label id="fx-param-row"><span id="fx-param-name"></span> <input type="range" min="1" max="254" id="fx-param"><output></output></label><label id="fx-film-row">Film recipe <select id="fx-film"></select></label><label>Effect mask <select id="fx-mask"></select></label><div class="bar"><button id="fx-up">Earlier</button><button id="fx-down">Later</button><button id="fx-remove">Remove</button></div></fieldset></details>
 <details id="mask-panel"><summary>Layer mask</summary><button id="mask-lift">Make base photo a layer</button>
 <label>Start mask from <select id="layer-mask-kind"><option value="white">Reveal all</option><option value="black">Hide all</option><option value="selection">Current selection</option><option value="luma">Luminance range</option><option value="depth">Imported depth range</option></select></label>
 <div id="mask-depth-options" hidden><button id="depth-choose">Upload depth map…</button><input type="file" accept="image/*" id="depth-file" hidden><p class="note" id="depth-status" role="status">Use a grayscale depth image aligned with this layer.</p></div><div id="mask-luma-options" hidden><label>Dark limit <input id="mask-low" type="range" min="0" max="255" value="128"><output>128</output></label><label>Light limit <input id="mask-high" type="range" min="0" max="255" value="255"><output>255</output></label><label>Range feather <input id="mask-soft" type="range" min="0" max="100" value="24"><output>24</output></label></div>
@@ -958,6 +967,10 @@
 <button type="button" data-pt="ba">Before / After</button>
 <button type="button" data-pt="layerfx">Sticker &amp; Layer FX</button>
 <button type="button" data-pt="redact">Privacy Redact</button>
+<button type="button" data-pt="shots">Screenshot Beautifier</button>
+<button type="button" data-pt="video">Video / Slideshow</button>
+<button type="button" data-pt="portrait">Portrait Retouch</button>
+<button type="button" data-pt="annotate">Arrows &amp; Callouts</button>
 <button type="button" data-pt="extras">ASCII · Tile · Slicer</button>
 </div>
 <div class="pro-pane" id="pt-svg">
@@ -1119,6 +1132,61 @@
 <label>Grid layout <select id="sl-grid"><option value="2x1">2-Slide Carousel (2 × 1)</option><option value="3x1" selected>3-Slide Panorama (3 × 1)</option><option value="4x1">4-Slide Panorama (4 × 1)</option><option value="3x3">9-Post Profile Grid (3 × 3)</option><option value="2x2">4-Tile Square Grid (2 × 2)</option></select></label>
 </div>
 <div class="bar"><button type="button" id="sl-export" class="pri">Slice &amp; Download .ZIP</button></div>
+</div>
+<div class="pro-pane" id="pt-shots" hidden>
+<p class="note">Shots.so / Ray.so-style Screenshot Beautifier — wrap any screenshot or design in a macOS/Windows glass frame with mesh gradients and soft shadow.</p>
+<div class="up-grid">
+<label>Window frame <select id="sh-frame"><option value="mac-dark">macOS Dark</option><option value="mac-light">macOS Light</option><option value="glass">Frosted Glass</option><option value="browser">Minimal Browser</option><option value="clean">Clean Rounded Only</option></select></label>
+<label>Padding <input id="sh-pad" type="range" min="16" max="160" value="72"><output>72 px</output></label>
+<label>Corner radius <input id="sh-rad" type="range" min="0" max="44" value="18"><output>18 px</output></label>
+<label>Shadow depth <input id="sh-shad" type="range" min="0" max="80" value="44"><output>44</output></label>
+</div>
+<div class="rmbg-bg-swatches" id="sh-bg-swatches" style="margin:6px 0"></div>
+<div class="pro-preview-box"><canvas id="sh-canvas"></canvas></div>
+<div class="bar"><button type="button" id="sh-apply" class="pri">Apply to canvas</button><button type="button" id="sh-copy">Copy PNG</button><button type="button" id="sh-dl">Download PNG</button></div>
+</div>
+<div class="pro-pane" id="pt-video" hidden>
+<p class="note">Turn your Pages (or current canvas) into a smooth animated slideshow or Reels/TikTok motion video (<code>.webm</code> / <code>.mp4</code>) right in the browser.</p>
+<div class="up-grid">
+<label>Motion / Transition <select id="vid-mode"><option value="fade">Smooth Crossfade (Pages)</option><option value="slide">Slide Left (Pages)</option><option value="zoom">Ken Burns Zoom (Single or Pages)</option><option value="glitch">Cyber Glitch Pulse</option></select></label>
+<label>Seconds / page <input id="vid-sec" type="range" min="1" max="6" step="0.5" value="2.5"><output>2.5 s</output></label>
+<label>Resolution <select id="vid-res"><option value="720">720p (Fast)</option><option value="1080" selected>1080p HD</option></select></label>
+</div>
+<div id="vid-prog-wrap" class="mini-prog" hidden><div id="vid-prog-bar"></div></div>
+<div class="pro-preview-box"><video id="vid-preview" controls loop muted playsinline hidden style="max-width:100%;max-height:30vh;border-radius:4px"></video><span id="vid-placeholder">Click Render Video to generate your clip.</span></div>
+<p class="note" id="vid-status" role="status"></p>
+<div class="bar"><button type="button" id="vid-run" class="pri">Render Video</button><button type="button" id="vid-dl" disabled>Download Video</button></div>
+</div>
+<div class="pro-pane" id="pt-portrait" hidden>
+<p class="note">Non-destructive portrait retouching — paint right on the preview to smooth skin (preserving texture), brighten eyes, or whiten teeth.</p>
+<div class="el-chips" id="por-modes">
+<button type="button" class="on" data-pm="skin">Smooth Skin</button>
+<button type="button" data-pm="eyes">Brighten Eyes</button>
+<button type="button" data-pm="teeth">Whiten Teeth</button>
+<button type="button" data-pm="glow">Soft Glow</button>
+</div>
+<div class="up-grid">
+<label>Brush size <input id="por-size" type="range" min="8" max="120" value="32"><output>32 px</output></label>
+<label>Strength <input id="por-str" type="range" min="10" max="100" value="50"><output>50%</output></label>
+</div>
+<div class="pro-preview-box interactive-box"><canvas id="por-canvas"></canvas></div>
+<div class="bar"><button type="button" id="por-undo">Undo stroke</button><button type="button" id="por-reset">Reset</button><span class="sp"></span><button type="button" id="por-apply" class="pri">Apply as layer</button></div>
+</div>
+<div class="pro-pane" id="pt-annotate" hidden>
+<p class="note">Drag on the preview to add crisp arrows, numbered step badges (1, 2, 3…), highlight boxes, or text callouts for tutorials &amp; thumbnails.</p>
+<div class="el-chips" id="ann-modes">
+<button type="button" class="on" data-am="arrow">Arrow ↗</button>
+<button type="button" data-am="step">Step Badge ①</button>
+<button type="button" class="on-off" data-am="box">Highlight Box</button>
+<button type="button" data-am="callout">Text Callout</button>
+</div>
+<div class="up-grid">
+<label>Color <input id="ann-col" type="color" value="#f43f5e"></label>
+<label>Thickness <input id="ann-w" type="range" min="2" max="16" value="5"><output>5 px</output></label>
+<label>Callout text <input id="ann-txt" type="text" value="Look here!" placeholder="Label text"></label>
+</div>
+<div class="pro-preview-box interactive-box"><canvas id="ann-canvas"></canvas></div>
+<div class="bar"><button type="button" id="ann-undo">Undo</button><button type="button" id="ann-clear">Clear</button><span class="sp"></span><button type="button" id="ann-apply" class="pri">Add annotations layer</button></div>
 </div>
 <div class="bar" style="justify-content:flex-end;margin-top:10px"><button type="button" id="pro-close">Close</button></div>
 </dialog>
@@ -1348,5 +1416,6 @@
 <script defer src="js/studio-cutout-pro.js"></script>
 <script defer src="js/studio-sessions.js"></script>
 <script defer src="js/studio-pages.js"></script>
+<script defer src="js/studio-ultimate.js"></script>
 </body>
 </html>
