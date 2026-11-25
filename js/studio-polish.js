@@ -178,4 +178,66 @@ window.addEventListener('drop',e=>{
   });
  }
 },true);
+/* ========== 7. Mobile Native Bottom-Sheet Drag Handle & Quick Actions ========== */
+(function initMobileUX(){
+ $('hdr-more-menu')?.addEventListener('click',e=>{
+  const b=e.target.closest('[data-mob]');if(!b)return;
+  const k=b.dataset.mob;
+  if(k==='search')$('cmd-open')?.click();
+  else if(k==='new')$('new-canvas-open')?.click();
+  else if(k==='sessions')$('sessions-open')?.click();
+  else if(k==='project')$('project-menu')?.click();
+  else if(k==='split'){const cb=$('spl');if(cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change',{bubbles:true}))}}
+ });
+
+ const handle=$('panel-height'),asideEl=document.querySelector('aside');
+ if(!handle||!asideEl)return;
+ const SNAPS=[14,46,74]; // Peek (14%), Half (46%), Expanded (74%)
+ let snapIdx=1,dragStartY=0,startPct=46,moved=false;
+
+ function setSheetPct(pct){
+  const clamped=Math.max(12,Math.min(78,pct));
+  asideEl.style.setProperty('--panel-height',clamped+'%');
+  asideEl.classList.toggle('sheet-peek',clamped<20);
+ }
+
+ // Replace core.js simple click toggle with smooth drag + 3-snap tap!
+ const fresh=handle.cloneNode(true);
+ handle.replaceWith(fresh);
+ fresh.addEventListener('pointerdown',e=>{
+  dragStartY=e.clientY;moved=false;
+  const cur=parseFloat(asideEl.style.getPropertyValue('--panel-height'))||46;
+  startPct=cur;
+  asideEl.classList.add('dragging');
+  fresh.setPointerCapture(e.pointerId);
+ });
+ fresh.addEventListener('pointermove',e=>{
+  if(!asideEl.classList.contains('dragging'))return;
+  const dy=dragStartY-e.clientY;
+  if(Math.abs(dy)>5)moved=true;
+  if(!moved)return;
+  const mainH=document.querySelector('main')?.clientHeight||window.innerHeight;
+  setSheetPct(startPct+(dy/mainH)*100);
+ });
+ const finishDrag=()=>{
+  if(!asideEl.classList.contains('dragging'))return;
+  asideEl.classList.remove('dragging');
+  if(!moved){
+   snapIdx=(snapIdx+1)%SNAPS.length;
+   setSheetPct(SNAPS[snapIdx]);
+  }else{
+   const cur=parseFloat(asideEl.style.getPropertyValue('--panel-height'))||46;
+   let best=0,bestD=999;
+   SNAPS.forEach((s,i)=>{const d=Math.abs(s-cur);if(d<bestD){bestD=d;best=i}});
+   snapIdx=best;setSheetPct(SNAPS[best]);
+  }
+ };
+ fresh.addEventListener('pointerup',finishDrag);
+ fresh.addEventListener('pointercancel',finishDrag);
+
+ // Auto-expand from peek when user taps any category tab on mobile
+ $('cat-tabs')?.addEventListener('click',()=>{
+  if(window.innerWidth<=760&&asideEl.classList.contains('sheet-peek')){snapIdx=1;setSheetPct(SNAPS[1])}
+ });
+})();
 })();

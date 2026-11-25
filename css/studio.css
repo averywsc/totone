@@ -361,6 +361,76 @@ h3{border-top:0!important;padding-top:2px!important;margin:18px 0 6px;font-size:
 #page-add-btn:hover{background:var(--acc);color:var(--accink);border-style:solid}
 .qr-prev-wrap{display:grid;place-items:center;padding:10px;margin:8px 0;background:repeating-conic-gradient(#121d38 0% 25%,#0b142a 0% 50%) 0 0/12px 12px;border-radius:var(--ui-radius)}
 #qr-preview{display:block!important;width:176px;height:176px;max-width:none;max-height:none;margin:0;border:0;border-radius:6px}
+
+/* Native-Style Mobile UI (Phones & Tablets <= 760px) */
+.mob-only{display:none!important}
+@media (max-width:760px){
+ .mob-only{display:block!important}
+ header{flex-wrap:nowrap!important;gap:4px;padding:6px 8px;min-height:46px;overflow:visible}
+ header h1{font-size:18px;margin-right:2px}
+ header #donate-btn,header #new-canvas-open,header #sessions-open,header #project-menu,header #cmp,header .hd,header #zoom,header #mx,header #cmd-open{display:none!important}
+ header button{padding:7px 9px;font-size:12.5px;min-height:34px}
+ header #export{padding:7px 12px}
+ #hdr-more-menu{position:fixed;top:52px;right:8px;left:auto;width:min(240px,86vw);max-height:72dvh;overflow:auto;padding:6px}
+ #hdr-more-menu button{padding:10px 12px;font-size:14px}
+
+ main{flex-direction:column!important;position:relative}
+ #stage{flex:1 1 auto;padding:8px;min-height:140px}
+ #empty{font-size:15px;padding:10px}
+ #empty .bar button{padding:9px 12px;font-size:13px}
+
+ /* Native Bottom Sheet Panel */
+ aside{width:100%!important;flex:0 0 var(--panel-height,46%);min-height:92px!important;max-height:78dvh;border-left:0!important;border-right:0!important;border-top:1px solid color-mix(in srgb,var(--edge) 60%,transparent);border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.45);transition:flex-basis .18s ease}
+ aside.dragging{transition:none!important}
+ #panel-height{display:flex!important;align-items:center;justify-content:center;width:100%;height:26px;padding:0;margin:0;border:0;background:transparent;color:transparent;font-size:0;cursor:ns-resize;touch-action:none;flex:none}
+ #panel-height::before{content:"";width:40px;height:4px;border-radius:999px;background:color-mix(in srgb,var(--mute) 55%,transparent)}
+ #cat-tabs{padding:2px 8px 4px;gap:4px}
+ #cat-tabs button{padding:9px 2px;font-size:12.5px;min-height:36px}
+ .tabs{padding:2px 8px 6px;gap:4px;overflow-x:auto;scrollbar-width:none}
+ .tabs::-webkit-scrollbar{display:none}
+ .tabs button{padding:8px 8px!important;font-size:12px!important;min-height:34px;white-space:nowrap}
+ .pn{padding:10px 12px calc(16px + env(safe-area-inset-bottom,0px))}
+ aside.sheet-peek .pn{overflow:hidden;opacity:.25;pointer-events:none}
+
+ /* Bigger Touch-Friendly Sliders & Buttons */
+ input[type=range]{height:24px}
+ input[type=range].lr-track{height:7px}
+ input[type=range].lr-track::-webkit-slider-thumb{width:20px;height:20px}
+ .pn button,.pn select{min-height:36px;padding:7px 10px;font-size:13px}
+ .pn label{font-size:13px;margin:9px 0}
+ .hsl-dot{width:28px;height:28px}
+ .layer-align-bar{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+ .layer-align-bar button{min-height:34px;font-size:12.5px}
+ .gp-grid{max-height:220px}
+ .sov-grid{max-height:280px}
+ #llist{max-height:190px}
+ #layer-float-bar{max-width:calc(100vw - 16px);overflow-x:auto;padding:4px 5px}
+ #layer-float-bar button{padding:6px 8px;font-size:12px}
+
+ /* Compact Pages Strip & Status Bar */
+ #pages-bar{padding:5px 8px;gap:6px}
+ .page-card{padding:4px 6px}
+ .page-thumb{width:38px;height:28px}
+ #status-bar{padding:4px 8px calc(4px + env(safe-area-inset-bottom,0px));gap:6px;font-size:11px;overflow-x:auto;scrollbar-width:none}
+ #status-bar::-webkit-scrollbar{display:none}
+ #sb-cursor,#sb-guide-btn,#sb-hist-btn{display:none!important}
+ .sb-zoom button{min-height:28px;padding:2px 9px;font-size:12px}
+ #dock-tooltip,#nav-minimap{display:none!important}
+ #hist-hud{width:170px;top:8px;right:8px}
+ #hist-hud-canvas{width:154px;height:56px}
+
+ /* Full-Bleed Mobile Bottom-Sheet Modals (Prevent iOS Auto-Zoom with 16px Inputs) */
+ dialog.studio-dialog,#exp .hbox,#help .hbox{width:100vw!important;max-width:100vw!important;max-height:88dvh!important;margin:auto 0 0 0!important;border-radius:16px 16px 0 0!important;border-bottom:0!important;padding:14px 14px calc(18px + env(safe-area-inset-bottom,0px))!important}
+ #exp,#help{align-items:end!important}
+ dialog input[type=text],dialog input[type=search],dialog input[type=number],dialog input[type=url],dialog textarea,dialog select,#exp input,#exp select{font-size:16px!important}
+ .ses-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:46dvh}
+ .theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .set-checks{grid-template-columns:1fr}
+ .pal-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .el-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+ .el-chips::-webkit-scrollbar{display:none}
+ .el-chips button{flex:none;white-space:nowrap;padding:7px 11px;font-size:12.5px}
+}
 button,select,input[type=search],input[type=text],input[type=number]{border-color:color-mix(in srgb,var(--edge) 62%,transparent)}
 button:hover{border-color:var(--edge)}
 .studio-card,.tpl-card,.sov-card,.pair-btn{border-color:color-mix(in srgb,var(--line) 85%,transparent);transition:transform .12s ease,border-color .14s ease,background-color .14s ease}
