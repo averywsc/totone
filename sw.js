@@ -1,14 +1,15 @@
 /* Totone PWA Offline Service Worker (Stale-While-Revalidate for Core Static Assets) */
-const CACHE='totone-app-v4';
+const CACHE='totone-app-v5.3';
 const CORE=[
- './','./index.html','./manifest.json',
+ './','./index.html','./manifest.json','./og-preview.png',
  './css/core.css?v=4','./css/studio.css?v=4',
  './js/core.js','./js/studio-canva.js','./js/studio-ps.js','./js/studio-ux.js',
  './js/studio-lightroom.js','./js/studio-ai.js','./js/studio-pro.js',
  './js/studio-settings.js','./js/studio-magic.js','./js/studio-power.js',
  './js/studio-overlays.js','./js/studio-lab10.js','./js/studio-polish.js',
  './js/studio-cutout-pro.js','./js/studio-sessions.js','./js/studio-pages.js',
- './js/studio-ultimate.js'
+ './js/studio-ultimate.js','./js/studio-nextgen.js','./js/studio-wave6.js',
+ './js/studio-wave7.js','./js/studio-crop-pro.js'
 ];
 
 self.addEventListener('install',e=>{
