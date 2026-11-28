@@ -564,9 +564,46 @@ function blurMask(m,r){const t=new Float32Array(W*H),o=new Uint8Array(W*H),n=2*r
 const selOp=k=>{if(!sel)return;pushU(selSnap());const m=blurMask(sel,+$('fe').value);sel=k==='f'?m:k==='m'?m.map(v=>v>127?255:0):m.map(v=>k==='g'?(v>3?255:0):(v>252?255:0));updInfo();draw(true)};
 $('feat').onclick=()=>selOp('f');$('grow').onclick=()=>selOp('g');$('shrk').onclick=()=>selOp('s');
 const ring=$('ring');
-const activeBrushInput=()=>{const kind=brushKind();if(kind)return $(['show','hide','edge','refine'].includes(kind)?'mask-brush-radius':'repair-radius');if(tab==='warp')return $('size');if(tab==='select'&&$('stool').value==='paint')return $('ssz');return null};
-c.addEventListener('pointermove',e=>{const bEl=activeBrushInput(),rs=bEl?+bEl.value:0;if(!rs){ring.style.display='none';return}const r=c.getBoundingClientRect(),d=2*rs*r.width/W;Object.assign(ring.style,{display:'block',width:d+'px',height:d+'px',left:e.clientX-d/2+'px',top:e.clientY-d/2+'px'})});
-c.addEventListener('pointerleave',()=>ring.style.display='none');
+const activeBrushSpec=()=>{
+ const kind=brushKind();
+ if(kind)return {el:$(['show','hide','edge','refine'].includes(kind)?'mask-brush-radius':'repair-radius'),isDiam:false};
+ if(tab==='warp')return {el:$('size'),isDiam:false};
+ if(tab==='draw')return {el:$('draw-size'),isDiam:true};
+ if(tab==='select'&&$('stool').value==='paint')return {el:$('ssz'),isDiam:false};
+ return null;
+};
+function syncBrushExitBar(){
+ const bar=$('brush-exit-bar'),lbl=$('brush-exit-lbl');
+ if(!bar)return;
+ const kind=brushKind();
+ bar.hidden=!kind;
+ if(kind&&lbl){
+  const names={edge:'Smooth edges',refine:'Refine edges',hide:'Mask hide',show:'Mask reveal',spot:'Spot heal',heal:'Heal brush',clone:'Clone stamp',dodge:'Dodge',burn:'Burn',sponge:'Sponge',blur:'Soften',sharp:'Sharpen',redeye:'Red eye',patch:'Patch'};
+  lbl.textContent=(names[kind]||kind)+' brush';
+ }
+}
+function exitActiveBrush(){
+ if($('mask-paint')?.value){$('mask-paint').value='';$('mask-paint').onchange()}
+ if($('repair-mode')?.value){$('repair-mode').value='';$('repair-mode').onchange()}
+ if(typeof syncEdgeStartBtn==='function')syncEdgeStartBtn();
+ syncBrushExitBar();
+ ring.style.display='none';
+}
+$('brush-exit-btn')?.addEventListener('click',exitActiveBrush);
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&brushKind()){e.preventDefault();exitActiveBrush()}
+});
+// Track brush ring on window in CAPTURE phase so stopImmediatePropagation during active painting NEVER freezes the ring!
+window.addEventListener('pointermove',e=>{
+ if(!base){ring.style.display='none';return}
+ const spec=activeBrushSpec(),val=spec?.el?+spec.el.value:0;
+ if(!val){ring.style.display='none';return}
+ const r=c.getBoundingClientRect();
+ if(!r.width||e.clientX<r.left-4||e.clientX>r.right+4||e.clientY<r.top-4||e.clientY>r.bottom+4){ring.style.display='none';return}
+ const d=Math.max(8,(spec.isDiam?val:2*val)*r.width/W);
+ Object.assign(ring.style,{display:'block',width:d+'px',height:d+'px',left:(e.clientX-d/2)+'px',top:(e.clientY-d/2)+'px'});
+},true);
+c.addEventListener('pointerleave',()=>{if(!correctionStroke)ring.style.display='none'});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.shiftKey&&!e.target.matches('textarea,input[type=text],input[type=search],[contenteditable=true]')){e.preventDefault();$('undo').click()}});
 
 $('p2t').onclick=()=>{if(palette.length>1){cur=-1;setStops(palette.map(q=>hex(...q)));showP($('q').value.toLowerCase())}};
@@ -4443,8 +4480,8 @@ function updateRepair(){
  $('repair-note').textContent=sampled?(chooseSource||!sourcePoint?'Click the source area first, then paint where the correction belongs.':'Paint to sample from the marked area. Alt-click to pick another source.'):'Paint corrections onto a separate retouch layer.';
 }
 $('repair-source').onclick=()=>{chooseSource=true;updateRepair()};
-$('repair-mode').onchange=()=>{chooseSource=repairSampleNeeded()&&!sourcePoint;if($('repair-mode').value){$('mask-paint').value='';$('vector-edit').checked=false;maskControls()}updateRepair()};
-$('mask-paint').onchange=()=>{if($('mask-paint').value){$('vector-edit').checked=false;maskControls();$('repair-mode').value='';updateRepair()}};
+$('repair-mode').onchange=()=>{chooseSource=repairSampleNeeded()&&!sourcePoint;if($('repair-mode').value){$('mask-paint').value='';$('vector-edit').checked=false;maskControls()}updateRepair();syncBrushExitBar()};
+$('mask-paint').onchange=()=>{if($('mask-paint').value){$('vector-edit').checked=false;maskControls();$('repair-mode').value='';updateRepair()}syncBrushExitBar()};
 function brushKind(){
  if(tab!=='layers'||typeDrawing||!base)return '';
  if($('mask-panel').open&&!$('mask-paint').disabled&&$('mask-paint').value)return $('mask-paint').value;
@@ -4765,6 +4802,7 @@ function syncEdgeStartBtn(){
  $('edge-start').classList.toggle('on',on);
  $('edge-start').setAttribute('aria-pressed',String(on));
  $('edge-start').textContent=on?'Smooth edges (On)':'Smooth edges';
+ syncBrushExitBar();
 }
 $('edge-start').onclick=()=>{
  if(!active||active.lk)return;
