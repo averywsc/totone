@@ -16,7 +16,9 @@ function loadTransformers(){
 function setProg(wrapId,barId,pct){
  const w=$(wrapId),b=$(barId);if(!w||!b)return;
  if(pct==null){w.hidden=true;b.style.width='0%';return}
- w.hidden=false;b.style.width=Math.max(4,Math.min(100,Math.round(pct)))+'%';
+ const v=Math.max(4,Math.min(100,Math.round(pct)))+'%';
+ w.hidden=false;b.style.width=v;
+ const ab=$('ai-busy-bar');if(ab)ab.style.width=v;
 }
 
 function ensureTargetLayerForAI(){
@@ -138,6 +140,17 @@ async function runNeuralRMBG(targetLayer,modelChoice){
  showToast('AI Background Removed!',1800);
 }
 
+function showAiBusyOverlay(on,title,pct){
+ const ov=$('ai-busy-overlay'),t=$('ai-busy-title'),b=$('ai-busy-bar');
+ if(!ov)return;
+ ov.hidden=!on;
+ if(title&&t)t.textContent=title;
+ if(b&&typeof pct==='number')b.style.width=Math.max(4,Math.min(100,pct))+'%';
+}
+const _origSetProg=typeof setProg==='function'?setProg:null;
+if(_origSetProg){
+ window._syncAiBusyBar=(pct)=>{const b=$('ai-busy-bar');if(b&&pct!=null)b.style.width=Math.max(4,Math.min(100,pct))+'%'};
+}
 // Wrap existing offline remover so both AI Neural and Instant Offline work seamlessly from #rmbg-smart!
 const offlineRemoveBg=window.runSmartBackgroundRemover;
 async function runUnifiedRemoveBg(){
@@ -151,6 +164,9 @@ async function runUnifiedRemoveBg(){
  const targetLayer=ensureTargetLayerForAI();
  if(!targetLayer)return;
  aiBusy=true;$('rmbg-smart').disabled=true;
+ showAiBusyOverlay(true,'Removing Background Locally…',10);
+ // Yield a frame so the browser paints the overlay BEFORE heavy WASM AI inference starts
+ await new Promise(r=>setTimeout(r,50));
  try{
   await runNeuralRMBG(targetLayer,mode);
  }catch(e){
@@ -159,6 +175,7 @@ async function runUnifiedRemoveBg(){
   offlineRemoveBg?.();
   if(active?.mask)$('rmbg-next').hidden=false;
  }finally{
+  showAiBusyOverlay(false);
   aiBusy=false;$('rmbg-smart').disabled=false;
  }
 }
