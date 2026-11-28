@@ -704,7 +704,7 @@ function layerMove(e,p){const l=active;if(!l||!ls)return;if(!ls.started){
   }
   const h=ls.h,iw=l.cv.width,ih=l.cv.height;
   if(h==='body'){l.x+=p[0]-last[0];l.y+=p[1]-last[1];guides=[];
-    if(!e.altKey){const k=KK()*8,[hw,hh]=EXT(l),ax=Math.abs(Math.sin(l.r))<.01,sx=(v,g)=>{if(Math.abs(v-g)<k){guides.push({x:g});return g-v}return 0},sy=(v,g)=>{if(Math.abs(v-g)<k){guides.push({y:g});return g-v}return 0};
+    if(!e.altKey){const k=KK()*3,[hw,hh]=EXT(l),ax=Math.abs(Math.sin(l.r))<.01,sx=(v,g)=>{if(Math.abs(v-g)<k){guides.push({x:g});return g-v}return 0},sy=(v,g)=>{if(Math.abs(v-g)<k){guides.push({y:g});return g-v}return 0};
       let dx=sx(l.x,W/2);if(!dx&&ax)dx=sx(l.x-hw,0)||sx(l.x+hw,W);let dy=sy(l.y,H/2);if(!dy&&ax)dy=sy(l.y-hh,0)||sy(l.y+hh,H);l.x+=dx;l.y+=dy}}
   else if(h==='rot'){let r=Math.atan2(p[1]-l.y,p[0]-l.x)+Math.PI/2;if(e.shiftKey)r=Math.round(r/(Math.PI/12))*Math.PI/12;l.r=r}
   else if(h.length===2){const hd=hyp(iw*(1-l.cl-l.cr),ih*(1-l.ct-l.cb))/2;l.s=Math.max(.02,hyp(p[0]-l.x,p[1]-l.y)/hd)}

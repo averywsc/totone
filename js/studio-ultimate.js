@@ -230,7 +230,7 @@ function drawSmartSnapLines(){
 c.addEventListener('pointerdown',()=>{if(active&&!active.lk&&['layers','design','text'].includes(tab))snapDragging=true});
 c.addEventListener('pointermove',e=>{
  if(!snapDragging||!active||e.altKey||!base)return;
- const tol=Math.max(6,Math.round(Math.min(W,H)*0.012));
+ const tol=Math.max(2.5,Math.min(5,Math.round(Math.min(W,H)*0.0035)));
  smartSnapX=null;smartSnapY=null;
  const targetsX=[W/2],targetsY=[H/2];
  layers.forEach(l=>{if(l!==active&&l.vis){targetsX.push(l.x);targetsY.push(l.y)}});
