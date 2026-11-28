@@ -680,6 +680,33 @@ body.ui-pro #empty .empty-seo-links{
 .al-info small{font-size:10px;color:var(--mute)}
 .al-acts{display:flex;gap:2px;flex:none}
 .al-acts button{padding:2px 5px!important;min-height:22px!important;font-size:10.5px!important}
+
+/* Custom Font Maker Modal */
+#font-maker-dialog{width:min(760px,96vw)}
+.fm-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.fm-top h2{margin:0!important}
+.fm-meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+#fm-live-preview{display:block!important;width:100%;height:64px;border-radius:6px;border:1px solid var(--line);background:#141418;margin:4px 0 10px}
+.fm-body{display:grid;grid-template-columns:324px 1fr;gap:12px;align-items:start}
+@media (max-width:720px){.fm-body{grid-template-columns:1fr}}
+.fm-pad-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:12.5px}
+#fm-pad{display:block!important;width:100%;max-width:320px;aspect-ratio:1;border-radius:7px;border:1px solid var(--edge);cursor:crosshair;touch-action:none;margin:0}
+.fm-pen-row{display:flex;align-items:center;gap:6px;margin:6px 0;flex-wrap:wrap}
+.fm-donor-box{padding:8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);margin-top:6px}
+.fm-char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:4px;max-height:420px;overflow-y:auto;padding:2px}
+.fm-ch{position:relative;height:36px;padding:0!important;font-size:14px!important;font-weight:600;display:grid;place-items:center;border-radius:5px!important}
+.fm-ch.done::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.fm-ch.on{background:var(--acc)!important;color:var(--accink)!important;border-color:transparent!important}
+.fm-ch.on::after{background:#fff}
+.p img.film-prev-thumb{
+ width:56px;height:32px;
+ object-fit:cover;
+ border-radius:4px;
+ flex:none;
+ background:var(--bg);
+ border:1px solid var(--line);
+ display:block;
+}
 @media (max-width:760px){
  #all-layers-btn{top:8px;left:8px;padding:4px 8px!important;font-size:11px!important}
  #all-layers-drawer{top:42px;left:8px;bottom:8px;width:calc(100% - 16px)}

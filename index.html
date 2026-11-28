@@ -29,7 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:wght@100..900&family=Raleway:wght@100..900&family=Playfair+Display:wght@400..900&family=Oswald:wght@200..700&family=Fredoka:wght@300..700&family=Orbitron:wght@400..900&family=Cinzel:wght@400..900&family=Lora:wght@400..700&family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Syne:wght@400..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/core.css?v=4">
 <link rel="stylesheet" href="css/studio.css?v=4">
-<link rel="stylesheet" href="css/studio-pro-ui.css?v=18">
+<link rel="stylesheet" href="css/studio-pro-ui.css?v=20">
 </head>
 <body class="ui-pro ui-pro-palette">
 <header>
@@ -257,6 +257,7 @@
 <h3>Pro Studio Generators</h3>
 <div class="studio-grid two ai-tool-grid">
 <button type="button" class="studio-card" data-ai-act="svg"><span>SVG Vectorizer</span><small>Image Trace</small></button>
+<button type="button" class="studio-card" data-ai-act="fontmaker"><span>Custom Font Maker</span><small>Draw &amp; Export .OTF</small></button>
 <button type="button" class="studio-card" data-ai-act="shots"><span>Screenshot Beautifier</span><small>macOS / Glass / Mesh</small></button>
 <button type="button" class="studio-card" data-ai-act="video"><span>Slideshow / Reels Video</span><small>Multi-Page .WebM / .MP4</small></button>
 <button type="button" class="studio-card" data-ai-act="annotate"><span>Arrows &amp; Callouts</span><small>Steps / Boxes / Tutorials</small></button>
@@ -365,7 +366,7 @@
 </div><div id="type-shapes" aria-label="Warp shapes"></div><label>Slant <input id="letter-slant" data-prop="slant" type="range" min="-40" max="40" data-unit="°"><output></output></label></details>
 <details><summary>Stretch and repeat</summary><label>Stretch band <select data-prop="band" id="letter-band"><option value="off">Off</option><option value="x">Horizontal slice</option><option value="y">Vertical slice</option><option value="letter">Stretch one letter</option></select></label>
 <div id="band-options"><label>Band position <input id="letter-cut" data-prop="cut" type="range" min="0" max="100" data-unit="%"><output></output></label><label>Extension <input id="letter-pull" data-prop="pull" type="range" min="0" max="300" data-unit="%"><output></output></label></div><label>Rows <input id="letter-rows" data-prop="rows" type="range" min="1" max="8" data-unit=""><output></output></label><div id="stack-options"><label>Row spacing <input id="letter-gap" data-prop="rowGap" type="range" min="-35" max="100" data-unit="%"><output></output></label><label>Band travel across rows <input id="letter-travel" data-prop="travel" type="range" min="-100" max="100" data-unit="%"><output></output></label></div></details>
-<details><summary>3D extrusion</summary><label>Depth <input id="letter-depth" data-prop="depth" type="range" min="0" max="120" data-unit="%"><output></output></label><div id="depth-options"><label>Miniature trees <input id="letter-trees" data-prop="trees" type="checkbox"></label><label>Direction <input id="letter-direction" data-prop="direction" type="range" min="-180" max="180" data-unit="°"><output></output></label><label>Side color <input id="letter-side" data-prop="side" type="color"></label><label>Side lighting <input id="letter-light" data-prop="lighting" type="range" min="0" max="100" data-unit="%"><output></output></label></div></details></div><h3>Typeface</h3><div class="bar" style="margin:4px 0"><button type="button" id="font-upload-btn" style="flex:1">⬆ Upload Custom Font (.ttf / .otf / .woff2)</button><input type="file" id="font-upload-file" accept=".ttf,.otf,.woff,.woff2" multiple hidden></div><input type="search" id="fq" placeholder="Search fonts" aria-label="Search fonts"><div class="chips7" id="fcat"><button class="on" data-c="all">All</button><button data-c="Sans">Sans</button><button data-c="Serif">Serif</button><button data-c="Display">Display</button><button data-c="Script">Script</button><button data-c="Mono">Mono</button><button data-c="Fun">Fun</button></div><div id="flist" role="listbox" aria-label="Fonts"></div><select id="tfont" hidden aria-label="Font"></select><label>Size <input type="range" id="tsz" min="6" max="800" value="100" aria-label="Text size slider"><input type="number" id="type-size" min="6" max="800" value="100" aria-label="Text size in pixels"></label><label>Colour <input type="color" id="tcol" value="#ffffff"></label><label>Weight <select id="tw"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label><label><span><input type="checkbox" id="tit"> Italic</span></label><div class="chips" id="tal" style="grid-template-columns:repeat(4,1fr)"><button data-a="left">Left</button><button data-a="center">Centre</button><button data-a="right">Right</button><button data-a="justify">Justify</button></div><label>Letter spacing <input type="range" id="tls" min="-10" max="60" value="0"><output id="tx-letter-value">0%</output></label><label>Word spacing <input id="tx-word" type="number" min="-20" max="200" value="0" aria-label="Extra word spacing as a percentage of font size">%</label><label>Line spacing <input type="range" id="tlh" min="70" max="220" value="120"><output id="tx-line-value">120%</output></label><h3>Text layout</h3>
+<details><summary>3D extrusion</summary><label>Depth <input id="letter-depth" data-prop="depth" type="range" min="0" max="120" data-unit="%"><output></output></label><div id="depth-options"><label>Miniature trees <input id="letter-trees" data-prop="trees" type="checkbox"></label><label>Direction <input id="letter-direction" data-prop="direction" type="range" min="-180" max="180" data-unit="°"><output></output></label><label>Side color <input id="letter-side" data-prop="side" type="color"></label><label>Side lighting <input id="letter-light" data-prop="lighting" type="range" min="0" max="100" data-unit="%"><output></output></label></div></details></div><h3>Typeface</h3><div class="bar" style="margin:4px 0"><button type="button" id="font-upload-btn" style="flex:1">Import Font (.ttf/.otf)</button><button type="button" id="font-maker-open" class="pri" style="flex:1">Font Maker (.otf)</button><input type="file" id="font-upload-file" accept=".ttf,.otf,.woff,.woff2" multiple hidden></div><input type="search" id="fq" placeholder="Search fonts" aria-label="Search fonts"><div class="chips7" id="fcat"><button class="on" data-c="all">All</button><button data-c="Sans">Sans</button><button data-c="Serif">Serif</button><button data-c="Display">Display</button><button data-c="Script">Script</button><button data-c="Mono">Mono</button><button data-c="Fun">Fun</button></div><div id="flist" role="listbox" aria-label="Fonts"></div><select id="tfont" hidden aria-label="Font"></select><label>Size <input type="range" id="tsz" min="6" max="800" value="100" aria-label="Text size slider"><input type="number" id="type-size" min="6" max="800" value="100" aria-label="Text size in pixels"></label><label>Colour <input type="color" id="tcol" value="#ffffff"></label><label>Weight <select id="tw"><option value="400">Regular</option><option value="700">Bold</option><option value="900">Black</option></select></label><label><span><input type="checkbox" id="tit"> Italic</span></label><div class="chips" id="tal" style="grid-template-columns:repeat(4,1fr)"><button data-a="left">Left</button><button data-a="center">Centre</button><button data-a="right">Right</button><button data-a="justify">Justify</button></div><label>Letter spacing <input type="range" id="tls" min="-10" max="60" value="0"><output id="tx-letter-value">0%</output></label><label>Word spacing <input id="tx-word" type="number" min="-20" max="200" value="0" aria-label="Extra word spacing as a percentage of font size">%</label><label>Line spacing <input type="range" id="tlh" min="70" max="220" value="120"><output id="tx-line-value">120%</output></label><h3>Text layout</h3>
 <label>Width stretch <input type="range" id="tx-width" min="25" max="300" value="100"><output id="tx-width-value">100%</output></label>
 <label>Height stretch <input type="range" id="tx-height" min="25" max="300" value="100"><output id="tx-height-value">100%</output></label>
 <label>Wrap width in px (0 = off) <input type="number" id="tx-wrap" min="0" max="4000" step="1" value="0"></label>
@@ -1606,7 +1607,16 @@
 </dialog>
 <dialog id="patch-notes-dialog" class="studio-dialog" aria-label="Patch Notes">
 <h2>Patch Notes</h2>
-<pre id="patch-notes-text" class="patch-notes-pre">v7.7.1
+<pre id="patch-notes-text" class="patch-notes-pre">v7.8.2
+- Live Film Thumbnail Previews in Presets: every Film Look listed inside the Presets window now renders a real live thumbnail preview of your current photo right next to its name.
+
+v7.8.1
+- 20× Faster Smooth Edges &amp; Refine Brush + 1-Click Toggle Off: eliminated per-dab GPU getImageData/putImageData stalls by buffering mask strokes in RAM and flushing once per animation frame (60fps), and made the "Smooth edges" button toggle cleanly on/off (and auto-reset when closing Layer mask) so you immediately return to normal layer dragging without changing the Mask brush dropdown.
+
+v7.8.0
+- Custom Font Maker, Importer &amp; .OTF Exporter (Design → Type → Font Maker &amp; FX → Pro Lab): draw your own letters freehand with Round Marker or Calligraphy nibs over typographic Cap/x-height/Baseline guides, borrow &amp; remix individual letters from built-in fonts or imported .TTF/.OTF donor fonts, auto-fill missing letters, preview live, install straight into Totone, or export a real installable .OTF font file via opentype.js.
+
+v7.7.1
 - Draggable Full-Height Mobile "All Tools" Drawer: All Tools now opens taller (64dvh) and lets you drag the top handle up to 86dvh (hiding the extra jump bar on phones for maximum workspace), while Presets, Color &amp; Crop stay locked to crisp tap-to-toggle.
 
 v7.7.0
@@ -1987,6 +1997,46 @@ v1.0.0
 </div>
 <div class="bar" style="justify-content:flex-end;margin-top:10px"><button type="button" id="ng-close">Close</button></div>
 </dialog>
+<dialog id="font-maker-dialog" class="studio-dialog" aria-label="Custom Font Maker &amp; Importer">
+<div class="fm-top">
+<h2>Custom Font Maker &amp; Importer</h2>
+<span class="note" id="fm-count" style="margin:0">0 / 70 letters assigned</span>
+</div>
+<div class="fm-meta-row">
+<label style="flex:1">Font name <input type="text" id="fm-name" value="My Totone Font" maxlength="32"></label>
+<label style="flex:1.4">Live preview <input type="text" id="fm-preview-text" value="Totone Font 2026!" maxlength="40"></label>
+</div>
+<canvas id="fm-live-preview" width="660" height="72"></canvas>
+<div class="fm-body">
+<div class="fm-pad-col">
+<div class="fm-pad-head"><strong>Letter: <span id="fm-cur-ch">A</span></strong><div class="bar" style="margin:0"><button type="button" id="fm-undo">Undo</button><button type="button" id="fm-clear">Clear</button><button type="button" id="fm-next">Next →</button></div></div>
+<canvas id="fm-pad" width="320" height="320"></canvas>
+<div class="fm-pen-row">
+<label style="flex:1">Pen <input type="range" id="fm-pen-size" min="6" max="38" value="18"><output>18</output></label>
+<select id="fm-pen-tip" aria-label="Pen tip"><option value="round">Round Marker</option><option value="chisel">Calligraphy</option></select>
+<label style="margin:0"><input type="checkbox" id="fm-ghost" checked> Guide</label>
+</div>
+<div class="fm-donor-box">
+<label>Borrow letter from <select id="fm-donor-font"></select></label>
+<div class="bar" style="margin:4px 0 0">
+<button type="button" id="fm-grab-one" class="pri">Assign This Letter</button>
+<button type="button" id="fm-fill-missing">Fill Missing Letters</button>
+<button type="button" id="fm-import-donor-btn">Import .TTF / .OTF…</button>
+<input type="file" id="fm-import-donor-file" accept=".ttf,.otf,.woff" hidden>
+</div>
+</div>
+</div>
+<div class="fm-grid-col">
+<div class="fm-char-grid" id="fm-char-grid"></div>
+</div>
+</div>
+<div class="bar" style="margin-top:10px">
+<button type="button" id="fm-install" class="pri">Install Into Totone</button>
+<button type="button" id="fm-export-otf" class="pri">Export .OTF Font File</button>
+<span class="sp"></span>
+<button type="button" id="fm-close">Close</button>
+</div>
+</dialog>
 <dialog id="cmd-dialog" class="studio-dialog" aria-label="Command Palette">
 <input type="search" id="cmd-input" placeholder="Type any tool, filter, theme, safe-zone, export, or action…" autocomplete="off">
 <div id="cmd-list" role="listbox"></div>
@@ -2017,6 +2067,7 @@ v1.0.0
 <script defer src="js/studio-polaroid.js"></script>
 <script defer src="js/studio-stickers.js"></script>
 <script defer src="js/studio-creative.js"></script>
+<script defer src="js/studio-fontmaker.js"></script>
 <script defer src="js/studio-extend.js"></script>
 </body>
 </html>

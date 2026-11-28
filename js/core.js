@@ -102,6 +102,7 @@ function showP(q=''){
     const looks=film.filmRows(q);if(looks)rows.push('<div class="preset-heading">Film looks</div>'+looks);
   }
   $('plist').innerHTML=rows.join('')||'<p class="note">No matching presets.</p>';
+  if(film&&base&&(pcat==='all'||pcat==='film')&&typeof film.previews==='function')film.previews($('plist'));
 }
 $('q').oninput=e=>{showP(e.target.value.toLowerCase());$('plist').scrollTop=0};
 $('plist').onclick=e=>{const look=e.target.closest('[data-film]');if(look){film.openRecipe(+look.dataset.film);return}const b=e.target.closest('.p');if(b){if(base)pushU(toneSnapshot());cur=+b.dataset.i;setMapSettings(P[cur].map);setStops(P[cur].s,P[cur].pos);showP($('q').value.toLowerCase());$('plist').querySelector('.on')?.focus({preventScroll:true})}};
@@ -145,7 +146,7 @@ async function load(f){
   window._totoneInitialStart={W,H,data:new Uint8ClampedArray(base.data)};
   versions=[];resetCorrectionTools();projectTitle=(f.name||'Totone').replace(/\.[^.]+$/,'');cancelPathInput();film?.reset(true,firstPhoto);$('zoom').value='0';$('zoom').onchange();
   lasso=[];cropSrc=null;updCropRestoreUI();CR=tab==='crop'?cropInit():null;if(CR)cropInfo();
-  setTypeDrawing(false);undoStack=[];redoS=[];edits=[];maskIdx=-1;sel=null;layers=[];active=null;refreshLayers();drawEdits();updInfo();c.style.display='block';$('empty').style.display='none';extract();film?.afterOpen();draw();syncActionStates();if(typeof showToast==='function')showToast(`Opened ${W} × ${H} px`,1600);return true;
+  setTypeDrawing(false);undoStack=[];redoS=[];edits=[];maskIdx=-1;sel=null;layers=[];active=null;refreshLayers();drawEdits();updInfo();c.style.display='block';$('empty').style.display='none';extract();film?.afterOpen();showP($('q').value.toLowerCase());draw();syncActionStates();if(typeof showToast==='function')showToast(`Opened ${W} × ${H} px`,1600);return true;
 }
 function extract(){
   if(!base)return;const K=+$('k').value,d=base.data,n=W*H,pts=[];
@@ -3381,12 +3382,13 @@ function thumbnailImage(){
   g.drawImage(source,(80-W*scale)/2,(48-H*scale)/2,W*scale,H*scale);thumbImage=read(sample);thumbSource=base;thumbs.clear()}
  return thumbImage;
 }
-function previews(){
- const job=++thumbJob;if(tab!=='film'||!base)return;
- const cards=[...pane.querySelectorAll('img[data-preview]')];if(!cards.length)return;
+function previews(root){
+ const targetRoot=root||pane;
+ const job=++thumbJob;if(!base||(tab!=='film'&&tab!=='tone'&&!root))return;
+ const cards=[...targetRoot.querySelectorAll('img[data-preview]')];if(!cards.length)return;
  const im=thumbnailImage();
  function next(){
-  if(job!==thumbJob||tab!=='film')return;
+  if(job!==thumbJob||!base)return;
   for(let count=0;cards.length&&count<4;count++){const img=cards.shift(),id=+img.dataset.preview;
    if(!thumbs.has(id)){
     const st=id<0?defaults():recipe(id,100,state);if(id<0){st.f.i=-id-1;st.detail=state.detail;st.wb=state.wb}
@@ -3543,7 +3545,7 @@ pane.onclick=e=>{
 function reset(newDoc=false,keepPending=false){previewSubject=false;gesture=null;secondRequest++;if(!keepPending)state=defaults();second=null;anchor=null;if(newDoc){maskBank=[];maskChoice=0;layoutOrigin=null;paper=null}cached=null;thumbSource=null;thumbs.clear();thumbJob++;if(!newDoc||tab==='film')build()}
 $('film-off').onclick=()=>command(()=>{state=defaults()});
 function filmRows(q){
- return PR.map((p,i)=>({p,i})).filter(({p})=>(p[0]+' '+p[1]+' film').toLowerCase().includes(q.trim().toLowerCase())).map(({p,i})=>'<button class="p'+(i===state.id?' on':'')+'" data-film="'+i+'">'+esc(p[0])+'</button>').join('');
+ return PR.map((p,i)=>({p,i})).filter(({p})=>(p[0]+' '+p[1]+' film').toLowerCase().includes(q.trim().toLowerCase())).map(({p,i})=>'<button class="p'+(i===state.id?' on':'')+'" data-film="'+i+'"><img class="film-prev-thumb" width="56" height="32" alt="" data-preview="'+i+'"'+(thumbs.has(i)?' src="'+thumbs.get(i)+'"':'')+'>'+esc(p[0])+'</button>').join('');
 }
 function openRecipe(id){document.querySelector('[data-t="film"]').click();category=PR[id][1];section='presets';apply(id)}
 function swapBase(){
@@ -4032,7 +4034,7 @@ function renderLook(im,settings){return develop(im,{...defaults(),...settings,d:
 function applySavedLook(settings){state={...defaults(),...structuredClone(settings),d:state.d};save();changed(true)}
 function setReference(ref,record=true){command(()=>{state.reference=ref;state.id=-1},false,record);syncReference()}
 $('fx-film').replaceChildren(...PR.flatMap((p,i)=>p[6]?[]:[new Option(p[0],i)]));
-return {effectPixels,renderLook,applySavedLook,setReference,gradeMask,fillMask,image,enabled,showSubjectMask,openExposureFiles,inDouble:()=>tab==='film'&&section==='double',reset,build,afterOpen,paintFrame,maskGuides,projectState:()=>({state:structuredClone(state),second,anchor,paper,layoutOrigin,section}),restoreProject,syncGrade,updateScopes,getGrade:currentGrade,setZone:(z,p,fin)=>{mutateGrade('3wheel-'+z,s=>Object.assign(s.zones[z],p));if(fin)finishGradeEdit()},setGradeProp:(k,v,fin)=>{mutateGrade('3wheel-'+k,s=>{s[k]=v});if(fin)finishGradeEdit()},finishGradeEdit,space:()=>({bank:maskBank,anchor,layoutOrigin,paper,masks:state.grading?.masks}),restoreSpace:value=>{if(value){maskBank=value.bank||[];if(state.grading)state.grading.masks=value.masks;anchor=value.anchor;layoutOrigin=value.layoutOrigin;paper=value.paper;cached=null}},transformSpace,rememberPixels,filmRows,openRecipe,loadSecond,invalidate:()=>{cached=null},isDouble:()=>tab==='film'&&section==='double'&&!!base,focusDouble:()=>{document.querySelector('[data-t="film"]').click();setSection('double')},get state(){return state}};
+return {effectPixels,renderLook,applySavedLook,setReference,gradeMask,fillMask,image,enabled,showSubjectMask,openExposureFiles,inDouble:()=>tab==='film'&&section==='double',reset,build,afterOpen,paintFrame,maskGuides,projectState:()=>({state:structuredClone(state),second,anchor,paper,layoutOrigin,section}),restoreProject,syncGrade,updateScopes,getGrade:currentGrade,setZone:(z,p,fin)=>{mutateGrade('3wheel-'+z,s=>Object.assign(s.zones[z],p));if(fin)finishGradeEdit()},setGradeProp:(k,v,fin)=>{mutateGrade('3wheel-'+k,s=>{s[k]=v});if(fin)finishGradeEdit()},finishGradeEdit,space:()=>({bank:maskBank,anchor,layoutOrigin,paper,masks:state.grading?.masks}),restoreSpace:value=>{if(value){maskBank=value.bank||[];if(state.grading)state.grading.masks=value.masks;anchor=value.anchor;layoutOrigin=value.layoutOrigin;paper=value.paper;cached=null}},transformSpace,rememberPixels,filmRows,previews,openRecipe,loadSecond,invalidate:()=>{cached=null},isDouble:()=>tab==='film'&&section==='double'&&!!base,focusDouble:()=>{document.querySelector('[data-t="film"]').click();setSection('double')},get state(){return state}};
 })();
 let panelSize=1;
 $('panel-height').onclick=()=>{panelSize=(panelSize+1)%3;document.querySelector('aside').style.setProperty('--panel-height',['36%','52%','68%'][panelSize])};
@@ -4580,17 +4582,34 @@ c.addEventListener('pointerdown',e=>{
   st.offset=repairSampleNeeded()?(sourcePoint.offset??=sourcePoint.p.map((v,i)=>Math.round(v-p[i]))):[0,0];
   pushU(mkSnap('p'));st.l=newRepairTarget();refreshLayers();
  }
- correctionStroke=st;c.setPointerCapture(e.pointerId);correctionDab(st,p);draw();
+ correctionStroke=st;c.setPointerCapture(e.pointerId);correctionDab(st,p);flushCorrection(st);
 },true);
+let corrRaf=0;
+function flushCorrection(st){
+ if(!st)return;
+ if(st.maskIm&&st.dirty){
+  const [x0,y0,x1,y1]=st.dirty;
+  st.g.putImageData(st.maskIm,0,0,x0,y0,x1-x0,y1-y0);
+  st.dirty=null;
+  maskViews.delete(st.l);
+ }
+ draw();
+}
+function scheduleCorrectionDraw(st){
+ if(corrRaf)return;
+ corrRaf=requestAnimationFrame(()=>{corrRaf=0;flushCorrection(correctionStroke||st)});
+}
 function moveCorrection(e){
  const st=correctionStroke;if(!st||e.pointerId!==st.id)return;
  e.stopImmediatePropagation();if(brushKind()!==st.mode||active!==st.l||active.lk)return;
  const p=pos(e),dx=p[0]-st.last[0],dy=p[1]-st.last[1],d=Math.hypot(dx,dy);if(!d)return;
- const n=Math.ceil(d/Math.max(1,st.radius*.35));
- for(let i=1;i<=n;i++)correctionDab(st,[st.last[0]+dx*i/n,st.last[1]+dy*i/n]);st.last=p;draw();
+ const spacing=Math.max(2,st.radius*(st.edge?0.45:0.35));
+ const n=Math.min(18,Math.ceil(d/spacing));
+ for(let i=1;i<=n;i++)correctionDab(st,[st.last[0]+dx*i/n,st.last[1]+dy*i/n]);
+ st.last=p;scheduleCorrectionDraw(st);
 }
 c.addEventListener('pointermove',moveCorrection,true);
-function endCorrection(e){if(correctionStroke?.id!==e.pointerId)return;if(e.type==='pointerup')moveCorrection(e);correctionStroke=null;refreshLayers();draw()}
+function endCorrection(e){if(correctionStroke?.id!==e.pointerId)return;if(e.type==='pointerup')moveCorrection(e);const st=correctionStroke;if(corrRaf){cancelAnimationFrame(corrRaf);corrRaf=0}flushCorrection(st);correctionStroke=null;refreshLayers();draw()}
 for(const type of ['pointerup','pointercancel','lostpointercapture'])c.addEventListener(type,endCorrection,true);
 function drawRepairSource(){
  if(!repairSampleNeeded()||!brushKind()||!sourcePoint||sourcePoint.base!==base)return;
@@ -4695,36 +4714,73 @@ $('mask-to-grade').onclick=()=>{if(maskChoice){film.gradeMask(maskChoice);jumpTo
 $('mask-to-fill').onclick=()=>{if(maskChoice){film.focusDouble();film.fillMask(maskChoice)}};
 function transformBank(matrix,w,h){maskBank=maskBank.map(m=>{const cv=bc(w,h),g=cv.getContext('2d');g.setTransform(matrix);g.drawImage(m.cv,0,0);return {...m,cv}})}
 function beginEdgeStroke(st){
- const w=st.l.cv.width,h=st.l.cv.height,source=bc(w,h),g=source.getContext('2d');
+ const w=st.l.cv.width,h=st.l.cv.height,source=bc(w,h),g=source.getContext('2d',{willReadFrequently:true});
  g.drawImage(st.l.cv,0,0);g.globalCompositeOperation='destination-in';g.drawImage(st.l.mask,0,0);
- const blurred=bc(w,h),bg=blurred.getContext('2d');bg.filter='blur('+Math.max(.65,+$('edge-width').value/st.l.s)+'px)';bg.drawImage(source,0,0);
+ const blurred=bc(w,h),bg=blurred.getContext('2d',{willReadFrequently:true});bg.filter='blur('+Math.max(.65,+$('edge-width').value/st.l.s)+'px)';bg.drawImage(source,0,0);
  st.edge=bg.getImageData(0,0,w,h).data;st.coverage=g.getImageData(0,0,w,h).data;
+ st.maskIm=st.g.getImageData(0,0,w,h);st.dirty=null;
  st.source=st.l.d.data;st.width=w;st.height=h;st.flow=+$('edge-flow').value/100;
- if(st.stencil)st.limit=st.stencil.getContext('2d').getImageData(0,0,w,h).data;
+ st.hard=Math.min(.99,+$('mask-hardness').value/100);
+ st.step=Math.max(1,Math.round(+$('edge-width').value/st.l.s/2));
+ if(st.stencil)st.limit=st.stencil.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h).data;
 }
 function brushEdge(st,p){
  const local=st.inverse.transformPoint(new DOMPoint(...p)),r=st.radius/st.l.s,x=Math.max(0,Math.floor(local.x-r)),y=Math.max(0,Math.floor(local.y-r));
- const w=Math.min(st.width,Math.ceil(local.x+r))-x,h=Math.min(st.height,Math.ceil(local.y+r))-y;if(w<=0||h<=0)return;
- const patch=st.g.getImageData(x,y,w,h),out=patch.data,step=Math.max(1,Math.round(+$('edge-width').value/st.l.s/2));
- for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++){
-  const px=x+xx,py=y+yy,i=4*(py*st.width+px),j=4*(yy*w+xx),alpha=st.source[i+3];if(!alpha)continue;
-  const fall=1-ss(Math.min(.99,+$('mask-hardness').value/100),1,Math.hypot(px+.5-local.x,py+.5-local.y)/r);if(!fall)continue;
-  let coverage=st.edge[i+3];
-  if(st.mode==='refine'&&coverage>1&&coverage<254){
-   let sum=0,weight=0;
-   for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
-    const sx=px+dx*step,sy=py+dy*step,q=4*(sy*st.width+sx);
-    if(sx<0||sx>=st.width||sy<0||sy>=st.height){weight+=.2;continue}
-    const distance=Math.abs(st.source[q]-st.source[i])+Math.abs(st.source[q+1]-st.source[i+1])+Math.abs(st.source[q+2]-st.source[i+2]);
-    const k=Math.exp(-distance/45-(dx*dx+dy*dy)/5);sum+=k*st.coverage[q+3];weight+=k;
+ const x1=Math.min(st.width,Math.ceil(local.x+r)),y1=Math.min(st.height,Math.ceil(local.y+r));
+ if(x1<=x||y1<=y)return;
+ const out=st.maskIm.data,step=st.step,hard=st.hard,invR=1/Math.max(1,r),r2=r*r,W0=st.width,H0=st.height;
+ const src=st.source,edg=st.edge,cov=st.coverage,lim=st.limit,flow=st.flow,isRef=st.mode==='refine';
+ for(let py=y;py<y1;py++){
+  const dy0=py+.5-local.y,dy2=dy0*dy0,row=py*W0;
+  for(let px=x;px<x1;px++){
+   const dx0=px+.5-local.x,d2=dx0*dx0+dy2;if(d2>=r2)continue;
+   const i=4*(row+px),alpha=src[i+3];if(!alpha)continue;
+   const fall=1-ss(hard,1,Math.sqrt(d2)*invR);if(!fall)continue;
+   let coverage=edg[i+3];
+   if(isRef&&coverage>1&&coverage<254){
+    let sum=0,weight=0;
+    const sr=src[i],sg=src[i+1],sb=src[i+2];
+    for(let dy=-1;dy<=1;dy++){
+     const sy=py+dy*step;if(sy<0||sy>=H0){weight+=.2;continue}
+     const srow=sy*W0;
+     for(let dx=-1;dx<=1;dx++){
+      const sx=px+dx*step;if(sx<0||sx>=W0){weight+=.2;continue}
+      const q=4*(srow+sx);
+      const dist=Math.abs(src[q]-sr)+Math.abs(src[q+1]-sg)+Math.abs(src[q+2]-sb);
+      const k=1/(1+dist*0.025+(dx*dx+dy*dy)*0.22);
+      sum+=k*cov[q+3];weight+=k;
+     }
+    }
+    if(weight)coverage=sum/weight;
    }
-   if(weight)coverage=sum/weight;
+   const target=Math.min(255,255*coverage/alpha);
+   out[i+3]+=(target-out[i+3])*fall*flow*(lim?lim[i+3]/255:1);
   }
-  const target=Math.min(255,255*coverage/alpha);out[j+3]+=(target-out[j+3])*fall*st.flow*(st.limit?st.limit[i+3]/255:1);
  }
- st.g.putImageData(patch,x,y);maskViews.delete(st.l);
+ if(!st.dirty)st.dirty=[x,y,x1,y1];
+ else{st.dirty[0]=Math.min(st.dirty[0],x);st.dirty[1]=Math.min(st.dirty[1],y);st.dirty[2]=Math.max(st.dirty[2],x1);st.dirty[3]=Math.max(st.dirty[3],y1)}
 }
-$('edge-start').onclick=()=>{if(!active||active.lk)return;$('mask-panel').open=true;$('mask-paint').value='edge';$('mask-paint').onchange();$('edge-options').hidden=false;$('mask-paint').focus()};
+function syncEdgeStartBtn(){
+ const on=['edge','refine'].includes($('mask-paint').value)&&$('mask-panel').open;
+ $('edge-start').classList.toggle('on',on);
+ $('edge-start').setAttribute('aria-pressed',String(on));
+ $('edge-start').textContent=on?'Smooth edges (On)':'Smooth edges';
+}
+$('edge-start').onclick=()=>{
+ if(!active||active.lk)return;
+ const isOn=['edge','refine'].includes($('mask-paint').value)&&$('mask-panel').open;
+ if(isOn){
+  $('mask-paint').value='';$('mask-paint').onchange();$('edge-options').hidden=true;
+ }else{
+  $('mask-panel').open=true;$('mask-paint').value='edge';$('mask-paint').onchange();$('edge-options').hidden=false;
+ }
+ syncEdgeStartBtn();
+};
+$('mask-panel')?.addEventListener('toggle',()=>{
+ if(!$('mask-panel').open&&$('mask-paint').value){$('mask-paint').value='';$('mask-paint').onchange()}
+ syncEdgeStartBtn();
+});
+$('mask-paint')?.addEventListener('change',syncEdgeStartBtn);
 
 
 const effectLabels={curve:'Tone curve',film:'Film look',grain:'Film grain',halation:'Halation'};
