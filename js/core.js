@@ -1676,6 +1676,14 @@ function syncTextPanel(){
  $('text-empty').textContent=base?(items.length?'Select a text layer or add another.':'Add text or draw a box on the image.'):'Open a photo or start with a transparent canvas.';
  $('type-blank').hidden=!!base;
  $('text-add').textContent=base?'Add text':'Open photo';
+ if(active?.tx&&$('tx-px-fx')){
+  $('tx-px-fx').value=active.tx.pxFx||'none';
+  $('tx-px-sz').value=active.tx.pxSize||6;
+  $('tx-px-int').value=active.tx.pxInt??80;
+  if($('tx-px-sz').nextElementSibling)$('tx-px-sz').nextElementSibling.textContent=(active.tx.pxSize||6)+' px';
+  if($('tx-px-int').nextElementSibling)$('tx-px-int').nextElementSibling.textContent=(active.tx.pxInt??80)+'%';
+  if($('tx-px-opts'))$('tx-px-opts').hidden=(active.tx.pxFx||'none')==='none';
+ }
 }
 function syncLettering(tx){
  const s={...TYPE_SHAPE,...tx},locked=!!active?.lk;
@@ -1703,6 +1711,18 @@ function syncLettering(tx){
 }
 function showTextLayer(){document.querySelector('[data-t="text"]').click()}
 $('edit-text-layer').onclick=showTextLayer;
+$('tx-px-fx')?.addEventListener('change',e=>{
+ if($('tx-px-opts'))$('tx-px-opts').hidden=e.target.value==='none';
+ retext({pxFx:e.target.value},'px-fx');
+});
+$('tx-px-sz')?.addEventListener('input',e=>{
+ if(e.target.nextElementSibling)e.target.nextElementSibling.textContent=e.target.value+' px';
+ retext({pxSize:+e.target.value},'px-sz');
+});
+$('tx-px-int')?.addEventListener('input',e=>{
+ if(e.target.nextElementSibling)e.target.nextElementSibling.textContent=e.target.value+'%';
+ retext({pxInt:+e.target.value},'px-int');
+});
 $('text-layer').onchange=e=>{if(e.target.value===''){active=null;refreshLayers();draw();return}active=layers[+e.target.value];textEdit=null;refreshLayers();draw()};
 $('text-add').onclick=()=>base?$('htxt').click():$('open').click();
 $('text-draw').onclick=()=>base?toggleTypeDrawing():$('open').click();
@@ -4093,9 +4113,114 @@ function trackAt(track,t){
  const p=points[a-1],q=points[a],f=(d-lengths[a-1])/(lengths[a]-lengths[a-1]||1);
  return [p[0]+(q[0]-p[0])*f,p[1]+(q[1]-p[1])*f,Math.atan2(q[1]-p[1],q[0]-p[0])];
 }
+function applyTextPixelFx(src,tx){
+ const fx=tx?.pxFx||'none';
+ if(!fx||fx==='none'||!src||!src.width||!src.height)return src;
+ const w=src.width,h=src.height;
+ const cell=Math.max(2,Math.min(32,Math.round(tx.pxSize||6)));
+ const amt=Math.max(0.05,Math.min(1,(tx.pxInt??80)/100));
+ const out=bc(w,h),g=out.getContext('2d',{willReadFrequently:true});
+ const cl8=v=>v<0?0:v>255?255:v|0;
+
+ if(fx==='pixelate'){
+  const sw=Math.max(1,Math.round(w/cell)),sh=Math.max(1,Math.round(h/cell));
+  const tmp=bc(sw,sh),tg=tmp.getContext('2d');
+  tg.imageSmoothingEnabled=false;tg.drawImage(src,0,0,sw,sh);
+  g.imageSmoothingEnabled=false;g.drawImage(tmp,0,0,sw,sh,0,0,w,h);
+  // Crisp alpha threshold so pixelated edges stay sharp 8-bit blocks
+  const im=g.getImageData(0,0,w,h),d=im.data,th=Math.round(40+80*amt);
+  for(let i=0;i<d.length;i+=4)d[i+3]=d[i+3]>=th?255:0;
+  g.putImageData(im,0,0);
+ }else if(fx==='dither'){
+  const sw=Math.max(1,Math.round(w/cell)),sh=Math.max(1,Math.round(h/cell));
+  const tmp=bc(sw,sh),tg=tmp.getContext('2d',{willReadFrequently:true});
+  tg.drawImage(src,0,0,sw,sh);
+  const im=tg.getImageData(0,0,sw,sh),d=im.data;
+  const b4=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+  for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
+   const i=(y*sw+x)*4;if(d[i+3]<30){d[i+3]=0;continue}
+   const thr=(b4[(y&3)*4+(x&3)]/16)*255*amt;
+   const a=d[i+3];
+   d[i+3]=a>thr?255:0;
+   if(d[i+3]){const l=(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]);if(l<thr*0.65){d[i]=cl8(d[i]*0.72);d[i+1]=cl8(d[i+1]*0.72);d[i+2]=cl8(d[i+2]*0.72)}}
+  }
+  tg.putImageData(im,0,0);
+  g.imageSmoothingEnabled=false;g.drawImage(tmp,0,0,sw,sh,0,0,w,h);
+ }else if(fx==='glitch'){
+  const shift=Math.max(2,Math.round(cell*1.4*amt));
+  const sim=src.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h);
+  const im=g.createImageData(w,h),sd=sim.data,dd=im.data;
+  for(let y=0;y<h;y++){
+   const slice=((Math.sin(y*0.18)*Math.sin(y*0.043))>0.62)?Math.round(Math.sin(y*0.7)*shift*1.6):0;
+   for(let x=0;x<w;x++){
+    const di=(y*w+x)*4;
+    const rx=Math.max(0,Math.min(w-1,x-shift+slice));
+    const gx=Math.max(0,Math.min(w-1,x+slice));
+    const bx=Math.max(0,Math.min(w-1,x+shift+slice));
+    const ri=(y*w+rx)*4,gi=(y*w+gx)*4,bi=(y*w+bx)*4;
+    dd[di]=sd[ri];dd[di+1]=sd[gi+1];dd[di+2]=sd[bi+2];
+    dd[di+3]=Math.max(sd[ri+3],sd[gi+3],sd[bi+3]);
+   }
+  }
+  g.putImageData(im,0,0);
+ }else if(fx==='halftone'){
+  const sim=src.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h).data;
+  const sp=Math.max(4,cell);
+  for(let y=sp/2;y<h;y+=sp)for(let x=sp/2;x<w;x+=sp){
+   const i=(Math.min(h-1,y|0)*w+Math.min(w-1,x|0))*4;
+   const a=sim[i+3]/255;if(a<0.12)continue;
+   const r=(sp*0.52)*a*(0.65+0.45*amt);
+   g.fillStyle=`rgba(${sim[i]},${sim[i+1]},${sim[i+2]},1)`;
+   g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fill();
+  }
+ }else if(fx==='scanlines'){
+  g.drawImage(src,0,0);
+  const step=Math.max(2,Math.round(cell*0.75));
+  g.globalCompositeOperation='destination-out';
+  g.fillStyle=`rgba(0,0,0,${(0.35+0.55*amt).toFixed(2)})`;
+  for(let y=0;y<h;y+=step*2)g.fillRect(0,y,w,Math.max(1,Math.round(step*0.85)));
+ }else if(fx==='chrome'){
+  g.drawImage(src,0,0);
+  const im=g.getImageData(0,0,w,h),d=im.data;
+  for(let y=0;y<h;y++){
+   const ny=y/Math.max(1,h);
+   const band=Math.sin(ny*Math.PI*3.5)*0.5+0.5;
+   const spec=Math.pow(Math.max(0,Math.cos((ny-0.38)*Math.PI*2.4)),5);
+   for(let x=0;x<w;x++){
+    const i=(y*w+x)*4;if(d[i+3]<6)continue;
+    const nx=x/Math.max(1,w);
+    const wave=Math.sin((nx*0.5+ny*1.6)*Math.PI*2.8)*0.5+0.5;
+    const cr=cl8(70+band*135+wave*35+spec*110);
+    const cg=cl8(76+band*138+wave*38+spec*115);
+    const cb=cl8(92+band*148+wave*45+spec*125);
+    d[i]=cl8(d[i]*(1-amt)+cr*amt);
+    d[i+1]=cl8(d[i+1]*(1-amt)+cg*amt);
+    d[i+2]=cl8(d[i+2]*(1-amt)+cb*amt);
+   }
+  }
+  g.putImageData(im,0,0);
+ }else if(fx==='erode'||fx==='dissolve'){
+  g.drawImage(src,0,0);
+  const im=g.getImageData(0,0,w,h),d=im.data;
+  const bs=fx==='dissolve'?Math.max(2,cell):Math.max(1,Math.round(cell*0.5));
+  for(let y=0;y<h;y+=bs)for(let x=0;x<w;x+=bs){
+   const hash=Math.abs(Math.sin(x*12.9898+y*78.233)*43758.5453)%1;
+   const drop=fx==='dissolve'?(hash<amt*0.62):(hash<amt*0.42);
+   if(!drop)continue;
+   for(let dy=0;dy<bs&&y+dy<h;dy++)for(let dx=0;dx<bs&&x+dx<w;dx++){
+    const i=((y+dy)*w+(x+dx))*4;
+    if(fx==='erode'&&d[i+3]>220&&hash>amt*0.24)continue;
+    d[i+3]=0;
+   }
+  }
+  g.putImageData(im,0,0);
+ }
+ if(src.pathGeometry)out.pathGeometry=src.pathGeometry;
+ return out;
+}
 function textCanvas(tx){
- const face=letterFace(tx);if(!tx.pathMode||tx.pathMode==='off')return face;
- const points=pathSamples(tx,face);if(!points)return face;const track=trackData(points);if(track.total<2)return face;
+ const face=letterFace(tx);if(!tx.pathMode||tx.pathMode==='off')return applyTextPixelFx(face,tx);
+ const points=pathSamples(tx,face);if(!points)return applyTextPixelFx(face,tx);const track=trackData(points);if(track.total<2)return applyTextPixelFx(face,tx);
  const start=(tx.pathStart??0)/100,end=(tx.pathEnd??100)/100,span=Math.max(.01,end-start);
  // Use the original letter advances so counters and serifs rotate together along the path.
  const raw=flatTextCanvas(tx),edges=letterEdges(tx,raw,raw).map(x=>x*face.width/raw.width);
@@ -4108,7 +4233,7 @@ function textCanvas(tx){
   const x=edges[i-1],sw=edges[i]-x;if(sw<=0)continue;const [cx,cy,angle]=trackAt(track,start+span*(x+sw/2)/face.width);
   g.save();g.translate(cx,cy);g.rotate(angle);g.drawImage(face,x,0,sw,face.height,-sw*advance/2,-face.height/2,sw*advance,face.height);g.restore();
  }
- cv.pathGeometry={points:points.map(([x,y])=>[(x-left)*fit,(y-top)*fit])};return cv;
+ cv.pathGeometry={points:points.map(([x,y])=>[(x-left)*fit,(y-top)*fit])};return applyTextPixelFx(cv,tx);
 }
 let pathDrawing=false,pathGesture=null,fillGesture=null;
 function textPathUI(tx){

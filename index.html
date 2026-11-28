@@ -354,6 +354,13 @@
 </details>
 <span class="note" id="text-fill-status" role="status"></span>
 <label>Blend mode <select id="text-blend"></select></label>
+<details id="tx-pixel-fx-box"><summary>Pixel &amp; Glitch Text FX</summary>
+<label>Effect <select id="tx-px-fx"><option value="none">None</option><option value="pixelate">Pixelate (8-Bit)</option><option value="dither">Ordered Dither</option><option value="glitch">RGB Glitch Split</option><option value="halftone">Halftone Dots</option><option value="scanlines">CRT Scanlines</option><option value="chrome">Liquid Chrome</option><option value="erode">Distressed Ink</option><option value="dissolve">Pixel Dissolve</option></select></label>
+<div id="tx-px-opts" hidden>
+<label>Pixel / cell size <input type="range" id="tx-px-sz" min="2" max="28" value="6"><output>6 px</output></label>
+<label>Intensity <input type="range" id="tx-px-int" min="10" max="100" value="80"><output>80%</output></label>
+</div>
+</details>
 <details id="type-path-section"><summary>Text on a path</summary><label>Baseline <select id="path-mode"><option value="off">Straight</option><option value="arc">Arc</option><option value="circle">Circle</option><option value="drawn">Drawn path</option></select></label><button id="path-draw" aria-pressed="false">Draw path on canvas</button><p class="note" id="path-msg"></p><div id="path-options"><label id="path-start-row">Start <input id="path-start" type="range" min="0" max="98" step="1"><output></output></label><label id="path-end-row">End <input id="path-end" type="range" min="2" max="100" step="1"><output></output></label></div></details><div id="type-design">
 <div class="bar"><button id="letter-reset">Reset lettering effects</button></div>
 <details><summary>Lettering presets</summary><div class="sty" id="letter-looks"></div></details>
@@ -1607,7 +1614,10 @@
 </dialog>
 <dialog id="patch-notes-dialog" class="studio-dialog" aria-label="Patch Notes">
 <h2>Patch Notes</h2>
-<pre id="patch-notes-text" class="patch-notes-pre">v7.8.6
+<pre id="patch-notes-text" class="patch-notes-pre">v7.9.0
+- Live Pixel &amp; Glitch Text FX (Design → Type → Pixel &amp; Glitch Text FX): apply non-destructive Pixelate (8-Bit), Ordered Dither, RGB Glitch Split, Halftone Dots, CRT Scanlines, Liquid Chrome, Distressed Ink, or Pixel Dissolve directly to any editable text layer with adjustable Pixel Size &amp; Intensity.
+
+v7.8.6
 - Shortened the on-canvas AI processing overlay message to "Running on-device AI in your browser."
 
 v7.8.5
