@@ -1338,10 +1338,11 @@ body.ui-pro .pj-pill:hover{
 /* === 7. Dedicated Mobile Studio UI (<= 760px: Presets + Flip, Basic Color, Grain, All Tools) === */
 #mob-nav,#mob-quick{display:none}
 @media (max-width:760px){
+ html,body{overscroll-behavior:none;height:100dvh;overflow:hidden}
  body.ui-pro header{
-  height:46px!important;
+  height:auto!important;
   min-height:46px!important;
-  padding:0 10px!important;
+  padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px!important;
   gap:6px!important;
   flex-wrap:nowrap!important;
  }
@@ -1383,17 +1384,32 @@ body.ui-pro .pj-pill:hover{
  body.ui-pro #empty .empty-primary button{flex:1 1 auto;height:38px;font-size:13px}
  body.ui-pro #empty .empty-secondary{margin-bottom:8px}
 
- /* Native Bottom Editor Sheet */
+ /* Native Tap-to-Toggle Bottom Editor Sheet (Zero Slide/Drag Bugs in PWA) */
  body.ui-pro aside{
   width:100%!important;
-  flex:0 0 var(--panel-height,44%)!important;
+  flex:0 0 46dvh!important;
+  max-height:56dvh!important;
+  min-height:0!important;
   border-radius:14px 14px 0 0;
   background:var(--panel);
   border-top:1px solid var(--pro-edge)!important;
   box-shadow:0 -8px 24px rgba(0,0,0,.45);
   display:flex;
   flex-direction:column;
+  overflow:hidden!important;
  }
+ body.mob-sheet-closed aside{
+  flex:0 0 auto!important;
+  height:auto!important;
+  max-height:none!important;
+  border-radius:0!important;
+ }
+ body.mob-sheet-closed aside > :not(#mob-nav){display:none!important}
+ .mob-sec-lbl{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--mute);margin:12px 0 4px;
+ }
+ .mob-sec-lbl:first-of-type{margin-top:4px}
 
  /* In quick modes (Presets / Color / Crop), hide desktop 2-row category tabs for clean mobile flow */
  body.mob-mode-presets #cat-tabs,

@@ -29,7 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:wght@100..900&family=Raleway:wght@100..900&family=Playfair+Display:wght@400..900&family=Oswald:wght@200..700&family=Fredoka:wght@300..700&family=Orbitron:wght@400..900&family=Cinzel:wght@400..900&family=Lora:wght@400..700&family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Syne:wght@400..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/core.css?v=4">
 <link rel="stylesheet" href="css/studio.css?v=4">
-<link rel="stylesheet" href="css/studio-pro-ui.css?v=16">
+<link rel="stylesheet" href="css/studio-pro-ui.css?v=17">
 </head>
 <body class="ui-pro ui-pro-palette">
 <header>
@@ -117,14 +117,26 @@
 <button id="panel-height" aria-label="Change editing panel height">Panel height</button>
 <div id="mob-quick" hidden>
 <div class="mob-pane" data-mp="color" hidden>
-<div class="mob-quick-head"><strong>Basic Color</strong><div class="mob-quick-acts"><button type="button" id="mob-auto">Auto</button><button type="button" id="mob-color-rst">Reset</button></div></div>
+<div class="mob-quick-head"><strong>Color &amp; Grading</strong><div class="mob-quick-acts"><button type="button" id="mob-auto">Auto</button><button type="button" id="mob-wheels-jump">Wheels</button><button type="button" id="mob-color-rst">Reset</button></div></div>
+<div class="mob-sec-lbl">Light</div>
 <label>Exposure <input type="range" data-sync="lr-exp" min="-4" max="4" step="0.05" value="0"><output>0</output></label>
 <label>Brightness <input type="range" data-sync="ab" min="-100" max="100" value="0"><output>0</output></label>
-<label>Contrast <input type="range" data-sync="ac" min="-100" max="100" value="0"><output>0</output></label>
-<label>Saturation <input type="range" data-sync="as" min="-100" max="100" value="0"><output>0</output></label>
-<label>Warmth <input type="range" data-sync="at" min="-100" max="100" value="0"><output>0</output></label>
+<label>Contrast <input type="range" data-sync="lr-con" min="-100" max="100" value="0"><output>0</output></label>
 <label>Highlights <input type="range" data-sync="lr-hi" min="-100" max="100" value="0"><output>0</output></label>
 <label>Shadows <input type="range" data-sync="lr-sh" min="-100" max="100" value="0"><output>0</output></label>
+<label>Whites <input type="range" data-sync="lr-wh" min="-100" max="100" value="0"><output>0</output></label>
+<label>Blacks <input type="range" data-sync="lr-bl" min="-100" max="100" value="0"><output>0</output></label>
+<div class="mob-sec-lbl">Color &amp; Tone</div>
+<label>Temp <input type="range" data-sync="lr-temp" min="-100" max="100" value="0"><output>0</output></label>
+<label>Tint <input type="range" data-sync="lr-tint" min="-100" max="100" value="0"><output>0</output></label>
+<label>Vibrance <input type="range" data-sync="lr-vib" min="-100" max="100" value="0"><output>0</output></label>
+<label>Saturation <input type="range" data-sync="lr-sat" min="-100" max="100" value="0"><output>0</output></label>
+<label>Warmth <input type="range" data-sync="at" min="-100" max="100" value="0"><output>0</output></label>
+<label>Hue shift <input type="range" data-sync="ah" min="-180" max="180" value="0"><output>0</output></label>
+<div class="mob-sec-lbl">Detail &amp; Finish</div>
+<label>Texture <input type="range" data-sync="lr-tex" min="-100" max="100" value="0"><output>0</output></label>
+<label>Clarity <input type="range" data-sync="lr-cla" min="-100" max="100" value="0"><output>0</output></label>
+<label>Dehaze <input type="range" data-sync="lr-deh" min="-100" max="100" value="0"><output>0</output></label>
 <label>Grain <input type="range" data-sync="ag" min="0" max="100" value="0"><output>0</output></label>
 <label>Vignette <input type="range" data-sync="av" min="0" max="100" value="0"><output>0</output></label>
 </div>
@@ -282,11 +294,11 @@
 
 <div class="pn on" id="p-tone">
 <h3>Presets</h3>
-<input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="multi">Multi</button><button data-c="trio">Trio</button><button data-c="duo">Duo</button><button data-c="mine">Mine</button><button data-c="film">Film</button></div><div id="plist"></div>
 <div class="tone-quick-bar">
 <div class="bar tone-actions"><button id="flip" class="pri">Flip preset</button><button id="rand">Random</button><button id="none">Off</button><button id="addp">Save</button><button id="rst">Reset</button></div>
 <label>Strength <input type="range" id="str" min="0" max="100" value="100"></label>
 </div>
+<input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="multi">Multi</button><button data-c="trio">Trio</button><button data-c="duo">Duo</button><button data-c="mine">Mine</button><button data-c="film">Film</button></div><div id="plist"></div>
 <details class="tone-adv"><summary>Gradient map &amp; stops</summary>
 <div class="gradient-editor">
 <div id="ramp" role="img" aria-label="Gradient stops from shadows to highlights"></div>
@@ -1594,7 +1606,12 @@
 </dialog>
 <dialog id="patch-notes-dialog" class="studio-dialog" aria-label="Patch Notes">
 <h2>Patch Notes</h2>
-<pre id="patch-notes-text" class="patch-notes-pre">v7.6.0
+<pre id="patch-notes-text" class="patch-notes-pre">v7.7.0
+- Rock-Solid Tap-to-Toggle Mobile PWA UI: replaced the glitchy slide-to-resize mobile sheet with crisp tap-to-open / tap-again-to-close tabs (tap the active tab or top pill to hide the drawer completely and view your photo full-screen), plus PWA safe-area &amp; overscroll fixes.
+- Pinned Flip Preset &amp; Strength Above Presets: moved Flip preset, Random, Off, Save, Reset &amp; Strength directly above the preset list so they are always visible without scrolling.
+- Expanded Mobile Color &amp; Grading Drawer: added full Lightroom Light, Color &amp; Detail controls (Exposure, Contrast, Highlights, Shadows, Whites, Blacks, Temp, Tint, Vibrance, Saturation, Warmth, Hue, Texture, Clarity, Dehaze, Grain, Vignette + 1-tap 3-Way Wheels shortcut).
+
+v7.6.0
 - Fixed Floating Layer Bar Covering Rotate Handle: positioned the quick layer toolbar cleanly below the selected layer (flipping above the rotate handle only when near the bottom edge) so the top rotate knob is always unobstructed.
 - Real-Time Live Export Preview (Ctrl+S): Export Studio now renders a live compressed preview image directly inside the modal as you adjust format, quality, dimensions, or MB/KB size caps.
 - Smart Photo Frame Drop-Zones (Design → Studio): upload any photo directly into a Canva-style photo frame (Arch, Circle, Squircle, Star, Heart, Torn Paper, Phone, Polaroid) with live Photo Zoom, Pan X/Y, and Border Width controls.

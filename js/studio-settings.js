@@ -600,8 +600,16 @@ function syncMobSliders(){
   if(out&&out.tagName==='OUTPUT')out.textContent=src.value;
  });
 }
-function setMobMode(mode){
+let curMobMode='presets';
+function setMobMode(mode,allowToggleClose=false){
  const b=document.body.classList;
+ if(allowToggleClose&&mode===curMobMode&&!b.contains('mob-sheet-closed')){
+  b.add('mob-sheet-closed');
+  if(mobNav)mobNav.querySelectorAll('button[data-mm]').forEach(btn=>btn.classList.remove('on'));
+  return;
+ }
+ b.remove('mob-sheet-closed');
+ curMobMode=mode;
  ['presets','color','crop','all'].forEach(m=>b.toggle('mob-mode-'+m,m===mode));
  if(mobNav)mobNav.querySelectorAll('button[data-mm]').forEach(btn=>btn.classList.toggle('on',btn.dataset.mm===mode));
  if(mobQuick){
@@ -621,7 +629,13 @@ function setMobMode(mode){
 if(mobNav){
  mobNav.addEventListener('click',e=>{
   const btn=e.target.closest('button[data-mm]');if(!btn)return;
-  setMobMode(btn.dataset.mm);
+  setMobMode(btn.dataset.mm,true);
+ });
+ $('mob-wheels-jump')?.addEventListener('click',()=>{
+  setMobMode('all',false);
+  document.querySelector('#cat-tabs button[data-cat="color"]')?.click();
+  document.querySelector('.tabs button[data-t="grade"]')?.click();
+  setTimeout(()=>$('lr-wheels-3up')?.scrollIntoView({behavior:'smooth',block:'center'}),60);
  });
  if(mobQuick){
   mobQuick.querySelectorAll('input[data-sync]').forEach(inp=>{
@@ -644,20 +658,13 @@ if(mobNav){
  }
  $('mob-auto')?.addEventListener('click',()=>{$('lr-auto')?.click();setTimeout(syncMobSliders,60)});
  $('mob-color-rst')?.addEventListener('click',()=>{
-  ['lr-exp','ab','ac','as','at','lr-hi','lr-sh'].forEach(id=>{
+  ['lr-exp','ab','lr-con','lr-hi','lr-sh','lr-wh','lr-bl','lr-temp','lr-tint','lr-vib','lr-sat','at','ah','lr-tex','lr-cla','lr-deh','ag','av'].forEach(id=>{
    const el=$(id);if(!el)return;
    el.value='0';el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));
   });
   syncMobSliders();
  });
- $('mob-grain-rst')?.addEventListener('click',()=>{
-  ['ag','av','gl','dt'].forEach(id=>{
-   const el=$(id);if(!el)return;
-   el.value='0';el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));
-  });
-  syncMobSliders();
- });
- setMobMode('presets');
+ setMobMode('presets',false);
 }
 
 /* Integrated 1-Click Feature Jump Bar (all active-tab features visible at a glance + scroll-spy) */
