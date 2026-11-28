@@ -192,11 +192,34 @@ window.addEventListener('drop',e=>{
 
  const handle=$('panel-height'),asideEl=document.querySelector('aside');
  if(!handle||!asideEl)return;
- // Clean 1-tap collapse/expand toggle on mobile (no buggy touch-drag fighting PWA gestures!)
+ // Clean 1-tap collapse/expand on Presets/Color/Crop, AND smooth drag-to-expand ONLY in "All Tools" mode!
  const fresh=handle.cloneNode(true);
  handle.replaceWith(fresh);
- fresh.addEventListener('click',()=>{
+ let dragY=0,startVh=62,dragging=false,moved=false;
+ fresh.addEventListener('pointerdown',e=>{
   if(window.innerWidth>760)return;
+  if(!document.body.classList.contains('mob-mode-all'))return;
+  dragging=true;moved=false;dragY=e.clientY;
+  startVh=parseFloat(asideEl.style.getPropertyValue('--all-h'))||62;
+  asideEl.classList.add('dragging');
+  fresh.setPointerCapture(e.pointerId);
+ });
+ fresh.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+  const dy=dragY-e.clientY;
+  if(Math.abs(dy)>5)moved=true;
+  if(!moved)return;
+  const vh=Math.max(36,Math.min(86,startVh+(dy/window.innerHeight)*100));
+  asideEl.style.setProperty('--all-h',vh.toFixed(1)+'dvh');
+ });
+ const endAllDrag=()=>{
+  if(!dragging)return;
+  dragging=false;asideEl.classList.remove('dragging');
+ };
+ fresh.addEventListener('pointerup',endAllDrag);
+ fresh.addEventListener('pointercancel',endAllDrag);
+ fresh.addEventListener('click',()=>{
+  if(window.innerWidth>760||moved){moved=false;return}
   document.body.classList.toggle('mob-sheet-closed');
   asideEl.classList.remove('sheet-peek','dragging');
  });

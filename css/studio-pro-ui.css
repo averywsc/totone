@@ -1384,7 +1384,7 @@ body.ui-pro .pj-pill:hover{
  body.ui-pro #empty .empty-primary button{flex:1 1 auto;height:38px;font-size:13px}
  body.ui-pro #empty .empty-secondary{margin-bottom:8px}
 
- /* Native Tap-to-Toggle Bottom Editor Sheet (Zero Slide/Drag Bugs in PWA) */
+ /* Native Tap-to-Toggle Bottom Editor Sheet (Fixed for Presets/Color/Crop, Draggable up to 86dvh for All Tools) */
  body.ui-pro aside{
   width:100%!important;
   flex:0 0 46dvh!important;
@@ -1398,6 +1398,12 @@ body.ui-pro .pj-pill:hover{
   flex-direction:column;
   overflow:hidden!important;
  }
+ body.ui-pro.mob-mode-all aside{
+  flex:0 0 var(--all-h,64dvh)!important;
+  max-height:88dvh!important;
+ }
+ body.ui-pro.mob-mode-all #panel-jump-bar{display:none!important}
+ body.ui-pro.mob-mode-all #panel-height{cursor:ns-resize}
  body.mob-sheet-closed aside{
   flex:0 0 auto!important;
   height:auto!important;
