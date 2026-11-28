@@ -12,9 +12,11 @@ function positionFloatBar(){
  const hh=(active.cv.height*(1-active.ct-active.cb)*active.s)/2;
  const co=Math.abs(Math.cos(active.r)),si=Math.abs(Math.sin(active.r));
  const topY=active.y-(hw*si+hh*co);
+ const botY=active.y+(hw*si+hh*co);
  const cx=cr.left+active.x*scaleX;
- let y=cr.top+topY*scaleY-44;
- if(y<sr.top+8)y=Math.min(sr.bottom-42,cr.top+(active.y+(hw*si+hh*co))*scaleY+12);
+ // Position below the layer by default so the top-center rotate handle is NEVER covered!
+ let y=cr.top+botY*scaleY+14;
+ if(y>sr.bottom-48)y=Math.max(sr.top+8,cr.top+topY*scaleY-76);
  const barW=floatBar.offsetWidth||340;
  const clampedX=Math.max(sr.left+barW/2+8,Math.min(sr.right-barW/2-8,cx));
  floatBar.hidden=false;

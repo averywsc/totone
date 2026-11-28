@@ -2,7 +2,7 @@
 (function(){
 /* ========== 0. 2-Tier Broad Category Navigation (AI / Color / Edit / Design / FX) & AI Studio Cards ========== */
 const catBar=$('cat-tabs'),subBar=document.querySelector('.tabs');
-const lastSubByCat={ai:'ai',color:'tone',edit:'layers',design:'design',fx:'filters'};
+const lastSubByCat={ai:'ai',color:'tone',edit:'crop',layers:'layers',design:'design',fx:'filters'};
 
 function syncCategoryForTab(tabName){
  if(!catBar||!subBar)return;

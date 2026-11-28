@@ -936,6 +936,26 @@ const FRAMES=[
  {id:'clear',name:'Clear frame',svg:'<path d="M6 6l16 16M22 6L6 22" stroke="currentColor" stroke-width="2.5"/>'}
 ];
 
+function renderFramedPhoto(l){
+ if(!l||!l._frameMeta)return;
+ const m=l._frameMeta;
+ const src=m.srcCv;if(!src)return;
+ const w=l.cv.width,h=l.cv.height;
+ const g=l.cv.getContext('2d');
+ g.clearRect(0,0,w,h);
+ const z=(m.zoom||100)/100;
+ const cover=Math.max(w/src.width,h/src.height)*z;
+ const dw=src.width*cover,dh=src.height*cover;
+ const ox=((m.px||0)/100)*w*0.5,oy=((m.py||0)/100)*h*0.5;
+ g.drawImage(src,(w-dw)/2+ox,(h-dh)/2+oy,dw,dh);
+ l.d=g.getImageData(0,0,w,h);
+ l.o=null;l.sil=null;l.gc=null;l.tnc=null;
+ const bw=+$('frame-bw')?.value||8;
+ if($('frame-outline')?.checked&&bw>0){l.ol={w:bw,c:$('frame-border-col')?.value||'#ffffff'}}
+ else l.ol=null;
+ refreshLayers();draw();
+}
+
 function applyPhotoFrame(frameId){
  if(!base){showToast('Open an image first',1600);return}
  if(!active){
@@ -945,7 +965,14 @@ function applyPhotoFrame(frameId){
   layers.unshift(active);base.data.fill(0);
  }
  if(active.lk){showToast('Unlock the layer first',1400);return}
- if(frameId==='clear'){active.ol=null;replaceMask(null);showToast('Removed frame mask',1300);return}
+ if(frameId==='clear'){active.ol=null;active._frameMeta=null;replaceMask(null);if($('frame-adjust-box'))$('frame-adjust-box').hidden=true;showToast('Removed frame mask',1300);return}
+ if(!active._frameMeta){
+  const scv=bc(active.cv.width,active.cv.height);
+  scv.getContext('2d').drawImage(active.cv,0,0);
+  active._frameMeta={frameId,srcCv:scv,zoom:100,px:0,py:0};
+ }else{
+  active._frameMeta.frameId=frameId;
+ }
  const w=active.cv.width,h=active.cv.height,mask=bc(w,h),g=mask.getContext('2d');
  g.fillStyle='#ffffff';
  const pad=Math.min(w,h)*0.04;
@@ -953,19 +980,53 @@ function applyPhotoFrame(frameId){
  else if(frameId==='polaroid'){g.fillRect(w*0.07,h*0.06,w*0.86,h*0.72)}
  else if(frameId==='phone'){const pw=Math.min(w*0.9,h*0.52),ph=Math.min(h*0.92,pw*1.92);g.beginPath();g.roundRect((w-pw)/2,(h-ph)/2,pw,ph,pw*0.14);g.fill()}
  else{traceShapePath(g,frameId,w,h,pad,18,frameId==='burst'?14:5);g.fill()}
- if($('frame-outline')?.checked){active.ol={w:Math.max(4,Math.round(Math.min(w,h)*0.015)),c:$('frame-border-col').value||'#ffffff'}}
+ const bw=+$('frame-bw')?.value||8;
+ if($('frame-outline')?.checked&&bw>0){active.ol={w:bw,c:$('frame-border-col').value||'#ffffff'}}
  replaceMask(mask);
- showToast(`Applied ${FRAMES.find(f=>f.id===frameId)?.name||frameId} frame`,1400);
+ if($('frame-adjust-box'))$('frame-adjust-box').hidden=false;
+ showToast(`Applied ${FRAMES.find(f=>f.id===frameId)?.name||frameId} frame — pan & zoom photo inside!`,1600);
 }
 window.applyPhotoFrame=applyPhotoFrame;
 
 const frameGrid=$('frame-grid');
+let lastFrameId='arch';
 for(const f of FRAMES){
  const b=document.createElement('button');b.type='button';b.className='studio-card';
  b.innerHTML=`<svg viewBox="0 0 28 28" aria-hidden="true">${f.svg}</svg><span>${esc(f.name)}</span>`;
- b.onclick=()=>applyPhotoFrame(f.id);
+ b.onclick=()=>{if(f.id!=='clear')lastFrameId=f.id;applyPhotoFrame(f.id)};
  frameGrid.append(b);
 }
+
+/* Upload Photo Directly Into Smart Frame + Live Zoom / Pan / Border Controls */
+$('frame-upload-btn')?.addEventListener('click',()=>$('frame-upload-file')?.click());
+$('frame-upload-file')?.addEventListener('change',e=>{
+ const f=e.target.files?.[0];e.target.value='';if(!f)return;
+ if(!base){showToast('Open a photo or create a canvas first',1500);return}
+ const im=new Image(),u=URL.createObjectURL(f);
+ im.onload=()=>{
+  URL.revokeObjectURL(u);
+  const s=Math.round(Math.min(W,H)*0.65);
+  const srcCv=bc(im.naturalWidth||s,im.naturalHeight||s);
+  srcCv.getContext('2d').drawImage(im,0,0,srcCv.width,srcCv.height);
+  const cv=bc(s,s),d=cv.getContext('2d').getImageData(0,0,s,s);
+  pushU(mkSnap('p'));
+  const l={cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:1,r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:'Framed Photo'};
+  l._frameMeta={frameId:lastFrameId,srcCv,zoom:100,px:0,py:0};
+  layers.push(l);active=l;
+  renderFramedPhoto(l);
+  applyPhotoFrame(lastFrameId);
+ };
+ im.src=u;
+});
+['frame-zoom','frame-px','frame-py','frame-bw','frame-border-col','frame-outline'].forEach(id=>{
+ $(id)?.addEventListener('input',()=>{
+  if(!active||!active._frameMeta)return;
+  if(id==='frame-zoom')active._frameMeta.zoom=+$('frame-zoom').value;
+  if(id==='frame-px')active._frameMeta.px=+$('frame-px').value;
+  if(id==='frame-py')active._frameMeta.py=+$('frame-py').value;
+  renderFramedPhoto(active);
+ });
+});
 
 /* ---------- 12 Studio-Crafted Multi-Layer Design Templates ---------- */
 function addAmbientGlowLayer(cx,cy,radius,colHex,opacity=0.65){
@@ -981,181 +1042,157 @@ function addAmbientGlowLayer(cx,cy,radius,colHex,opacity=0.65){
 
 const TEMPLATES=[
  {
-  name:'Cyberworld 2000',w:1080,h:1350,bg:'solid',c1:'#03050c',c2:'#070e24',
-  previewBg:'linear-gradient(135deg,#03050a,#2b6cff 60%,#dbeafe)',previewTxt:'CYBER 2000',
+  name:'Swiss Exhibition',w:1080,h:1350,bg:'solid',c1:'#f2efe9',c2:'#f2efe9',
+  previewBg:'#f2efe9;color:#141414;border-left:5px solid #d9381e',previewTxt:'SWISS 01',
   async build(){
-   addAmbientGlowLayer(W*0.36,H*0.46,W*0.65,'#2b6cff',0.48);
-   await addY2KElement('win98','#2b6cff');active.x=W*0.37;active.y=H*0.46;active.s=0.84;
-   await addY2KElement('cd','#3b82f6');active.x=W*0.81;active.y=H*0.27;active.s=0.52;
-   await addY2KElement('chrome-swirl','#2b6cff');active.x=W*0.80;active.y=H*0.56;active.s=0.56;
-   await addY2KElement('globe','#2b6cff');active.x=W*0.74;active.y=H*0.78;active.s=0.35;
-   await addY2KElement('globe','#60a5fa');active.x=W*0.89;active.y=H*0.78;active.s=0.35;
-   await addY2KElement('restricted','#3b82f6');active.x=W*0.24;active.y=H*0.91;active.s=0.54;
-   await addY2KElement('orbit-star','#60a5fa');active.x=W*0.53;active.y=H*0.91;active.s=0.36;
-   await addY2KElement('barcode','#3b82f6');active.x=W*0.82;active.y=H*0.91;active.s=0.48;
-   await addY2KElement('sparkles','#60a5fa');active.x=W*0.37;active.y=H*0.46;active.s=0.95;active.op=0.85;
-   await ensureFont('Orbitron');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'CYBERWORLD',f:'Orbitron',sz:112,c:'#93c5fd',w:900,ls:4,stroke:'#2563eb',strokeWidth:4});t.y=H*0.095;
-   t=newTextLayer({t:'VIRTUAL REALITY // 2000',f:'Space Mono',sz:26,c:'#93c5fd',w:700,ls:10});t.x=W*0.37;t.y=H*0.79;
+   await addShapeLayer('rect',{w:920,h:520,fillType:'solid',fill:'#d9381e',radius:0});
+   active.x=W/2;active.y=H*0.64;active.s=1;active.name='Vermilion block';
+   await addShapeLayer('line',{w:920,h:10,fillType:'solid',fill:'#141414'});
+   active.x=W/2;active.y=H*0.13;active.s=1;active.name='Top rule';
+   await addShapeLayer('line',{w:920,h:10,fillType:'solid',fill:'#141414'});
+   active.x=W/2;active.y=H*0.41;active.s=1;active.name='Mid rule';
+   await ensureFont('Inter');await ensureFont('Space Mono');
+   let t=newTextLayer({t:'FORM &\nSPACE',f:'Inter',sz:154,c:'#141414',w:800,al:'left',lh:88,ls:-4});t.x=W*0.33;t.y=H*0.26;
+   t=newTextLayer({t:'KUNSTHALLE ZÜRICH · OCT 14 — DEC 20',f:'Space Mono',sz:20,c:'#141414',w:700,al:'left',ls:4});t.x=W*0.36;t.y=H*0.095;
+   t=newTextLayer({t:'ARCHIVE SERIES 04',f:'Space Mono',sz:20,c:'#f2efe9',w:700,al:'left',ls:6});t.x=W*0.24;t.y=H*0.79;
   }
  },
  {
-  name:'Xbox 2001 Energy',w:1200,h:1200,bg:'solid',c1:'#010402',c2:'#010402',
-  previewBg:'radial-gradient(circle at 60% 45%,#22ff44,#021506 60%,#000)',previewTxt:'X · 2001',
+  name:'Cinema Poster',w:1080,h:1350,bg:'solid',c1:'#0d0d0f',c2:'#0d0d0f',
+  previewBg:'#0d0d0f;color:#eceae4',previewTxt:'CINEMA',
   async build(){
-   addAmbientGlowLayer(W*0.58,H*0.48,W*0.58,'#22ff44',0.58);
-   await addY2KElement('xbox-arc','#22ff44');active.x=W*0.56;active.y=H*0.48;active.s=1.35;
-   await addY2KElement('xbox-arc','#86efac');active.x=W*0.48;active.y=H*0.52;active.s=0.95;active.r=1.8;active.op=0.62;
-   await addY2KElement('hud','#22ff44');active.x=W/2;active.y=H/2;active.s=1.34;
-   await addY2KElement('sparkles','#22ff44');active.x=W*0.5;active.y=H*0.5;active.s=1.35;
-   await ensureFont('Orbitron');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'DIRECT·X',f:'Orbitron',sz:140,c:'#ffffff',w:900,ls:12,stroke:'#16a34a',strokeWidth:5});t.x=W*0.44;t.y=H*0.50;
-   t=newTextLayer({t:'NOVEMBER 2001 // NEXT-GEN ENGINE',f:'Space Mono',sz:22,c:'#86efac',w:700,ls:12});t.x=W*0.44;t.y=H*0.61;
+   await addShapeLayer('rect',{w:880,h:840,fillType:'solid',fill:'#1c1c20',stroke:'#2e2e34',sw:2,radius:0});
+   active.x=W/2;active.y=H*0.42;active.s=1;active.name='Photo frame (drop image here)';
+   await ensureFont('Cormorant Garamond');await ensureFont('Inter');
+   let t=newTextLayer({t:'STILL WATER',f:'Cormorant Garamond',sz:118,c:'#f2efe9',w:600,ls:10});t.y=H*0.80;
+   t=newTextLayer({t:'A FILM BY AVERY STUDIO',f:'Inter',sz:20,c:'#8e8e98',w:600,ls:16});t.y=H*0.065;
+   t=newTextLayer({t:'IN THEATRES THIS AUTUMN  ·  35MM',f:'Inter',sz:18,c:'#8e8e98',w:500,ls:12});t.y=H*0.91;
   }
  },
  {
-  name:'Frutiger Aero 06',w:1080,h:1350,bg:'gradient',c1:'#0284c7',c2:'#65a30d',
-  previewBg:'linear-gradient(155deg,#0ea5e9,#38bdf8 48%,#84cc16)',previewTxt:'AERO 06',
+  name:'Vinyl Sleeve',w:1400,h:1400,bg:'solid',c1:'#edeae2',c2:'#edeae2',
+  previewBg:'#edeae2;color:#141416',previewTxt:'LP · 01',
   async build(){
-   addAmbientGlowLayer(W*0.5,H*0.18,W*0.75,'#e0f2fe',0.55);
-   await addY2KElement('aurora','#00e5ff');active.x=W*0.5;active.y=H*0.56;active.s=1.38;
-   await addY2KElement('aero-orb','#00d8ff');active.x=W*0.28;active.y=H*0.39;active.s=0.92;
-   await addY2KElement('aero-orb','#a3e635');active.x=W*0.74;active.y=H*0.47;active.s=0.66;
-   await addY2KElement('aero-orb','#ffffff');active.x=W*0.64;active.y=H*0.28;active.s=0.34;active.op=0.85;
-   await addY2KElement('droplets','#38bdf8');active.x=W*0.52;active.y=H*0.56;active.s=1.28;
-   await addY2KElement('aero-pill','#00d8ff');active.x=W*0.5;active.y=H*0.84;active.s=0.92;
-   await ensureFont('Poppins');await ensureFont('Inter');
-   let t=newTextLayer({t:'PURE FUTURE',f:'Poppins',sz:112,c:'#ffffff',w:800,ls:4});t.y=H*0.15;t.sh={x:0,y:6,b:18,a:0.28,c:'#0c4a6e'};
-   t=newTextLayer({t:'HUMAN · NATURE · TECHNOLOGY',f:'Inter',sz:26,c:'#ffffff',w:700,ls:14});t.y=H*0.84;
+   await addShapeLayer('circle',{w:820,h:820,fillType:'solid',fill:'#141416'});
+   active.x=W*0.5;active.y=H*0.54;active.s=1;active.name='Matte disc';
+   await addShapeLayer('circle',{w:240,h:240,fillType:'solid',fill:'#c85a32'});
+   active.x=W*0.5;active.y=H*0.54;active.s=1;active.name='Center label';
+   await addShapeLayer('circle',{w:32,h:32,fillType:'solid',fill:'#edeae2'});
+   active.x=W*0.5;active.y=H*0.54;active.s=1;active.name='Spindle hole';
+   await ensureFont('Inter');await ensureFont('Space Mono');
+   let t=newTextLayer({t:'SIDE A — NOCTURNE',f:'Inter',sz:54,c:'#141416',w:700,al:'left',ls:-2});t.x=W*0.32;t.y=H*0.095;
+   t=newTextLayer({t:'CAT. 014 / 33⅓ RPM / STEREO',f:'Space Mono',sz:22,c:'#5a5a60',w:500,al:'left',ls:4});t.x=W*0.28;t.y=H*0.145;
   }
  },
  {
-  name:'Cybercore Holo',w:1080,h:1080,bg:'solid',c1:'#01030a',c2:'#01030a',
-  previewBg:'radial-gradient(circle,#2b6cff,#020617 70%)',previewTxt:'HOLO 00',
+  name:'Editorial Lookbook',w:1080,h:1350,bg:'solid',c1:'#e7dfd3',c2:'#e7dfd3',
+  previewBg:'#e7dfd3;color:#1d1b18',previewTxt:'ISSUE 09',
   async build(){
-   addAmbientGlowLayer(W/2,H*0.44,W*0.58,'#2563eb',0.55);
-   await addY2KElement('sparkles','#3b82f6');active.x=W/2;active.y=H/2;active.s=1.48;
-   await addY2KElement('globe','#2563eb');active.x=W/2;active.y=H*0.44;active.s=0.95;active.op=0.72;
-   await addY2KElement('orbit-star','#60a5fa');active.x=W/2;active.y=H*0.44;active.s=1.12;
-   await addY2KElement('hud','#3b82f6');active.x=W/2;active.y=H/2;active.s=1.25;
-   await ensureFont('VT323');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'connected to the wired',f:'VT323',sz:78,c:'#dbeafe',w:400,ls:6});t.y=H*0.77;
-   t=newTextLayer({t:'// SIGNAL LOCKED · 00:00',f:'Space Mono',sz:22,c:'#60a5fa',w:600,ls:10});t.y=H*0.86;
-  }
- },
- {
-  name:'Magazine Cover',w:1080,h:1350,bg:'gradient',c1:'#0e0c1e',c2:'#3a1235',
-  previewBg:'linear-gradient(135deg,#0e0c1e,#701a5c)',previewTxt:'ATELIER',
-  async build(){
-   addAmbientGlowLayer(W*0.5,H*0.45,W*0.62,'#f472b6',0.38);
-   await addShapeLayer('arch',{w:660,h:760,fillType:'linear',fill:'#fb7185',fill2:'#4c1d95',angle:170,shadow:true});
-   active.x=W/2;active.y=H*0.52;active.s=0.88;active.name='Editorial arch';
-   await addShapeLayer('rect',{w:960,h:1230,fillType:'none',stroke:'#f5e6d3',sw:4,radius:0});
-   active.x=W/2;active.y=H/2;active.s=1;active.name='Cover border';
-   await addShapeLayer('pill',{w:360,h:76,fillType:'solid',fill:'#f5c542',shadow:true});
-   active.x=W/2;active.y=H*0.86;active.s=0.9;active.name='Issue pill';
-   await ensureFont('Playfair Display');await ensureFont('Montserrat');
-   let t=newTextLayer({t:'ATELIER',f:'Playfair Display',sz:182,c:'#fdf6ec',w:900,ls:10});t.y=H*0.15;
-   t=newTextLayer({t:'THE FUTURE OF LIGHT & COLOUR',f:'Montserrat',sz:30,c:'#fde68a',w:700,ls:14});t.y=H*0.76;
-   t=newTextLayer({t:'ISSUE 09 · AUTUMN',f:'Montserrat',sz:24,c:'#141226',w:800,ls:10});t.y=H*0.86;
-  }
- },
- {
-  name:'YouTube Thumb',w:1280,h:720,bg:'gradient',c1:'#070b1a',c2:'#1d2b64',
-  previewBg:'linear-gradient(135deg,#070b1a,#e11d48)',previewTxt:'WATCH NOW',
-  async build(){
-   addAmbientGlowLayer(W*0.78,H*0.45,W*0.52,'#ff2e55',0.58);
-   addAmbientGlowLayer(W*0.22,H*0.5,W*0.45,'#38bdf8',0.38);
-   await addShapeLayer('burst',{w:310,h:310,fillType:'linear',finish:'aero',fill:'#ff2e55',fill2:'#ff8a00',points:14,shadow:true});
-   active.x=W*0.82;active.y=H*0.26;active.s=0.82;active.name='Burst badge';
-   await addShapeLayer('arrow',{w:340,h:190,fillType:'solid',fill:'#ffd60a',warp:'arc',bend:35,shadow:true});
-   active.x=W*0.64;active.y=H*0.62;active.s=0.65;active.r=-0.22;active.name='Curved arrow';
-   await ensureFont('Anton');await ensureFont('Archivo Black');
-   let t=newTextLayer({t:'10X!',f:'Archivo Black',sz:54,c:'#ffffff',w:900});t.x=W*0.82;t.y=H*0.26;
-   t=newTextLayer({t:'INSANE\nRESULTS',f:'Anton',sz:168,c:'#ffffff',w:700,al:'left',lh:94,stroke:'#000000',strokeWidth:9});t.x=W*0.28;t.y=H*0.52;
-  }
- },
- {
-  name:'Streetwear Poster',w:1080,h:1350,bg:'solid',c1:'#09090b',c2:'#09090b',
-  previewBg:'linear-gradient(135deg,#09090b,#bef264)',previewTxt:'RAW 01',
-  async build(){
-   addAmbientGlowLayer(W*0.5,H*0.48,W*0.62,'#a3e635',0.38);
-   await addShapeLayer('circle',{w:620,h:620,fillType:'linear',finish:'chrome',fill:'#c6ff3d',fill2:'#22d3ee',angle:120,warp:'bulge',bend:32});
-   active.x=W*0.5;active.y=H*0.48;active.s=0.88;active.name='Chrome orb';
-   await addShapeLayer('star',{w:220,h:220,fillType:'solid',fill:'#c6ff3d',points:8});
-   active.x=W*0.82;active.y=H*0.18;active.s=0.68;active.name='Star stamp';
-   await addY2KElement('barcode','#c6ff3d');active.x=W*0.26;active.y=H*0.16;active.s=0.45;
-   await ensureFont('Syne');await ensureFont('Space Mono');
-   let t=newTextLayer({t:'KINETIC\nSTUDIO',f:'Syne',sz:148,c:'#ffffff',w:800,lh:94,stroke:'#09090b',strokeWidth:4});t.y=H*0.48;
-   t=newTextLayer({t:'LIMITED EDITION · DROP 04 · TOKYO / NYC',f:'Space Mono',sz:24,c:'#c6ff3d',w:700,ls:10});t.y=H*0.88;
-  }
- },
- {
-  name:'Album Cover',w:1400,h:1400,bg:'gradient',c1:'#0f172a',c2:'#4c1d95',
-  previewBg:'linear-gradient(135deg,#0f172a,#7c3aed)',previewTxt:'MIDNIGHT',
-  async build(){
-   addAmbientGlowLayer(W*0.5,H*0.52,W*0.64,'#f472b6',0.46);
-   await addShapeLayer('arch',{w:720,h:880,fillType:'linear',finish:'aero',fill:'#f472b6',fill2:'#fb923c',angle:180,shadow:true});
-   active.x=W/2;active.y=H*0.53;active.s=0.88;active.name='Sunset arch';
-   await addY2KElement('sparkles','#fde68a');active.x=W/2;active.y=H*0.5;active.s=1.45;active.op=0.75;
-   await ensureFont('Unbounded');await ensureFont('Raleway');
-   let t=newTextLayer({t:'AFTERHOURS',f:'Unbounded',sz:106,c:'#ffffff',w:700,ls:8});t.y=H*0.14;
-   t=newTextLayer({t:'DELUXE EDITION',f:'Raleway',sz:32,c:'#fde68a',w:600,ls:24});t.y=H*0.90;
-  }
- },
- {
-  name:'Minimal Quote',w:1080,h:1080,bg:'solid',c1:'#f3efe6',c2:'#f3efe6',
-  previewBg:'#f3efe6;color:#1b1b1b',previewTxt:'“CREATE”',
-  async build(){
-   await addShapeLayer('rect',{w:960,h:960,fillType:'none',stroke:'#d6cfc2',sw:4,radius:18});
-   active.x=W/2;active.y=H/2;active.s=1;active.name='Subtle frame';
-   await addShapeLayer('line',{w:240,h:36,fillType:'solid',fill:'#18181b'});
-   active.x=W/2;active.y=H*0.65;active.s=0.65;active.name='Divider rule';
+   await addShapeLayer('rect',{w:740,h:840,fillType:'solid',fill:'#cfc4b4',radius:0});
+   active.x=W*0.56;active.y=H*0.56;active.s=1;active.name='Editorial photo block';
+   await addShapeLayer('line',{w:920,h:8,fillType:'solid',fill:'#1d1b18'});
+   active.x=W/2;active.y=H*0.19;active.s=1;active.name='Masthead rule';
    await ensureFont('Playfair Display');await ensureFont('Inter');
-   let t=newTextLayer({t:'“Make things\nworth staring at.”',f:'Playfair Display',sz:86,c:'#18181b',w:700,it:true,lh:115});t.y=H*0.43;
-   t=newTextLayer({t:'TOTONE STUDIO',f:'Inter',sz:24,c:'#52525b',w:700,ls:22});t.y=H*0.74;
+   let t=newTextLayer({t:'ATELIER',f:'Playfair Display',sz:148,c:'#1d1b18',w:700,ls:6});t.y=H*0.11;
+   t=newTextLayer({t:'AUTUMN / WINTER',f:'Inter',sz:22,c:'#1d1b18',w:600,ls:14});t.x=W*0.24;t.y=H*0.225;
+   t=newTextLayer({t:'09',f:'Playfair Display',sz:120,c:'#1d1b18',w:400,it:true});t.x=W*0.14;t.y=H*0.86;
   }
  },
  {
-  name:'Story / Reel Promo',w:1080,h:1920,bg:'gradient',c1:'#0f0726',c2:'#064e3b',
-  previewBg:'linear-gradient(160deg,#0f0726,#10b981)',previewTxt:'STORY',
+  name:'Brutalist Type',w:1080,h:1350,bg:'solid',c1:'#161618',c2:'#161618',
+  previewBg:'#161618;color:#e8e6df',previewTxt:'RAW // 01',
   async build(){
-   addAmbientGlowLayer(W*0.5,H*0.36,W*0.78,'#10b981',0.48);
-   await addShapeLayer('pill',{w:620,h:128,fillType:'linear',finish:'aero',fill:'#ffffff',fill2:'#d1fae5',shadow:true});
-   active.x=W/2;active.y=H*0.82;active.s=0.92;active.name='CTA Button';
-   await addY2KElement('sparkles','#6ee7b7');active.x=W/2;active.y=H*0.38;active.s=1.35;
-   await ensureFont('Bebas Neue');await ensureFont('Poppins');
-   let t=newTextLayer({t:'WEEKEND\nCOLLECTION',f:'Bebas Neue',sz:192,c:'#ffffff',w:700,lh:96,ls:6});t.y=H*0.36;
-   t=newTextLayer({t:'SWIPE UP TO EXPLORE',f:'Poppins',sz:32,c:'#064e3b',w:800,ls:6});t.y=H*0.82;
+   await addShapeLayer('rect',{w:960,h:1230,fillType:'none',stroke:'#3a3a42',sw:2,radius:0});
+   active.x=W/2;active.y=H/2;active.s=1;active.name='Grid border';
+   await addShapeLayer('line',{w:960,h:8,fillType:'solid',fill:'#e8e6df'});
+   active.x=W/2;active.y=H*0.76;active.s=1;active.name='Footer rule';
+   await ensureFont('Archivo Black');await ensureFont('Space Mono');
+   let t=newTextLayer({t:'CONCRETE\nSYSTEMS\nVOL. 02',f:'Archivo Black',sz:136,c:'#e8e6df',w:900,al:'left',lh:90,ls:-3});t.x=W*0.44;t.y=H*0.36;
+   t=newTextLayer({t:'35.6762° N, 139.6503° E',f:'Space Mono',sz:22,c:'#9a9aa4',w:500,al:'left',ls:4});t.x=W*0.31;t.y=H*0.82;
+   t=newTextLayer({t:'LIMITED EDITION PRINT',f:'Space Mono',sz:22,c:'#e8e6df',w:700,al:'left',ls:6});t.x=W*0.29;t.y=H*0.865;
   }
  },
  {
-  name:'Y2K Cyber Flyer',w:1080,h:1350,bg:'gradient',c1:'#090418',c2:'#2e1065',
-  previewBg:'linear-gradient(135deg,#090418,#06b6d4)',previewTxt:'Y2K LIVE',
+  name:'YouTube Editorial',w:1280,h:720,bg:'solid',c1:'#111215',c2:'#111215',
+  previewBg:'#111215;color:#f4f4f6;border-left:5px solid #2f7cf6',previewTxt:'VIDEO 16:9',
   async build(){
-   addAmbientGlowLayer(W*0.5,H*0.5,W*0.65,'#06b6d4',0.5);
-   await addShapeLayer('rect',{w:740,h:340,fillType:'linear',finish:'chrome',fill:'#06b6d4',fill2:'#a855f7',warp:'wave',bend:48,slant:20});
-   active.x=W/2;active.y=H*0.52;active.s=0.96;active.name='Chrome wave ribbon';
-   await addShapeLayer('bolt',{w:180,h:240,fillType:'solid',finish:'neon',fill:'#fde047'});
-   active.x=W*0.18;active.y=H*0.2;active.s=0.62;active.name='Neon bolt';
-   await addY2KElement('orbit-star','#22d3ee');active.x=W*0.82;active.y=H*0.74;active.s=0.52;
-   await ensureFont('Orbitron');await ensureFont('VT323');
-   let t=newTextLayer({t:'HYPER\nCLUB',f:'Orbitron',sz:130,c:'#ffffff',w:900,lh:96});t.y=H*0.27;
-   t=newTextLayer({t:'SAT NOV 28 // DOORS 22:00 // LEVEL 09',f:'VT323',sz:44,c:'#67e8f9',w:400,ls:6});t.y=H*0.86;
+   await addShapeLayer('rect',{w:580,h:600,fillType:'solid',fill:'#1c1d22',stroke:'#2e3038',sw:2,radius:14});
+   active.x=W*0.72;active.y=H*0.5;active.s=1;active.name='Subject photo card';
+   await addShapeLayer('pill',{w:210,h:46,fillType:'solid',fill:'#2f7cf6'});
+   active.x=W*0.16;active.y=H*0.23;active.s=1;active.name='Category tag';
+   await ensureFont('Inter');
+   let t=newTextLayer({t:'DEEP DIVE',f:'Inter',sz:20,c:'#ffffff',w:700,ls:8});t.x=W*0.16;t.y=H*0.23;
+   t=newTextLayer({t:'How Good\nDesign Works.',f:'Inter',sz:96,c:'#f4f4f6',w:800,al:'left',lh:102,ls:-3});t.x=W*0.28;t.y=H*0.52;
+   t=newTextLayer({t:'14 MIN · STUDIO BREAKDOWN',f:'Inter',sz:22,c:'#888b96',w:600,al:'left',ls:6});t.x=W*0.22;t.y=H*0.78;
   }
  },
  {
-  name:'Product Launch',w:1080,h:1080,bg:'gradient',c1:'#141418',c2:'#27272f',
-  previewBg:'linear-gradient(135deg,#141418,#f97316)',previewTxt:'LAUNCH',
+  name:'Gallery Print Mat',w:1080,h:1350,bg:'solid',c1:'#f7f6f2',c2:'#f7f6f2',
+  previewBg:'#f7f6f2;color:#222;border:1px solid #d4d1c7',previewTxt:'GALLERY',
   async build(){
-   addAmbientGlowLayer(W*0.52,H*0.54,W*0.6,'#f97316',0.48);
-   await addShapeLayer('blob',{w:640,h:640,fillType:'linear',finish:'aero',fill:'#f97316',fill2:'#ec4899',angle:45,shadow:true});
-   active.x=W*0.52;active.y=H*0.54;active.s=0.86;active.name='Glossy hero blob';
-   await addShapeLayer('pill',{w:320,h:72,fillType:'solid',fill:'#ffffff'});
-   active.x=W*0.5;active.y=H*0.86;active.s=0.88;active.name='Release badge';
-   await ensureFont('Unbounded');await ensureFont('Inter');
-   let t=newTextLayer({t:'SERIES X',f:'Unbounded',sz:116,c:'#ffffff',w:800});t.y=H*0.17;
-   t=newTextLayer({t:'OUT NOW · 2026',f:'Inter',sz:26,c:'#18181b',w:800,ls:12});t.y=H*0.86;
+   await addShapeLayer('rect',{w:800,h:960,fillType:'solid',fill:'#e4e1d8',stroke:'#d0ccc0',sw:2,radius:0});
+   active.x=W/2;active.y=H*0.44;active.s=1;active.name='Mat window (place photo)';
+   await ensureFont('Cormorant Garamond');await ensureFont('Inter');
+   let t=newTextLayer({t:'Untitled Study IV, 2026',f:'Cormorant Garamond',sz:44,c:'#18181a',w:600,it:true});t.y=H*0.865;
+   t=newTextLayer({t:'ARCHIVAL PIGMENT PRINT  ·  EDITION OF 25',f:'Inter',sz:17,c:'#6e6d68',w:500,ls:12});t.y=H*0.91;
+  }
+ },
+ {
+  name:'Minimal Quote',w:1080,h:1080,bg:'solid',c1:'#141416',c2:'#141416',
+  previewBg:'#141416;color:#ececef',previewTxt:'“QUOTE”',
+  async build(){
+   await addShapeLayer('line',{w:120,h:6,fillType:'solid',fill:'#ececef'});
+   active.x=W*0.18;active.y=H*0.66;active.s=1;active.name='Short rule';
+   await ensureFont('Playfair Display');await ensureFont('Inter');
+   let t=newTextLayer({t:'“Simplicity is about\nsubtracting the obvious\nand adding the meaningful.”',f:'Playfair Display',sz:64,c:'#ececef',w:500,it:true,al:'left',lh:122});t.x=W*0.48;t.y=H*0.42;
+   t=newTextLayer({t:'JOHN MAEDA',f:'Inter',sz:20,c:'#82828e',w:600,al:'left',ls:16});t.x=W*0.22;t.y=H*0.73;
+  }
+ },
+ {
+  name:'Story Editorial',w:1080,h:1920,bg:'solid',c1:'#141c17',c2:'#141c17',
+  previewBg:'#141c17;color:#efe9dc',previewTxt:'STORY 9:16',
+  async build(){
+   await addShapeLayer('rect',{w:920,h:1120,fillType:'solid',fill:'#1f2b24',stroke:'#314237',sw:2,radius:0});
+   active.x=W/2;active.y=H*0.50;active.s=1;active.name='Story photo frame';
+   await ensureFont('Cormorant Garamond');await ensureFont('Inter');
+   let t=newTextLayer({t:'FIELD NOTES',f:'Cormorant Garamond',sz:112,c:'#efe9dc',w:600,ls:4});t.y=H*0.125;
+   t=newTextLayer({t:'NEW COLLECTION  ·  SPRING 2026',f:'Inter',sz:22,c:'#9cb0a3',w:600,ls:14});t.y=H*0.18;
+   t=newTextLayer({t:'READ THE FULL STORY  ↑',f:'Inter',sz:24,c:'#efe9dc',w:600,ls:10});t.y=H*0.89;
+  }
+ },
+ {
+  name:'Duotone Zine',w:1080,h:1350,bg:'solid',c1:'#132a63',c2:'#132a63',
+  previewBg:'#132a63;color:#f4f1ea',previewTxt:'ZINE 03',
+  async build(){
+   await addShapeLayer('rect',{w:940,h:760,fillType:'solid',fill:'#f4f1ea',radius:0});
+   active.x=W/2;active.y=H*0.64;active.s=1;active.name='Paper inset';
+   await ensureFont('Bebas Neue');await ensureFont('Space Mono');
+   let t=newTextLayer({t:'MIDNIGHT PRESS',f:'Bebas Neue',sz:184,c:'#f4f1ea',w:700,ls:4});t.y=H*0.16;
+   t=newTextLayer({t:'ISSUE 03  //  INDEPENDENT PHOTOGRAPHY',f:'Space Mono',sz:20,c:'#9ab3eb',w:600,ls:6});t.y=H*0.285;
+   t=newTextLayer({t:'DROP PHOTO HERE',f:'Space Mono',sz:24,c:'#132a63',w:700,ls:8});t.y=H*0.64;
+  }
+ },
+ {
+  name:'Product Spec Card',w:1080,h:1080,bg:'solid',c1:'#ececef',c2:'#ececef',
+  previewBg:'#ececef;color:#141416',previewTxt:'SPEC 01',
+  async build(){
+   await addShapeLayer('rect',{w:920,h:680,fillType:'solid',fill:'#dcdce2',radius:12});
+   active.x=W/2;active.y=H*0.44;active.s=1;active.name='Product stage';
+   await ensureFont('Inter');await ensureFont('Space Mono');
+   let t=newTextLayer({t:'OBJECT 01 — MATTE EDITION',f:'Inter',sz:44,c:'#141416',w:700,al:'left',ls:-1});t.x=W*0.38;t.y=H*0.835;
+   t=newTextLayer({t:'ANODIZED ALUMINUM  ·  240G  ·  SERIES II',f:'Space Mono',sz:19,c:'#62626c',w:500,al:'left',ls:4});t.x=W*0.34;t.y=H*0.885;
+  }
+ },
+ {
+  name:'Archive Wireframe',w:1080,h:1350,bg:'solid',c1:'#0a0d14',c2:'#0a0d14',
+  previewBg:'#0a0d14;color:#cbd5e1;border:1px solid #334155',previewTxt:'ARC · 00',
+  async build(){
+   await addY2KElement('globe','#94a3b8');active.x=W*0.5;active.y=H*0.48;active.s=0.92;active.op=0.82;
+   await addShapeLayer('rect',{w:940,h:1210,fillType:'none',stroke:'#334155',sw:2,radius:0});
+   active.x=W/2;active.y=H/2;active.s=1;active.name='Outer frame';
+   await ensureFont('Space Mono');await ensureFont('Inter');
+   let t=newTextLayer({t:'ARCHIVE // 2000',f:'Inter',sz:96,c:'#f1f5f9',w:800,ls:-2});t.y=H*0.14;
+   t=newTextLayer({t:'INDEX 004  ·  DIGITAL OBJECT STUDY',f:'Space Mono',sz:20,c:'#94a3b8',w:500,ls:8});t.y=H*0.87;
   }
  }
 ];
@@ -1167,11 +1204,42 @@ for(const tpl of TEMPLATES){
  b.onclick=async()=>{
   await createDesignCanvas(tpl.w,tpl.h,tpl.bg,tpl.c1,tpl.c2,tpl.name);
   await tpl.build();
+  const firstText=layers.find(l=>l.tx);
+  if(firstText)active=firstText;
   refreshLayers();draw();
-  showToast(`Loaded "${tpl.name}" template`,1800);
+  showToast(`Loaded "${tpl.name}" — double-click any text on canvas to edit`,2400);
  };
  tplGrid.append(b);
 }
+
+/* Double-click any text layer directly on the canvas (from any tab) to edit its text immediately */
+c.addEventListener('dblclick',e=>{
+ if(!base||!layers.length)return;
+ const p=pos(e);
+ for(let i=layers.length-1;i>=0;i--){
+  const l=layers[i];
+  if(!l.vis||l.lk||!l.tx)continue;
+  const dx=p[0]-l.x,dy=p[1]-l.y;
+  const co=Math.cos(-l.r),si=Math.sin(-l.r);
+  const lx=(dx*co-dy*si)/Math.max(0.05,l.s),ly=(dx*si+dy*co)/Math.max(0.05,l.s);
+  const hw=l.cv.width/2+12,hh=l.cv.height/2+12;
+  if(Math.abs(lx)<=hw&&Math.abs(ly)<=hh){
+   active=l;
+   if(typeof refreshLayers==='function')refreshLayers();
+   if(typeof draw==='function')draw();
+   document.querySelector('#cat-tabs button[data-cat="design"]')?.click();
+   document.querySelector('.tabs button[data-t="text"]')?.click();
+   setTimeout(()=>{
+    const ed=$('type-edit');
+    if(ed&&!ed.disabled)ed.click();
+    else $('txt')?.focus();
+   },30);
+   e.preventDefault();
+   e.stopPropagation();
+   return;
+  }
+ }
+});
 
 /* ---------- Canva Font Pairings ---------- */
 const FONT_PAIRS=[

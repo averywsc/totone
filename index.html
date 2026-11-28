@@ -29,19 +29,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:wght@100..900&family=Raleway:wght@100..900&family=Playfair+Display:wght@400..900&family=Oswald:wght@200..700&family=Fredoka:wght@300..700&family=Orbitron:wght@400..900&family=Cinzel:wght@400..900&family=Lora:wght@400..700&family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Syne:wght@400..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/core.css?v=4">
 <link rel="stylesheet" href="css/studio.css?v=4">
+<link rel="stylesheet" href="css/studio-pro-ui.css?v=16">
 </head>
-<body>
+<body class="ui-pro ui-pro-palette">
 <header>
-<h1>Totone</h1><a id="donate-btn" href="https://buymeacoffee.com/averyuwubaka" target="_blank" rel="noopener noreferrer" title="Support Totone on Buy Me a Coffee">♥ Donate</a>
-<button id="open" title="Open image or .totone project (O)">Open</button><button id="new-canvas-open" title="New blank design or Magic Resize">New</button><button id="sessions-open" title="Previous Sessions &amp; Saved Browser Projects">Sessions</button><button id="project-menu" title="Save or open .totone project">Project</button>
-<button id="undo" title="Undo (Ctrl+Z)">Undo</button><button id="redo" title="Redo (Ctrl+Y)">Redo</button><button id="cmp" title="Hold to compare original (\)">Compare</button>
+<div class="hdr-brand"><h1>Totone</h1></div>
+<div class="hdr-files"><button id="open" title="Open image or .totone project (O)">Open</button><button id="new-canvas-open" title="New blank design or Magic Resize">New</button><button id="sessions-open" title="Previous Sessions &amp; Saved Browser Projects">Sessions</button><button id="project-menu" title="Save or open .totone project">Project</button></div>
+<div class="hdr-hist"><button id="undo" title="Undo (Ctrl+Z)" aria-label="Undo"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg><span class="lbl">Undo</span></button><button id="redo" title="Redo (Ctrl+Y)" aria-label="Redo"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg><span class="lbl">Redo</span></button></div>
+<div class="hdr-view"><button id="cmp" title="Hold to compare original (\)">Compare</button>
 <label class="hd" title="Before / after split slider"><input type="checkbox" id="spl"> Split <input type="range" id="spr" min="1" max="99" value="50" aria-label="Split position"></label>
 <select id="zoom" aria-label="Zoom"><option value="0">Fit</option><option value="c" id="zc" hidden></option><option value=".5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select>
-<select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option><option value="4096">4096 px</option><option value="8192">Original (8K)</option></select>
+<select id="mx" title="Working size for the next image" aria-label="Working size"><option value="1000">1000 px</option><option value="1400" selected>1400 px</option><option value="2000">2000 px</option><option value="4096">4096 px</option><option value="8192">Original (8K)</option></select></div>
 <span class="sp"></span>
-<button id="cmd-open" title="Command Palette — search any tool (Ctrl+K)">Search <kbd>Ctrl+K</kbd></button>
+<button id="cmd-open" title="Command Palette — search any tool (Ctrl+K)"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg><span class="cmd-lbl">Search tools, filters, AI…</span><span class="cmd-classic">Search</span> <kbd>Ctrl+K</kbd></button>
+<span class="sp pro-sp"></span>
+<div class="hdr-right">
+<a id="donate-btn" href="https://buymeacoffee.com/averyuwubaka" target="_blank" rel="noopener noreferrer" title="Support Totone on Buy Me a Coffee" aria-label="Support Totone"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.5-9.2-8.4C1.1 9.5 2.6 5.5 6.4 4.8c2.2-.4 4.2.6 5.6 2.3 1.4-1.7 3.4-2.7 5.6-2.3 3.8.7 5.3 4.7 3.6 7.8C19 16.5 12 21 12 21z" fill="currentColor" stroke="none"/></svg><span class="lbl-classic">♥ Donate</span></a>
 <div class="hdr-more-wrap">
-<button type="button" id="hdr-more-btn" title="More actions (History, Versions, Border, Reset, Shortcuts)">⋯</button>
+<button type="button" id="hdr-more-btn" title="More actions (History, Versions, Border, Reset, Shortcuts)" aria-label="More actions"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg><span class="lbl-classic">⋯</span></button>
 <div id="hdr-more-menu" hidden>
 <button type="button" class="mob-only" data-mob="search">Search Tools (Ctrl+K)</button>
 <button type="button" class="mob-only" data-mob="new">New Blank Design</button>
@@ -59,14 +64,17 @@
 <button id="reset">Reset warp</button>
 <button id="rlook">Reset look</button>
 <button id="helpb">Keyboard Shortcuts</button>
+<button type="button" id="ui-mode-quick-toggle">Switch UI: Classic Mode</button>
 <button type="button" id="patch-notes-open">Patch Notes</button>
 <button type="button" id="share-totone-btn">Share Totone Link</button>
+<a id="more-donate-link" class="more-menu-link" href="https://buymeacoffee.com/averyuwubaka" target="_blank" rel="noopener noreferrer">♥ Donate / Support Totone</a>
 <button type="button" id="pwa-install-btn" hidden>Install Totone App</button>
 <button id="tool-finder" hidden>Find tool</button>
 </div>
 </div>
-<button id="settings-open" title="Settings &amp; UI Theme Customizer (Ctrl+,)">⚙</button>
-<button class="pri" id="export" title="Export image — format, size &amp; target MB (Ctrl+S)">Export</button>
+<button id="settings-open" title="Settings &amp; UI Theme Customizer (Ctrl+,)" aria-label="Settings"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.08a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="lbl-classic">⚙</span></button>
+<button class="pri" id="export" title="Export image — format, size &amp; target MB (Ctrl+S)" aria-label="Export"><svg class="pro-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg><span class="exp-lbl">Export</span></button>
+</div>
 <input type="file" id="file" accept="image/*,.totone" hidden><input type="file" id="glint-image" accept="image/*" hidden><input type="file" id="border-image" accept="image/*" hidden><input type="file" id="file2" accept="image/*" multiple hidden>
 </header>
 <main>
@@ -104,14 +112,37 @@
 <button type="button" data-dock="auto" title="1-Click Smart Auto Enhance"><svg viewBox="0 0 24 24"><path d="M4 20L15 9M14 4v3M19 9h3M17.5 5.5l2-2M17.5 12.5l2 2"/></svg></button>
 <button type="button" data-dock="settings" title="Settings &amp; UI Theme Customizer (Ctrl+,)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.08a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </nav>
-<section id="stage"><div id="empty"><span>Drop an image here, start a blank design, or try a sample.</span><div class="bar"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sessions">Previous sessions</button><button id="empty-sample">Sample photo</button><button id="empty-elements">Web elements</button></div><button id="recover-empty" hidden>Recover last session</button><small>Tip: Paste with Ctrl+V · Press / or Ctrl+K to find any tool · Double-click sliders to reset</small><nav class="empty-seo-links" aria-label="Quick tools"><a href="discord-image-compressor/">Discord 10MB Compressor</a> · <a href="fix-concert-lighting/">Fix Concert Lighting</a> · <a href="open-psd-online/">Open PSD</a> · <a href="ai-background-remover/">AI Remove BG</a> · <a href="strip-exif-data/">Strip EXIF</a></nav></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="nav-minimap" hidden aria-label="Zoom Navigator"><canvas id="nav-mini-cv" width="144" height="108"></canvas><div id="nav-mini-box"></div></div><div id="split-handle" hidden title="Drag left/right to compare before &amp; after"><span>⇄</span></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div></section>
+<section id="stage"><div id="empty"><div class="empty-emblem" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-6 6-3-3-4 4"/></svg></div><span class="empty-title">Drop a photo or start a canvas</span><p class="empty-sub">Local-first photo editor, color grader &amp; design studio · Zero uploads</p><div class="bar empty-primary"><button id="empty-open" class="pri">Open image</button><button id="empty-new">New design</button><button id="empty-sample" hidden>Sample photo</button></div><div class="bar empty-secondary"><button id="empty-sessions">Previous sessions</button><button id="empty-elements">Web elements</button></div><div class="empty-presets" aria-label="Quick start canvas sizes"><button type="button" data-qsize="1080x1080"><strong>1:1</strong><small>Square</small></button><button type="button" data-qsize="1080x1350"><strong>4:5</strong><small>Portrait</small></button><button type="button" data-qsize="1080x1920"><strong>9:16</strong><small>Story</small></button><button type="button" data-qsize="1920x1080"><strong>16:9</strong><small>HD Video</small></button><button type="button" data-qsize="1800x1200"><strong>3:2</strong><small>Photo</small></button><button type="button" data-qsize="1200x1800"><strong>2:3</strong><small>Poster</small></button><button type="button" data-qsize="2560x1080"><strong>21:9</strong><small>Cinema</small></button><button type="button" data-qsize="1240x1754"><strong>A4</strong><small>Print</small></button></div><div class="empty-custom-dim" id="empty-custom-dim" aria-label="Custom canvas dimensions"><input type="number" id="ec-w" min="1" max="8192" step="any" value="1080" aria-label="Custom width"><span class="ec-x">×</span><input type="number" id="ec-h" min="1" max="8192" step="any" value="1350" aria-label="Custom height"><select id="ec-unit" aria-label="Dimension unit"><option value="px">px</option><option value="in">in (300dpi)</option><option value="cm">cm (300dpi)</option><option value="ratio">ratio</option></select><button type="button" id="ec-create">Create</button></div><button id="recover-empty" hidden>Recover last session</button><small class="empty-tip">Paste with Ctrl+V · Press Ctrl+K for any tool · Double-click sliders to reset</small><nav class="empty-seo-links" aria-label="Quick tools"><a href="discord-image-compressor/">Discord 10MB Compressor</a><a href="fix-concert-lighting/">Fix Concert Lighting</a><a href="open-psd-online/">Open PSD</a><a href="ai-background-remover/">AI Remove BG</a><a href="strip-exif-data/">Strip EXIF</a></nav></div><canvas id="c" aria-label="Image preview"></canvas><canvas id="stage-guides" aria-hidden="true"></canvas><div id="hist-hud" hidden aria-label="Live RGB Histogram"><div class="hud-head"><span>RGB Histogram</span><button type="button" id="hist-hud-close" title="Hide histogram">✕</button></div><canvas id="hist-hud-canvas" width="210" height="78"></canvas></div><div id="nav-minimap" hidden aria-label="Zoom Navigator"><canvas id="nav-mini-cv" width="144" height="108"></canvas><div id="nav-mini-box"></div></div><div id="split-handle" hidden title="Drag left/right to compare before &amp; after"><span>⇄</span></div><div id="ring"></div><div id="eyedrop-loupe" aria-hidden="true"><i></i><span>#ffffff</span></div><div id="layer-float-bar" role="toolbar" aria-label="Quick layer actions" hidden><button type="button" data-fl="warp" title="Warp this shape" hidden>Warp</button><button type="button" data-fl="dup" title="Duplicate layer (Ctrl+J)">Duplicate</button><button type="button" data-fl="flip" title="Flip horizontally">Flip</button><button type="button" data-fl="center" title="Centre on canvas">⊕</button><button type="button" data-fl="up" title="Bring forward">↑</button><button type="button" data-fl="down" title="Send backward">↓</button><span class="fl-sep"></span><input id="fl-op" type="range" min="0" max="100" value="100" title="Layer opacity" aria-label="Quick layer opacity"><span class="fl-sep"></span><button type="button" data-fl="rmbg" title="Remove background from layer">Remove BG</button><button type="button" data-fl="frame" title="Mask layer into a Canva frame">Frame</button><button type="button" data-fl="lock" title="Lock or unlock layer">Lock</button><button type="button" data-fl="del" title="Delete layer">✕</button></div><div id="drop-hint" aria-hidden="true">Drop image, layer, or .totone project</div><button type="button" id="all-layers-btn" aria-expanded="false" aria-controls="all-layers-drawer" title="Show all layers in full">All Layers <b id="all-layers-count">0</b></button><div id="all-layers-drawer" hidden aria-label="All Layers"><div class="al-head"><strong>All Layers</strong><button type="button" id="all-layers-close" aria-label="Close">✕</button></div><div id="all-layers-list"></div></div><div id="stage-hud" role="toolbar" aria-label="Canvas quick controls" hidden><button type="button" id="hud-zout" title="Zoom out (−)">−</button><button type="button" id="hud-zoom-val" title="Fit to screen (Ctrl+0)">Fit</button><button type="button" id="hud-zin" title="Zoom in (+)">+</button><span class="hud-sep"></span><button type="button" id="hud-cmp" title="Hold to compare original (\)">Compare</button><button type="button" id="hud-split" title="Toggle before / after split">Split</button></div></section>
 <aside>
 <button id="panel-height" aria-label="Change editing panel height">Panel height</button>
+<div id="mob-quick" hidden>
+<div class="mob-pane" data-mp="color" hidden>
+<div class="mob-quick-head"><strong>Basic Color</strong><div class="mob-quick-acts"><button type="button" id="mob-auto">Auto</button><button type="button" id="mob-color-rst">Reset</button></div></div>
+<label>Exposure <input type="range" data-sync="lr-exp" min="-4" max="4" step="0.05" value="0"><output>0</output></label>
+<label>Brightness <input type="range" data-sync="ab" min="-100" max="100" value="0"><output>0</output></label>
+<label>Contrast <input type="range" data-sync="ac" min="-100" max="100" value="0"><output>0</output></label>
+<label>Saturation <input type="range" data-sync="as" min="-100" max="100" value="0"><output>0</output></label>
+<label>Warmth <input type="range" data-sync="at" min="-100" max="100" value="0"><output>0</output></label>
+<label>Highlights <input type="range" data-sync="lr-hi" min="-100" max="100" value="0"><output>0</output></label>
+<label>Shadows <input type="range" data-sync="lr-sh" min="-100" max="100" value="0"><output>0</output></label>
+<label>Grain <input type="range" data-sync="ag" min="0" max="100" value="0"><output>0</output></label>
+<label>Vignette <input type="range" data-sync="av" min="0" max="100" value="0"><output>0</output></label>
+</div>
+<div class="mob-pane" data-mp="grain" hidden>
+<div class="mob-quick-head"><strong>Grain &amp; Finish</strong><div class="mob-quick-acts"><button type="button" id="mob-grain-rst">Reset</button></div></div>
+<label>Grain <input type="range" data-sync="ag" min="0" max="100" value="0"><output>0</output></label>
+<label>Vignette <input type="range" data-sync="av" min="0" max="100" value="0"><output>0</output></label>
+<label>Soft Glow <input type="range" data-sync="gl" min="0" max="100" value="0"><output>0</output></label>
+<label>Dither <input type="range" data-sync="dt" min="0" max="100" value="0"><output>0</output></label>
+<label>Preset Strength <input type="range" data-sync="str" min="0" max="100" value="100"><output>100</output></label>
+</div>
+</div>
 <nav id="cat-tabs" aria-label="Workspace categories">
-<button type="button" data-cat="ai" title="AI Background Remover, ESRGAN Upscaler, Depth Bokeh, Magic Eraser &amp; Smart Tools">✦ AI</button>
+<button type="button" data-cat="ai" title="AI Background Remover, ESRGAN Upscaler, Depth Bokeh, Magic Eraser &amp; Smart Tools">AI</button>
 <button type="button" class="on" data-cat="color" title="Develop, Presets, Light, Color Palette &amp; Film Stocks">Color</button>
-<button type="button" data-cat="edit" title="Layers, Cutout Selections, Crop, Draw &amp; Warp">Edit</button>
-<button type="button" data-cat="design" title="Templates, Shapes, Stickers, Typography &amp; 30+ Overlays">Design</button>
+<button type="button" data-cat="edit" title="Cutout Selections, Crop, Draw, Warp &amp; Overlays">Edit</button>
+<button type="button" data-cat="layers" title="View, Reorder, Blend &amp; Manage Layers">Layers</button>
+<button type="button" data-cat="design" title="Sticker Mode, Templates, Shapes &amp; Typography">Design</button>
 <button type="button" data-cat="fx" title="38 Filters, Retro/Pixel &amp; Pro Lab Tools">FX</button>
 </nav>
 <div class="tabs" role="tablist">
@@ -120,19 +151,21 @@
 <button role="tab" data-t="grade" data-cat="color" title="Color Grading presets, 3D LUTs, Basic Develop, Point Color, curves &amp; wheels">Grade</button>
 <button role="tab" data-t="adjust" data-cat="color" title="Brightness, contrast, levels &amp; glow">Light</button>
 <button role="tab" data-t="colour" data-cat="color" title="Palette &amp; selective color edits">Palette</button>
-<button role="tab" data-t="film" data-cat="color" title="Film stocks, grain &amp; double exposure">Film</button>
-<button role="tab" data-t="layers" data-cat="edit" hidden title="Layers, masks, blend modes &amp; retouch">Layers</button>
+<button role="tab" data-t="film" data-cat="color" title="Polaroid, Disposable Camera &amp; Film stocks">Film</button>
+<button role="tab" data-t="layers" data-cat="layers" hidden title="Layers, masks, blend modes &amp; retouch">Layers</button>
 <button role="tab" data-t="select" data-cat="edit" hidden title="Wand, lasso, color range &amp; cutout selections">Cutout</button>
-<button role="tab" data-t="crop" data-cat="edit" hidden title="Crop, rotate &amp; aspect ratios">Crop</button>
-<button role="tab" data-t="draw" data-cat="edit" hidden title="Brushes, paint, gradients &amp; shapes">Draw</button>
+<button role="tab" data-t="crop" data-cat="edit" hidden title="Crop, expand, rotate &amp; aspect ratios">Crop</button>
+<button role="tab" data-t="draw" data-cat="edit" hidden title="Brushes, custom stamps, paint &amp; gradients">Draw</button>
 <button role="tab" data-t="warp" data-cat="edit" hidden title="Warp &amp; liquify brushes">Warp</button>
-<button role="tab" data-t="design" data-cat="design" hidden title="Templates, shapes, stickers, frames &amp; QR">Studio</button>
+<button role="tab" data-t="glints" data-cat="edit" hidden title="Old paper, grain, light leaks, bokeh &amp; optical overlays">Overlays</button>
+<button role="tab" data-t="borders" data-cat="edit" hidden title="Gallery, museum, deckle, 35mm &amp; custom uploaded image borders">Borders</button>
+<button role="tab" data-t="design" data-cat="design" hidden title="Sticker Mode, templates, shapes, frames &amp; QR">Studio</button>
 <button role="tab" data-t="text" data-cat="design" hidden title="Typography, warped text &amp; paths">Type</button>
-<button role="tab" data-t="glints" data-cat="design" hidden title="30+ Pro Overlays &amp; optical highlight glints">Overlays</button>
 <button role="tab" data-t="filters" data-cat="fx" hidden title="38 FX filters &amp; perspective skew">Filters</button>
 <button role="tab" data-t="pixel" data-cat="fx" hidden title="Pixel art, dithering &amp; retro effects">Retro</button>
 <button role="tab" data-t="lab" data-cat="fx" hidden title="SVG Trace, GIF, Mockups, Low-Poly, Pixel Sort, Scanner &amp; more">Pro Lab</button>
 </div>
+<nav id="panel-jump-bar" aria-label="Jump to section in active tab" hidden></nav>
 
 <div class="pn" id="p-ai">
 <div class="bg-rm-box ai-hero-card">
@@ -250,7 +283,11 @@
 <div class="pn on" id="p-tone">
 <h3>Presets</h3>
 <input type="search" id="q" placeholder="Search presets" aria-label="Search presets"><div class="chips" id="pcat"><button class="on" data-c="all">All</button><button data-c="mono">Mono</button><button data-c="multi">Multi</button><button data-c="trio">Trio</button><button data-c="duo">Duo</button><button data-c="mine">Mine</button><button data-c="film">Film</button></div><div id="plist"></div>
-<h3>Gradient map</h3>
+<div class="tone-quick-bar">
+<div class="bar tone-actions"><button id="flip" class="pri">Flip preset</button><button id="rand">Random</button><button id="none">Off</button><button id="addp">Save</button><button id="rst">Reset</button></div>
+<label>Strength <input type="range" id="str" min="0" max="100" value="100"></label>
+</div>
+<details class="tone-adv"><summary>Gradient map &amp; stops</summary>
 <div class="gradient-editor">
 <div id="ramp" role="img" aria-label="Gradient stops from shadows to highlights"></div>
 <div id="gradient-handles" role="group" aria-label="Gradient colour stops"></div>
@@ -263,27 +300,51 @@
 <button id="gradient-delete">Remove stop</button>
 </div>
 <label><span><input type="checkbox" id="gradient-enabled"> Apply gradient map</span></label>
-<div class="bar"><button id="rand">Random palette</button><button id="none">No tone map</button><button id="flip">Flip</button><button id="addp">Save as preset</button><button id="rst">Reset</button></div>
-<label>Strength <input type="range" id="str" min="0" max="100" value="100"></label>
 <label>Map by <select id="gm-source"><option value="luma">Brightness</option><option value="light">Lightness</option><option value="red">Red channel</option><option value="green">Green channel</option><option value="blue">Blue channel</option></select></label>
 <label>Interpolation <select id="gm-curve"><option value="rgb">RGB</option><option value="smooth">Smooth stops</option><option value="linear">Linear light</option><option value="steps">Hard stops</option><option value="oklab">Perceptual (OKLab)</option></select></label>
 <label>Midpoint <input type="range" id="gm-mid" min="10" max="90" value="50"><output id="gm-value">50%</output></label>
 <div class="bar"><button id="gm-auto" title="Find a midpoint from the image or selection">Auto midpoint</button><button id="gm-reset">Reset mapping</button></div>
-<h3>Custom stops</h3>
+</details>
+<details class="tone-adv"><summary>Custom stops &amp; harmony</summary>
 <div class="chips" id="ctn" style="grid-template-columns:repeat(3,1fr)"><button data-n="2">Duo</button><button data-n="3" class="on">Trio</button><button data-n="4">Four</button><button data-n="5">Five</button><button data-n="6">Six</button><button data-n="8">Eight</button></div>
-
 <div class="bar"><button id="cimg2">Duo from image</button><button id="cimg3">Trio from image</button></div>
 <label>Harmony from <input type="color" id="hc" value="#e8467c"></label>
 <div class="chips" id="hrm" style="grid-template-columns:repeat(3,1fr)"><button data-h="comp">Complement</button><button data-h="tri">Triad</button><button data-h="ana">Analogous</button><button data-h="split">Split</button><button data-h="tet">Tetrad</button><button data-h="mono">Shades</button></div>
-
+</details>
 </div>
 
-<div class="pn" id="p-text"><div class="bar"><button id="text-add" class="pri">Add text</button><button id="text-draw" aria-pressed="false">Draw text box</button><button id="type-blank">Blank canvas</button></div>
-<label>Text layer <select id="text-layer"></select></label><button id="text-in-layers">Show in Layers</button><p id="text-empty" class="note"></p>
-<div id="ltx" hidden><h3>Text</h3><textarea id="txt" rows="2" aria-label="Text"></textarea><div class="bar"><button id="fill-import">Fill text with image…</button><button id="type-edit">Edit on canvas</button><button id="type-copy-style" title="Copy this text layer’s formatting">Copy style</button><button id="type-paste-style" title="Apply the copied formatting to this text layer">Paste style</button></div><span class="note" id="text-fill-status" role="status"></span><label>Text blend mode <select id="text-blend"></select></label><details id="type-path-section"><summary>Text on a path</summary><label>Baseline <select id="path-mode"><option value="off">Straight</option><option value="arc">Arc</option><option value="circle">Circle</option><option value="drawn">Drawn path</option></select></label><button id="path-draw" aria-pressed="false">Draw path on canvas</button><p class="note" id="path-msg"></p><div id="path-options"><label id="path-start-row">Start <input id="path-start" type="range" min="0" max="98" step="1"><output></output></label><label id="path-end-row">End <input id="path-end" type="range" min="2" max="100" step="1"><output></output></label></div></details><div id="type-design">
+<div class="pn" id="p-text">
+<div class="bar"><button id="text-add" class="pri" style="flex:1">+ Add Text</button><button id="text-draw" aria-pressed="false">Draw Box</button><button id="type-blank" hidden>Blank canvas</button></div>
+<label>Active text <select id="text-layer"></select></label><button id="text-in-layers" hidden>Show in Layers</button><p id="text-empty" class="note"></p>
+<div id="ltx" hidden>
+<textarea id="txt" rows="2" aria-label="Text" placeholder="Type your text here…"></textarea>
+<div class="bar"><button id="type-edit">Edit on canvas</button><button type="button" id="edit-by-letter-btn" class="pri">Edit Letter by Letter</button><button id="fill-import">Fill with image…</button><button id="type-copy-style" title="Copy this text layer’s formatting">Copy style</button><button id="type-paste-style" title="Apply the copied formatting to this text layer">Paste style</button></div>
+<details class="bg-rm-box" id="per-letter-studio"><summary>Letter-by-Letter Editor (Image, Font &amp; Color)</summary>
+<p class="note">Click any letter below to give that individual letter its own image, font, color, scale, or tilt.</p>
+<label>Word <input type="text" id="pl-text" maxlength="24" value="TOTONE" placeholder="Type text…"></label>
+<div class="pl-tiles" id="pl-tiles" aria-label="Select a letter to style"></div>
+<p class="note" id="pl-cur-label" style="font-weight:600;color:var(--ink)"></p>
+<div class="bar"><button type="button" id="pl-img-btn" class="pri" style="flex:1">Fill This Letter With Image…</button><button type="button" id="pl-img-clear" hidden>Clear Image</button><input type="file" id="pl-img-file" accept="image/*" hidden></div>
+<div id="pl-img-opts" hidden>
+<label>Image zoom <input type="range" id="pl-img-zoom" min="50" max="300" value="110"><output>110%</output></label>
+<label>Image pan X <input type="range" id="pl-img-x" min="-100" max="100" value="0"><output>0%</output></label>
+<label>Image pan Y <input type="range" id="pl-img-y" min="-100" max="100" value="0"><output>0%</output></label>
+</div>
+<label>Letter font <select id="pl-font"></select></label>
+<label>Letter color <input type="color" id="pl-col" value="#ffffff"></label>
+<label>Letter scale <input type="range" id="pl-scale" min="60" max="160" value="100"><output>100%</output></label>
+<label>Letter tilt <input type="range" id="pl-tilt" min="-25" max="25" value="0"><output>0°</output></label>
+<label>Base size <input type="range" id="pl-size" min="36" max="360" value="160"><output>160</output></label>
+<label>Spacing <input type="range" id="pl-track" min="-20" max="60" value="10"><output>10</output></label>
+<label>Outline <input type="color" id="pl-scol" value="#000000"><input type="range" id="pl-sw" min="0" max="20" value="0"><output>0</output></label>
+<div class="bar"><button type="button" id="pl-add" class="pri" style="flex:1">Apply Letter-by-Letter Layer</button></div>
+</details>
+<span class="note" id="text-fill-status" role="status"></span>
+<label>Blend mode <select id="text-blend"></select></label>
+<details id="type-path-section"><summary>Text on a path</summary><label>Baseline <select id="path-mode"><option value="off">Straight</option><option value="arc">Arc</option><option value="circle">Circle</option><option value="drawn">Drawn path</option></select></label><button id="path-draw" aria-pressed="false">Draw path on canvas</button><p class="note" id="path-msg"></p><div id="path-options"><label id="path-start-row">Start <input id="path-start" type="range" min="0" max="98" step="1"><output></output></label><label id="path-end-row">End <input id="path-end" type="range" min="2" max="100" step="1"><output></output></label></div></details><div id="type-design">
 <div class="bar"><button id="letter-reset">Reset lettering effects</button></div>
-<details open><summary>Lettering presets</summary><div class="sty" id="letter-looks"></div></details>
-<details open><summary>Warp shape</summary><button id="custom-warp" data-shape="custom" aria-pressed="false">Custom warp</button>
+<details><summary>Lettering presets</summary><div class="sty" id="letter-looks"></div></details>
+<details><summary>Warp shape</summary><button id="custom-warp" data-shape="custom" aria-pressed="false">Custom warp</button>
 <div id="mesh-bend"><label>Bend <input id="letter-bend" data-prop="bend" type="range" min="-100" max="100" data-unit="%"><output></output></label></div>
 <div id="mesh-tools" hidden><label>Warp points <input id="mesh-count" type="range" min="6" max="34" step="2" value="10"><output id="mesh-count-value">10</output></label><button id="mesh-flat">Reset custom warp</button><p class="note">Drag the top and bottom points to curve the lettering. Pull a side point inward to pinch that edge.</p>
 <label>Control point <select id="mesh-point"></select></label>
@@ -443,6 +504,26 @@
 </div>
 
 <div class="pn" id="p-film">
+<div class="bg-rm-box" id="polaroid-studio">
+<div class="pol-head"><h4>Polaroid &amp; Disposable Camera</h4><button type="button" id="pol-reset-top" title="Reset Polaroid look, frame &amp; caption">Reset</button></div>
+<p class="note">Click any film stock or frame to switch live without stacking.</p>
+<div class="pol-stock-grid" id="pol-stock-grid"></div>
+<div class="pol-frame-grid" id="pol-frame-grid" aria-label="Polaroid frame previews"></div>
+<label hidden>Frame <select id="pol-frame"><option value="classic">Polaroid Classic White</option><option value="aged">Aged Vintage Cream</option><option value="black">Polaroid Matte Black</option><option value="wide">Wide Format White</option><option value="mint">Duochrome Mint</option><option value="blush">Blush Pink</option><option value="sky">Sky Pastel</option><option value="terra">Terracotta</option><option value="gold">Gold Foil</option><option value="strip35">35mm Film Strip</option><option value="custom">Custom Frame Color</option><option value="none">No Frame (Filter Only)</option></select></label>
+<label id="pol-col-row" hidden>Frame color <input type="color" id="pol-col" value="#d6d1c4"></label>
+<label>Strength <input type="range" id="pol-int" min="10" max="100" value="88"><output>88%</output></label>
+<label>Film grain <input type="range" id="pol-grain" min="0" max="50" value="12"><output>12</output></label>
+<label>Aged film <input type="range" id="pol-age" min="0" max="100" value="14"><output>14%</output></label>
+<label>Aged frame <input type="range" id="pol-frame-age" min="0" max="100" value="0"><output>0%</output></label>
+<label><span><input type="checkbox" id="pol-leak"> Warm corner light leak</span></label>
+<label><span><input type="checkbox" id="pol-date"> Retro quartz LED date</span></label>
+<label>Caption <input type="text" id="pol-cap" maxlength="38" placeholder="Write on the Polaroid…"></label>
+<label>Caption style <select id="pol-font"><option value="sharpie" selected>Sharpie Marker</option><option value="hand">Handwritten Note</option><option value="pen">Ballpoint Pen</option><option value="script">Brush Script</option><option value="typewriter">Vintage Typewriter</option><option value="mono">Archive Mono</option></select></label>
+<label>Ink color <span class="pol-ink-row" id="pol-ink-swatches"><button type="button" data-ink="#1c1b1a" style="background:#1c1b1a" title="Sharpie Black"></button><button type="button" data-ink="#1d4ed8" style="background:#1d4ed8" title="Blue Ballpoint"></button><button type="button" data-ink="#dc2626" style="background:#dc2626" title="Red Marker"></button><button type="button" data-ink="#b48a38" style="background:#b48a38" title="Gold Sharpie"></button><button type="button" data-ink="#f5f5f7" style="background:#f5f5f7" title="White Chalk"></button><input type="color" id="pol-ink" value="#1c1b1a" aria-label="Custom ink color"></span></label>
+<label>Caption size <input type="range" id="pol-capsz" min="60" max="150" value="100"><output>100%</output></label>
+<div class="bar"><button type="button" id="pol-clear" disabled style="flex:1">Reset Polaroid / Film</button></div>
+</div>
+<h3>Film Stocks &amp; Lab</h3>
 <label>Film tools <select id="film-section"><option value="presets">Film presets</option><option value="grade">Light and color</option><option value="detail">Photo detail &amp; white balance</option><option value="finish">Grain and glow</option><option value="double">Double exposure</option></select></label>
 <details id="batch-panel"><summary>Saved looks and batch export</summary><label>Look name <input id="look-name" type="text" maxlength="64" placeholder="My film look"></label><button id="look-save">Save current film and glints</button><fieldset id="batch-setup"><label>Saved look <select id="look-list"></select></label><button id="look-apply">Apply to this photo</button><label>Batch photos <input id="batch-files" type="file" accept="image/*" multiple></label><div id="batch-items"></div><button id="batch-export" disabled>Export PNG set (.zip)</button></fieldset><p class="note" role="status" id="look-status"></p></details>
 <button id="film-grading">Curves and color grading</button><p class="note" id="film-status" aria-live="polite"></p><div id="film-controls"></div>
@@ -452,14 +533,16 @@
 </div>
 <div class="pn" id="p-glints">
 <div id="studio-overlays-box">
-<h3 style="margin-top:0;border-top:0;padding-top:0">Studio Overlays (30+ HD)</h3>
-<p class="note">Procedural light leaks, bokeh, film burns, dust, rain, fog, scanlines &amp; frames. Click any overlay to add as an editable layer.</p>
+<h3 style="margin-top:0;border-top:0;padding-top:0">Overlays, Old Paper &amp; Grain</h3>
+<label>Default Film Grain <input type="range" id="ov-grain-sync" min="0" max="100" value="0"><output>0</output></label>
+<p class="note">Photorealistic old paper, crumpled parchment, 35mm grain, dust, optical light leaks &amp; real lens bokeh.</p>
 <div class="el-chips" id="sov-cats">
 <button type="button" class="on" data-oc="all">All</button>
+<button type="button" data-oc="paper">Old Paper</button>
+<button type="button" data-oc="grunge">Grain &amp; Film</button>
 <button type="button" data-oc="leaks">Leaks</button>
 <button type="button" data-oc="bokeh">Bokeh</button>
-<button type="button" data-oc="grunge">Textures</button>
-<button type="button" data-oc="weather">Weather</button>
+<button type="button" data-oc="weather">Atmosphere</button>
 <button type="button" data-oc="frames">Frames</button>
 </div>
 <div class="up-grid" style="margin:6px 0">
@@ -583,10 +666,13 @@
 </div>
 <div class="bar"><button id="ov-shuffle">Shuffle pattern</button><button id="ov-reset">Reset overlay settings</button></div>
 </div>
+<div hidden>
 <h3 id="overlay-library-heading">Overlay library</h3>
 <input type="search" id="ov-search" placeholder="Search overlays" aria-label="Search overlays">
 <label>Category <select id="ov-category"><option value="">All overlays</option><option>Light</option><option>Texture</option><option>Pattern</option><option>Frame</option><option>Water</option><option>Photo</option></select></label>
 <div class="ovg" id="ovg"></div><p class="note" id="ov-empty" hidden>No matching overlays.</p>
+</div>
+<div class="bar"><button type="button" onclick="document.querySelector('.tabs [data-t=glints]')?.click()" style="flex:1">Open Overlays &amp; Old Paper →</button><button type="button" onclick="document.querySelector('.tabs [data-t=borders]')?.click()" style="flex:1">Open Borders →</button></div>
 <div id="lctl" hidden><div class="bar"><button id="lup">Forward</button><button id="ldn">Backward</button></div><h3>Transform</h3><label>Size <input type="range" id="bs" min="3" max="400" value="100"></label><label>Rotate <input type="range" id="lr" min="-180" max="180" value="0"></label><div class="bar"><button id="lflip">Flip</button><button id="lr90">Rotate 90°</button><button id="lcrop">Crop</button><button id="lrc">Reset crop</button><button id="lfit">Fill canvas</button><button id="lcen">Centre</button></div><div class="bar"><button data-al="l">Left</button><button data-al="c">Centre</button><button data-al="r">Right</button><button data-al="t">Top</button><button data-al="m">Middle</button><button data-al="b">Bottom</button></div><h3>Effects</h3><label><span><input type="checkbox" id="fsh"> Shadow or glow</span><input type="color" id="fsc" value="#000000" aria-label="Shadow colour"></label><label>Across <input type="range" id="fsx" min="-100" max="100" value="12"></label><label>Down <input type="range" id="fsy" min="-100" max="100" value="12"></label><label>Blur <input type="range" id="fsb" min="0" max="80" value="18"></label><label>Strength <input type="range" id="fsa" min="0" max="100" value="60"></label><label><span><input type="checkbox" id="fol"> Outline</span><input type="color" id="foc" value="#ffffff" aria-label="Outline colour"></label><label>Width <input type="range" id="fow" min="1" max="60" value="6"></label><h3>Glow</h3><label><span><input type="checkbox" id="gon"> Glow</span><input type="color" id="gc" value="#7fd4ff" aria-label="Glow colour"></label><label>Size <input type="range" id="gr" min="2" max="200" value="40"></label><label>Strength <input type="range" id="gi" min="1" max="100" value="60"></label><label>Spread <input type="range" id="gsp" min="0" max="40" value="0"></label><label><span><input type="checkbox" id="gown"> Use the layer's own colours</span></label><label>Blend <select id="gbm"><option value="source-over">Normal</option><option value="screen">Screen</option><option value="lighter">Add</option></select></label><div class="sty" id="gpre"><button data-g="soft">Soft</button><button data-g="neon">Neon</button><button data-g="halo">Halo</button><button data-g="fire">Fire</button><button data-g="bloom">Bloom</button><button data-g="ice">Ice</button></div>
 <h3>Layer look</h3><label>Brightness <input type="range" id="lkb" min="-100" max="100" value="0"></label><label>Contrast <input type="range" id="lkc" min="-100" max="100" value="0"></label><label>Saturation <input type="range" id="lks" min="-100" max="100" value="0"></label><label>Hue shift <input type="range" id="lkh" min="-180" max="180" value="0"></label><label>Blur <input type="range" id="lkr" min="0" max="40" value="0"></label><label>Black and white <input type="range" id="lkg" min="0" max="100" value="0"></label><label><span><input type="checkbox" id="lki"> Invert</span></label><label><span><input type="checkbox" id="ltn"> Tint</span><input type="color" id="ltc" value="#ff5f2e" aria-label="Tint colour"></label><label>Tint amount <input type="range" id="lta" min="0" max="100" value="60"></label><div class="bar"><button id="ltone">Apply tone map to layer</button><button id="lklr">Reset look</button></div><p class="note" id="lmsg"></p>
 <h3>Transparency</h3><div class="bar"><button id="tkp">Pick colour</button><input type="color" id="tk" value="#ffffff" aria-label="Key colour"><button id="tkr">Remove colour</button></div><label>Tolerance <input type="range" id="ttl" min="0" max="200" value="40"></label><label>Softness <input type="range" id="tsf" min="0" max="100" value="30"></label><div class="bar"><select id="tgd" aria-label="Fade direction"><option value="l">Fade in from left</option><option value="r">Fade in from right</option><option value="t">Fade in from top</option><option value="b">Fade in from bottom</option></select><button id="tgf">Fade</button></div><label>Fade length <input type="range" id="tgl" min="10" max="100" value="60"></label><label>Edge size <input type="range" id="ted" min="1" max="50" value="8"></label><div class="bar"><button id="tef">Soften edges</button><button id="tia">Invert alpha</button><button id="tra">Reset alpha</button></div><label>Brightness cut <input type="range" id="tth" min="0" max="255" value="200"></label><div class="bar"><button id="tlt">Lights to clear</button><button id="tdk">Darks to clear</button></div><label><span><input type="checkbox" id="lsolo"> View layer alone</span></label></div><label><span><input type="checkbox" id="lgrade" checked> Colour grading includes layers</span></label><p class="note">Drag to move (it snaps to the centre and edges; hold Alt to skip). Corners resize and the round handle rotates (Shift snaps). Arrow keys nudge, Delete removes. The eye shows or hides, the lock protects a layer, double-click a name to rename, drag rows to reorder.</p></div>
@@ -606,14 +692,48 @@
 <select id="crop-ov-style" aria-label="Crop overlay grid" style="max-width:136px;padding:3px 6px;font-size:12px"><option value="thirds">Rule of Thirds</option><option value="golden">Golden Ratio</option><option value="diag">Diagonals</option><option value="fine">Fine Level Grid</option></select></label>
 <label><span><input type="checkbox" id="crop-constrain" checked> Constrain crop when straightening</span></label>
 <p class="note" id="cinfo"></p>
-<div class="bar"><button class="pri" id="capply">Apply crop</button><button id="creset">Reset</button></div>
+<div class="bar"><button class="pri" id="capply" hidden>Apply crop</button><button id="creset">Reset ratio</button><button type="button" id="c-reedit" disabled title="Re-open full image with your previous crop box so you can expand or adjust it">Re-edit crop</button><button type="button" id="c-restore" disabled title="Restore the full uncropped original image">Restore original</button></div>
+<h3>Expand Canvas</h3>
+<label>Amount (px) <input type="range" id="exp-amt" min="20" max="600" step="10" value="120"><output>120 px</output></label>
+<label>Sides <select id="exp-sides"><option value="all">All sides</option><option value="lr">Left &amp; Right</option><option value="tb">Top &amp; Bottom</option><option value="bot">Bottom only</option></select></label>
+<label>Fill <select id="exp-fill"><option value="blur">Blurred photo</option><option value="edge">Edge stretch</option><option value="white">White</option><option value="black">Black</option><option value="transparent">Transparent</option></select></label>
+<div class="bar"><button type="button" id="exp-run" class="pri" style="flex:1">Expand canvas</button></div>
 <h3>Orientation</h3><div class="bar"><button data-film-geometry="left">Rotate left</button><button data-film-geometry="right">Rotate right</button></div><div class="bar"><button data-film-geometry="flip-x">Flip horizontal</button><button data-film-geometry="flip-y">Flip vertical</button></div>
 <label>Straighten <input id="film-angle" type="range" min="-45" max="45" step=".5" value="0"><output id="film-angle-value">0°</output></label><button data-film-geometry="straighten">Apply straighten</button>
 <details id="outside-frame"><summary>Outside frame</summary><label>Units <select id="outside-unit"><option value="pixels">Pixels</option><option value="percent">Percent of short edge</option></select></label>
 <label>Link edges <input type="checkbox" checked id="outside-link"></label><label>Top <input type="number" id="outside-top" min="0" value="4"></label><label>Right <input type="number" id="outside-right" min="0" value="4"></label><label>Bottom <input type="number" id="outside-bottom" min="0" value="4"></label><label>Left <input type="number" id="outside-left" min="0" value="4"></label><label>Frame color <input type="color" id="outside-color" value="#ffffff"></label><button id="outside-picker">Pick screen color</button><label>Opacity <input id="outside-opacity" type="range" min="0" max="100" value="100"></label><button id="outside-apply">Add outside frame</button><p class="note" role="status" id="outside-status"></p></details></div>
 
+<div class="pn" id="p-borders">
+<h3>Borders &amp; Custom Frames</h3>
+<p class="note">Click any border style to preview live, or upload your own border image/texture.</p>
+<div class="brd-style-grid" id="brd-style-grid"></div>
+<div id="brd-col-row" hidden><label>Border color <input type="color" id="brd-col" value="#2f7cf6"></label></div>
+<div id="brd-img-row" hidden>
+<div class="bar"><button type="button" id="brd-img-btn" class="pri" style="flex:1">Upload Custom Border Image…</button><input type="file" id="brd-img-file" accept="image/*" hidden></div>
+<label>Image fit <select id="brd-img-fit"><option value="cover">Cover</option><option value="tile">Tile / Repeat</option><option value="stretch">Stretch</option></select></label>
+</div>
+<label>Thickness <input type="range" id="brd-size" min="2" max="28" value="8"><output>8%</output></label>
+<label>Inner corner radius <input type="range" id="brd-rad" min="0" max="60" value="0"><output>0 px</output></label>
+<label><span><input type="checkbox" id="brd-shadow" checked> Soft inner frame shadow</span></label>
+<div class="bar"><button type="button" id="brd-clear" disabled style="flex:1">Remove border</button></div>
+</div>
 <div class="pn" id="p-design">
 <div class="bar"><button id="design-new-btn" class="pri">New / Magic Resize</button><button id="design-elements-btn">Web elements</button></div>
+<div class="bg-rm-box" id="sticker-studio">
+<h4>Sticker Mode Studio</h4>
+<p class="note">Upload any PNG/image as a sticker (or style your active layer) with live metallic, foil, die-cut frame &amp; shadow filters.</p>
+<div class="bar">
+<button type="button" id="stk-upload-btn" class="pri" style="flex:1">Upload Sticker…</button>
+<button type="button" id="stk-apply-active">Style Active Layer</button>
+<input type="file" id="stk-upload-file" accept="image/*" hidden>
+</div>
+<label>Finish <select id="stk-finish"><option value="matte">Matte Vinyl</option><option value="chrome">Chrome Metallic</option><option value="holo">Holographic Foil</option><option value="gold">Brushed Gold</option><option value="silver">Brushed Silver</option><option value="glossy">Glossy Laminated</option></select></label>
+<label>Frame / Cut <select id="stk-frame"><option value="diecut-white">Die-Cut White Border</option><option value="diecut-black">Die-Cut Black Border</option><option value="diecut-custom">Custom Color Cut</option><option value="square">Square Badge Frame</option><option value="stamp">Postage Stamp Edge</option><option value="none">Borderless</option></select></label>
+<label>Shadow <select id="stk-shadow"><option value="soft">Soft Studio Shadow</option><option value="peel">3D Peel Lift Shadow</option><option value="hard">Hard Pop-Art Offset</option><option value="neon">Neon Rim Glow</option><option value="none">No Shadow</option></select></label>
+<label id="stk-bcol-row" hidden>Border / Glow color <input type="color" id="stk-bcol" value="#ffffff"></label>
+<label>Border width <input type="range" id="stk-bw" min="0" max="44" value="14"><output>14 px</output></label>
+<label>Metallic sheen <input type="range" id="stk-sheen" min="10" max="100" value="68"><output>68%</output></label>
+</div>
 <h3>Templates</h3>
 <p class="note">Start from an editable multi-layer design template.</p>
 <div class="studio-grid two" id="tpl-grid"></div>
@@ -686,8 +806,15 @@
 <div class="bar"><button type="button" id="qr-add" class="pri" style="flex:1">Add QR code layer</button><button type="button" id="qr-dl">Save PNG</button></div>
 <h3>Photo frames</h3>
 <p class="note">Clip the selected layer (or base photo) into a Canva-style frame.</p>
+<div class="bar"><button type="button" id="frame-upload-btn" class="pri" style="flex:1">Upload Photo Into Frame…</button><input type="file" id="frame-upload-file" accept="image/*" hidden></div>
 <label><span><input type="checkbox" id="frame-outline"> Add crisp border</span><input type="color" id="frame-border-col" value="#ffffff" aria-label="Frame border colour"></label>
 <div class="studio-grid" id="frame-grid"></div>
+<div id="frame-adjust-box" class="bg-rm-box" hidden>
+<label>Photo zoom <input type="range" id="frame-zoom" min="100" max="280" value="100"><output>100%</output></label>
+<label>Pan X <input type="range" id="frame-px" min="-100" max="100" value="0"><output>0%</output></label>
+<label>Pan Y <input type="range" id="frame-py" min="-100" max="100" value="0"><output>0%</output></label>
+<label>Border width <input type="range" id="frame-bw" min="0" max="32" value="8"><output>8 px</output></label>
+</div>
 <h3>Font pairings</h3>
 <p class="note">Add a pre-styled headline + subtitle combo in one click.</p>
 <div id="font-pair-list"></div>
@@ -831,6 +958,12 @@
 <label>Perspective tilt <input type="range" id="ps-persp" min="-40" max="40" value="0"></label>
 <div class="bar"><button id="ps-skew-apply" class="pri">Apply skew</button><button id="ps-skew-reset">Reset</button></div>
 </div>
+<nav id="mob-nav" aria-label="Mobile quick editor">
+<button type="button" class="on" data-mm="presets"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>Presets</button>
+<button type="button" data-mm="color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Color</button>
+<button type="button" data-mm="crop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14M18 22V8a2 2 0 0 0-2-2H2"/></svg>Crop</button>
+<button type="button" data-mm="all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>All Tools</button>
+</nav>
 </aside>
 </main>
 <section id="pages-bar" aria-label="Document pages" hidden>
@@ -1372,6 +1505,10 @@
 <button type="button" data-st="keys">Shortcuts</button>
 </div>
 <div class="set-pane" id="st-theme">
+<div class="ui-mode-seg" id="set-ui-mode" role="group" aria-label="Interface style">
+<button type="button" class="on" data-uim="pro"><strong>Studio Pro</strong><small>Refined neutral graphite, Figma/Lightroom feel</small></button>
+<button type="button" data-uim="classic"><strong>Classic Totone</strong><small>Original dark-navy look &amp; layout</small></button>
+</div>
 <p class="note">Pick a preset theme or fine-tune any UI color, radius, density, font, and layout live. Changes save automatically.</p>
 <div id="set-themes" class="theme-grid"></div>
 <div class="up-grid">
@@ -1457,7 +1594,92 @@
 </dialog>
 <dialog id="patch-notes-dialog" class="studio-dialog" aria-label="Patch Notes">
 <h2>Patch Notes</h2>
-<pre id="patch-notes-text" class="patch-notes-pre">v5.4.1
+<pre id="patch-notes-text" class="patch-notes-pre">v7.6.0
+- Fixed Floating Layer Bar Covering Rotate Handle: positioned the quick layer toolbar cleanly below the selected layer (flipping above the rotate handle only when near the bottom edge) so the top rotate knob is always unobstructed.
+- Real-Time Live Export Preview (Ctrl+S): Export Studio now renders a live compressed preview image directly inside the modal as you adjust format, quality, dimensions, or MB/KB size caps.
+- Smart Photo Frame Drop-Zones (Design → Studio): upload any photo directly into a Canva-style photo frame (Arch, Circle, Squircle, Star, Heart, Torn Paper, Phone, Polaroid) with live Photo Zoom, Pan X/Y, and Border Width controls.
+
+v7.5.1
+- Positioned the subtle red heart Donate icon directly to the left of the ⋯ menu button in the top-right bar.
+
+v7.5.0
+- Fixed Bottom Canvas HUD Split Toggle: clicking "Split" in the floating bottom bar now cleanly toggles Before/After Split both on and off.
+- Cleaner Header &amp; Donate Placement: moved the subtle red heart Donate icon to the right beside the ⋯ menu, added a Donate link inside the ⋯ menu, and switched the mobile Export button to a crisp icon-only button.
+- Upgraded Mobile Bottom Nav &amp; Sliders: replaced the Grain-only tab with Crop &amp; Straighten (moving Grain &amp; Vignette right into the Color tab), refined mobile slider track thickness, and hid the All Layers pill on the empty start screen.
+
+v7.4.0
+- Subtle Red Heart Donate Icon: restored Buy Me a Coffee support link right beside the Totone title as a clean, understated red heart icon in Studio Pro.
+- Simplified Text &amp; Letter-by-Letter Flow (Design → Type): click "+ Add Text", type your words, and hit "Edit Letter by Letter" to customize each letter's image, font, color, scale, and tilt directly without clutter.
+
+v7.3.0
+- Per-Letter Image, Font &amp; Color Studio (Design → Type): click any individual letter in a word to give it its own uploaded image (with zoom &amp; pan), font, color, scale, and tilt — renders live onto an editable layer.
+- Dedicated Pro Borders Mode (Edit → Borders): 11 live non-destructive borders including Gallery White, Matte Black, Archival Cream, Double Pinstripe, Museum Mat, Torn Deckle Paper, 35mm Contact Frame, Brushed Gold, Walnut Frame, Custom Color &amp; Upload Custom Image Border (Cover/Tile/Stretch).
+- Floating "All Layers" Drawer: new left-side "All Layers" button on the canvas pops open a full-height drawer showing every layer with thumbnails and 1-click visibility, reorder, and delete controls.
+- Cleaner Layers Panel &amp; Even Top Category Bar: removed the legacy low-res overlay list from Layers (linking directly to the photorealistic Overlays &amp; Borders studios) and balanced spacing across AI | Color | Edit | Layers | Design | FX.
+
+v7.2.0
+- Fixed Custom Stamp Brushes: Draw → Custom Stamp Brushes (built-in &amp; uploaded PNG stamps) now properly sync ImageData onto a dedicated Stamp Paint layer so every click &amp; drag paints reliably.
+- New Sticker Mode Studio (Design → Studio): upload any image as a sticker or style the active layer live with Chrome Metallic, Holographic Foil, Brushed Gold, Brushed Silver, Glossy Laminated, Die-Cut White/Black/Custom, Square Frame, Postage Stamp &amp; 3D Peel / Soft / Hard / Neon Shadows.
+- Photorealistic Overlays &amp; Old Paper Pack (moved to Edit → Overlays): rebuilt overlays with multi-octave fBM paper fibers, Aged Parchment, Crumpled Paper, Tea-Stained Sheet, 1970s Newsprint, Darkroom Paper, Folded Poster, 35mm Film Grain, authentic micro-dust, smooth optical light leaks, real spherical-aberration lens bokeh &amp; live Default Film Grain slider.
+- Dedicated Top-Level Layers Section: promoted Layers to its own top-level category tab (AI | Color | Edit | Layers | Design | FX) for instant 1-click access.
+
+v7.1.0
+- True Lightroom-Style Non-Destructive Crop Mode: while in Crop mode, the entire original photo stays visible dimmed behind the crop frame so you can freely drag/reposition and resize handles without prematurely slicing; leaving the Crop tab auto-commits the crop, and returning to Crop automatically re-opens the full photo behind your previous crop box.
+- Fixed Polaroid Double-Frame Stacking + Aged Frame Slider: locked the clean unframed source snapshot with async render sequencing so switching stocks or frames never stacks a second frame; added an "Aged frame" patina/wear slider for any frame color, authentic 90s quartz LED date stamp font, and a 1-click Reset button right at the top of Polaroid Studio.
+- True 100% Reset Look: now resets Polaroid, Lightroom Basic/HSL/Wheels/Curves/Point Color, Film, Glints, Overlays, Skew, Pixel, Tone, Light, Layers, Crop &amp; restores the exact starting default photo.
+
+v7.0.0
+- Live 1-Click Polaroid &amp; Disposable Camera Switching: removed the Apply button — click any of the 12 film stocks (added CineStill 800T, Kodak Gold 200, Lomo Purple &amp; Sepia 1974) or 12 visual Polaroid frames (added Duochrome Mint, Blush Pink, Sky Pastel, Terracotta, Gold Foil &amp; 35mm Film Strip) to switch instantly without stacking frames.
+- Sharpie &amp; Custom Caption Styles: live-updating Polaroid captions with Sharpie Marker (with realistic ink bleed), Handwritten Note, Ballpoint Pen, Brush Script, Vintage Typewriter &amp; Archive Mono fonts, quick ink swatches + custom color, and size slider.
+
+v6.9.0
+- Direct Canvas Text Editing for All Templates &amp; Text Layers: double-click any text layer directly on the canvas (from any tab) to edit its text immediately — templates also auto-select their headline layer on load.
+- Visual Polaroid Frame Previews: added miniature physical Polaroid frame preview cards (Classic White, Aged Cream, Matte Black, Wide Format, Custom Color, Filter Only) inside the Polaroid &amp; Disposable Camera studio.
+- Full-Revert Reset Look: "Reset look" now truly reverts the entire image back to the original starting photo (reversing filters, Polaroid frames, crops, expands, layers, and Lightroom/tone adjustments — 100% undoable with Ctrl+Z).
+
+v6.8.0
+- Polaroid &amp; Disposable Camera Studio (Color → Film): 8 authentic film stocks with real dye-curve color science (QuickSnap 400, FunSaver 800, Ilford HP5, Polaroid SX-70, Polaroid 600, Polaroid i-Type, Aged 1998 Film, Instax Flash), physical Polaroid frames (Classic White, Aged Cream, Matte Black, Wide, Custom Color), optional handwritten captions, corner light leaks &amp; retro orange date stamp.
+- Instant Auto-Crop + Basic Canvas Expand: removed the Apply Crop button — dragging a crop area or picking an aspect ratio auto-crops immediately (with 1-click Re-edit crop &amp; Restore original), plus a simple Expand Canvas tool (Blurred photo, Edge stretch, White, Black, or Transparent).
+- Upgraded Start Page: removed Sample Photo, expanded quick aspect ratios to 8 presets (1:1, 4:5, 9:16, 16:9, 3:2, 2:3, 21:9, A4), added custom Width × Height input supporting px, inches (300 DPI), cm (300 DPI), and aspect ratios, and fixed spacing around Recover Last Session.
+
+v6.7.0
+- Non-Destructive Restorable Crop: after cropping an image, click "Re-edit crop" anytime to bring back the full original canvas with your previous crop box pre-framed for expansion/adjustment, or click "Restore original" to undo all crops in 1 click.
+- Redesigned 12 Editorial Studio Templates: replaced all 12 starter templates with clean designer-grade layouts (Swiss Exhibition, A24 Cinema Poster, Vinyl Sleeve, Editorial Lookbook, Brutalist Type Grid, Clean YouTube Card, Gallery Print Mat, Minimal Quote, Story Editorial, Duotone Zine, Product Spec Sheet, Y2K Archive).
+- Cleaner Start Screen &amp; UI Polish: removed divider lines on the start page and refined spacing, typography, and visual hierarchy across Studio Pro.
+
+v6.6.0
+- Zero-Scroll Feature Jump Bar: switched the Feature Jump Bar to a compact multi-row wrap with short, scannable labels (no horizontal scrolling or hidden off-screen pills) and live scroll-spy highlighting as you move through any panel.
+
+v6.5.0
+- Desktop-Style Marquee Crop Selection: in the Crop tab, click and drag anywhere on the photo to highlight the exact area you want to keep (like selecting on a desktop), then drag edges/corners to fine-tune or hold Shift to draw a new box anytime.
+- Unified Smooth Panel Scrolling: eliminated nested scroll traps on Studio Overlays, Grade Presets, Filters, Film Stocks, and Warp Shapes so scrolling down to other features works effortlessly on both desktop and mobile.
+
+v6.4.0
+- Integrated 1-Click Feature Jump Bar: replaced the floating side button with a sleek horizontal pill bar built directly beneath the inspector tabs — jump to any section or tool in the current tab with a single click (supports mouse-wheel horizontal scroll, auto-expands collapsed sections, and highlights the target).
+
+v6.3.0
+- Side "Features" Quick-Jump Popover: a clean matte button on the edge of the right panel pops open a list of every feature and section inside the active tab — click any item to auto-expand, smooth-scroll, and highlight it instantly.
+- Zero Text Clipping &amp; Box Overflow Fixes: widened Studio Pro inspector to 360px, replaced fixed clipping button/select heights with comfortable min-heights and line-heights, and fixed wrapping on Presets action bars, chips, cards, and labels across desktop and mobile.
+
+v6.2.0
+- Cleaner Pro Header &amp; UX Flow: removed the top-left T icon box and the star next to AI; moved redundant Compare/Split/Zoom controls out of the top bar into the floating bottom Canvas HUD so the titlebar breathes.
+- Streamlined Presets Workflow: placed Flip Preset, Strength, Random, Off &amp; Save directly below the preset list and tucked Gradient Map &amp; Custom Stops into clean collapsible sections.
+- Redesigned Mobile UI: dedicated thumb-friendly 4-tab mobile bottom bar (Presets + Flip, Basic Color, Grain &amp; Finish, and All Tools) with live-synced touch sliders and a cleaner mobile top bar.
+
+v6.1.0
+- Matte Pro Aesthetic &amp; Canvas HUD UX: stripped all glowing shadows, ambient halos, and glassmorphic SaaS effects from Studio Pro in favor of a flat, color-accurate matte neutral palette (Figma / Lightroom / Capture One craft).
+- Floating Bottom Canvas HUD: quick Zoom (− / Fit / +), Hold-to-Compare, and Before/After Split bar floats cleanly below the artwork whenever an image is open.
+- Keyboard Zoom Shortcuts: Ctrl+0 fits to screen, Ctrl+1 jumps to 100%, and hovering any inspector slider row subtly highlights the active row.
+
+v6.0.0
+- Complete "Studio Pro" UI Redesign: ground-up Figma / Lightroom CC / Pixelmator Pro interface with 3-zone desktop titlebar, centered Spotlight Command Search bar, crisp SVG Undo/Redo &amp; Settings/Export icons, curated 12-tool left rail, elevated Obsidian Start Workspace with 1-click canvas size presets (1:1, 9:16, 16:9, 4:5), recessed segmented category switcher, clean underline sub-tabs, native pill toggle switches, squircle color wells, custom chevron dropdowns, ultra-slim scrollbars, and restrained Studio Blue accents.
+- 100% Classic Totone Compatibility: switch instantly between "Studio Pro" and "Classic Totone" anytime in Settings or the top-right ⋯ menu.
+
+v5.5.0
+- Added UI Style Switcher: choose between Studio Pro (new flagship neutral-graphite Lightroom/Figma interface with borderless toolbar, custom precision sliders, elevated welcome card, dot-grid stage &amp; refined inspector cards) and Classic Totone (original dark-navy UI)
+- Switch anytime in Settings -&gt; Theme &amp; UI, the More (...) menu, or Ctrl+K
+
+v5.4.1
 - Replaced og-preview.png with an editorial split-graded studio banner and added explicit 1200x630 Open Graph image metadata
 
 v5.4.0
@@ -1772,6 +1994,9 @@ v1.0.0
 <script defer src="js/studio-wave6.js"></script>
 <script defer src="js/studio-wave7.js"></script>
 <script defer src="js/studio-crop-pro.js"></script>
+<script defer src="js/studio-polaroid.js"></script>
+<script defer src="js/studio-stickers.js"></script>
+<script defer src="js/studio-creative.js"></script>
 <script defer src="js/studio-extend.js"></script>
 </body>
 </html>

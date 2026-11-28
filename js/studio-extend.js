@@ -51,14 +51,17 @@ cbUpload?.addEventListener('change',e=>{
 
 function stampCustomBrushAt(cx,cy){
  if(!customBrushImg||!base)return;
- if(!active||active.lk){
-  const cv=bc(W,H),d=cv.getContext('2d').getImageData(0,0,W,H);
-  pushU(mkSnap('p'));
-  const l={cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:1,r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:'Stamp Paint'};
-  layers.push(l);active=l;
+ if(!active||active.lk||active.tx||active.cv.width!==W||active.cv.height!==H||active.name!=='Stamp Paint'){
+  const existing=layers.find(l=>!l.lk&&l.vis&&l.name==='Stamp Paint'&&l.cv.width===W&&l.cv.height===H);
+  if(existing){active=existing}
+  else{
+   const cv=bc(W,H),d=cv.getContext('2d').getImageData(0,0,W,H);
+   const l={cv,d,o:null,lk:false,sh:null,ol:null,x:W/2,y:H/2,s:1,r:0,op:1,bm:'source-over',fl:false,vis:true,cl:0,ct:0,cr:0,cb:0,name:'Stamp Paint'};
+   layers.push(l);active=l;
+  }
  }
- const sz=Math.max(8,+($('draw-size')?.value||36)*1.4);
- const op=(+($('draw-op')?.value||100))/100;
+ const sz=Math.max(10,Math.round((+($('draw-size')?.value||36))*1.6));
+ const op=Math.max(0.05,Math.min(1,(+($('draw-op')?.value||100))/100));
  const scatter=(+($('cb-scatter')?.value||35))/100*sz*1.2;
  const jitter=(+($('cb-jitter')?.value||45))/100*Math.PI;
  const tint=!!$('cb-tint')?.checked,col=$('draw-col1')?.value||'#ffffff';
@@ -67,12 +70,13 @@ function stampCustomBrushAt(cx,cy){
  sg.drawImage(customBrushImg,0,0,sz,sz);
  if(tint){sg.globalCompositeOperation='source-in';sg.fillStyle=col;sg.fillRect(0,0,sz,sz)}
 
- const g=active.cv.getContext('2d');
+ const g=active.cv.getContext('2d',{willReadFrequently:true});
  const px=cx+(Math.random()-0.5)*scatter-active.x+active.cv.width/2;
  const py=cy+(Math.random()-0.5)*scatter-active.y+active.cv.height/2;
  g.save();g.globalAlpha=op;g.translate(px,py);g.rotate((Math.random()-0.5)*jitter);
  g.drawImage(stampCv,-sz/2,-sz/2);g.restore();
- if(typeof syncL==='function')syncL(active);
+ active.d=g.getImageData(0,0,active.cv.width,active.cv.height);
+ active.o=null;active.sil=null;active.gc=null;active.tnc=null;
 }
 
 c.addEventListener('pointerdown',e=>{

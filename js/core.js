@@ -142,8 +142,9 @@ async function load(f){
   const s=workingScale(bmp.width,bmp.height);
   W=Math.max(1,Math.round(bmp.width*s));H=Math.max(1,Math.round(bmp.height*s));c.width=W;c.height=H;
   ctx.drawImage(bmp,0,0,W,H);bmp.close();base=ctx.getImageData(0,0,W,H);orig=new ImageData(new Uint8ClampedArray(base.data),W,H);
+  window._totoneInitialStart={W,H,data:new Uint8ClampedArray(base.data)};
   versions=[];resetCorrectionTools();projectTitle=(f.name||'Totone').replace(/\.[^.]+$/,'');cancelPathInput();film?.reset(true,firstPhoto);$('zoom').value='0';$('zoom').onchange();
-  lasso=[];CR=tab==='crop'?cropInit():null;if(CR)cropInfo();
+  lasso=[];cropSrc=null;updCropRestoreUI();CR=tab==='crop'?cropInit():null;if(CR)cropInfo();
   setTypeDrawing(false);undoStack=[];redoS=[];edits=[];maskIdx=-1;sel=null;layers=[];active=null;refreshLayers();drawEdits();updInfo();c.style.display='block';$('empty').style.display='none';extract();film?.afterOpen();draw();syncActionStates();if(typeof showToast==='function')showToast(`Opened ${W} × ${H} px`,1600);return true;
 }
 function extract(){
@@ -541,8 +542,14 @@ function endLasso(md){md=md||lmd;const T=$('stool').value;
 }
 $('alle').onclick=()=>{palette.forEach(q=>{edits.push({f:q.map(Math.round),t:q.map(Math.round),tol:35})});maskIdx=-1;drawEdits();draw()};
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
-  tab=b.dataset.t;if(tab!=='layers'&&tab!=='text'&&typeDrawing)setTypeDrawing(false);if(tab!=='text')cancelPathInput();if(tab==='text'){if(!active?.tx)active=layers.findLast(l=>l.tx)||null;cropMode=false;refreshLayers()}document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
-  document.querySelectorAll('.pn').forEach(x=>x.classList.toggle('on',x.id==='p-'+tab));lasso=[];CR=tab==='crop'&&base?cropInit():null;if(CR)cropInfo();c.style.cursor=tab==='layers'?'default':'crosshair';if(tab==='layers')showOverlays();if(tab==='glints')syncGlintTool();if(tab==='film')film.build();if(tab==='grade'){film.syncGrade();if(!base)film.updateScopes()}draw()});
+  const prevTab=tab,nextTab=b.dataset.t;
+  if(prevTab==='crop'&&nextTab!=='crop'&&base&&CR&&(Math.round(CR.w)<W-1||Math.round(CR.h)<H-1)){applyCrop(true)}
+  tab=nextTab;if(tab!=='layers'&&tab!=='text'&&typeDrawing)setTypeDrawing(false);if(tab!=='text')cancelPathInput();if(tab==='text'){if(!active?.tx)active=layers.findLast(l=>l.tx)||null;cropMode=false;refreshLayers()}document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.pn').forEach(x=>x.classList.toggle('on',x.id==='p-'+tab));lasso=[];
+  if(tab==='crop'&&base){
+    if(cropSrc){reopenCropCanvas()}else{CR=cropInit()}
+  }else{CR=null}
+  if(CR)cropInfo();c.style.cursor=tab==='layers'?'default':'crosshair';if(tab==='layers')showOverlays();if(tab==='glints')syncGlintTool();if(tab==='film')film.build();if(tab==='grade'){film.syncGrade();if(!base)film.updateScopes()}draw()});
 const cmp=$('cmp');cmp.onpointerdown=()=>{showOrig=true;draw()};['pointerup','pointerleave','pointercancel'].forEach(t=>cmp.addEventListener(t,()=>{if(showOrig){showOrig=false;draw()}}));
 let dl=null;
 if(window.claude&&claude.use)claude.use('downloads').then(m=>{dl=m;$('psv').hidden=!m;if(typeof syncExp==='function')syncExp()}).catch(()=>{});
@@ -803,7 +810,38 @@ refreshLayers();
 
 const B4=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
 document.querySelectorAll('#pcat button').forEach(b=>b.onclick=()=>{pcat=b.dataset.c;document.querySelectorAll('#pcat button').forEach(x=>x.classList.toggle('on',x===b));showP($('q').value.toLowerCase());$('plist').scrollTop=0});
-$('rlook').onclick=()=>{if(!base)return;film.reset();edits=[];maskIdx=-1;drawEdits();cur=-1;$('str').value=100;$('reduce').checked=false;$('spl').checked=false;$('adjr').click();$('apx').value=1;pxo();setMapSettings();setStops(null);showP($('q').value.toLowerCase())};
+$('rlook').onclick=()=>{
+  if(!base)return;
+  pushU(documentSnapshot());
+  if(typeof window.resetPolaroidStudio==='function')window.resetPolaroidStudio(true);
+  const st=window._totoneInitialStart;
+  if(st&&st.data){
+    W=st.W;H=st.H;c.width=W;c.height=H;
+    base=new ImageData(new Uint8ClampedArray(st.data),W,H);
+    orig=new ImageData(new Uint8ClampedArray(st.data),W,H);
+    layers=[];active=null;sel=null;cropSrc=null;updCropRestoreUI();
+    outIm=null;fcache=null;cdirty=true;SCR.clear();jit=null;
+    if(zoomV&&$('zoom').value!=='0')c.style.width=W*zoomV+'px';
+    if(tab==='crop'){CR=cropInit();cropInfo()}
+  }
+  film.reset(true,false);
+  edits=[];maskIdx=-1;drawEdits();cur=-1;
+  $('str').value=100;$('reduce').checked=false;$('spl').checked=false;
+  $('adjr')?.click();
+  $('gp-reset')?.click();
+  $('grade-reset')?.click();
+  $('pc-reset')?.click();
+  $('glint-reset')?.click();
+  $('ov-reset')?.click();
+  $('ps-skew-reset')?.click();
+  ['lr-exp','lr-con','lr-hi','lr-sh','lr-wh','lr-bl','lr-temp','lr-tint','lr-tex','lr-cla','lr-deh','lr-vib','lr-sat','film-angle'].forEach(id=>{
+    const el=$(id);if(el){el.value='0';el.dispatchEvent(new Event('input',{bubbles:true}))}
+  });
+  $('apx').value=1;pxo();setMapSettings();setStops(null);
+  if(typeof syncAutoOutputs==='function')syncAutoOutputs();
+  refreshLayers();extract();updInfo();showP($('q').value.toLowerCase());draw();
+  if(typeof showToast==='function')showToast('Reset everything back to original photo',1800);
+};
 const help=$('help');$('helpb').onclick=()=>help.hidden=false;help.onclick=()=>help.hidden=true;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!help.hidden)help.hidden=true});
 let textEdit=null;
@@ -2807,6 +2845,7 @@ function rectFromAnchor(ax,ay,px,py,R){let w=Math.abs(px-ax),h=Math.abs(py-ay);c
   return{x:sx>0?ax:ax-w,y:sy>0?ay:ay-h,w,h}}
 function cropHit(p){const k=KK(),t=14*k,{x,y,w,h}=CR,px=p[0],py=p[1],nl=Math.abs(px-x)<t,nr=Math.abs(px-x-w)<t,nt=Math.abs(py-y)<t,nb=Math.abs(py-y-h)<t,inx=px>x-t&&px<x+w+t,iny=py>y-t&&py<y+h+t;
   if(nl&&nt)return'tl';if(nr&&nt)return'tr';if(nl&&nb)return'bl';if(nr&&nb)return'br';if(nt&&inx)return't';if(nb&&inx)return'b';if(nl&&iny)return'l';if(nr&&iny)return'r';
+  if(w>=W-2&&h>=H-2)return null;
   return px>x&&px<x+w&&py>y&&py<y+h?'move':null}
 function cropDrag(p){const{h,p:p0,r}=cd,R=aspR(),dx=p[0]-p0[0],dy=p[1]-p0[1];
   if(h==='move'){CR=clampR({x:r.x+dx,y:r.y+dy,w:r.w,h:r.h});return}
@@ -2822,14 +2861,36 @@ function drawCrop(){if(CR.x+CR.w>W+.5||CR.y+CR.h>H+.5)CR=cropInit();const{x,y,w,
   ctx.lineWidth=1.5*k;ctx.strokeStyle='#fff';ctx.strokeRect(x,y,w,h);
   if($('cgrid').checked){ctx.lineWidth=k;ctx.strokeStyle='rgba(255,255,255,.55)';ctx.beginPath();for(let i=1;i<3;i++){ctx.moveTo(x+w*i/3,y);ctx.lineTo(x+w*i/3,y+h);ctx.moveTo(x,y+h*i/3);ctx.lineTo(x+w,y+h*i/3)}ctx.stroke()}
   const hs=6*k;ctx.fillStyle='#fff';ctx.strokeStyle='#050c1f';ctx.lineWidth=1.5*k;for(const[px,py]of[[x,y],[x+w/2,y],[x+w,y],[x,y+h/2],[x+w,y+h/2],[x,y+h],[x+w/2,y+h],[x+w,y+h]]){ctx.fillRect(px-hs,py-hs,hs*2,hs*2);ctx.strokeRect(px-hs,py-hs,hs*2,hs*2)}ctx.restore()}
-function cropSnap(){const s={W,H,b:base,o:orig,sel,spatial:film?.space(),pos:layers.map(l=>[l,l.x,l.y])};return()=>{const cur=cropSnap();W=s.W;H=s.H;base=s.b;orig=s.o;sel=s.sel;film?.restoreSpace(s.spatial);s.pos.forEach(([l,x,y])=>{l.x=x;l.y=y});c.width=W;c.height=H;outIm=null;fcache=null;cdirty=true;SCR.clear();jit=null;if(CR)CR=cropInit();return cur}}
-function applyCrop(){if(!base||!CR)return;const x=Math.round(CR.x),y=Math.round(CR.y),w=Math.max(1,Math.min(W-x,Math.round(CR.w))),h=Math.max(1,Math.min(H-y,Math.round(CR.h)));if(w===W&&h===H)return;pushU(cropSnap());film?.transformSpace(new DOMMatrix().translate(-x,-y),w,h,null,{kind:'crop',x:x/W,y:y/H,w:w/W,h:h/H});
+let cropSrc=null;
+function updCropRestoreUI(){const a=$('c-reedit'),b=$('c-restore');if(a)a.disabled=!cropSrc;if(b)b.disabled=!cropSrc}
+function cropSnap(){const s={W,H,b:base,o:orig,sel,cropSrc:cropSrc?{...cropSrc}:null,spatial:film?.space(),pos:layers.map(l=>[l,l.x,l.y])};return()=>{const cur=cropSnap();W=s.W;H=s.H;base=s.b;orig=s.o;sel=s.sel;cropSrc=s.cropSrc?{...s.cropSrc}:null;updCropRestoreUI();film?.restoreSpace(s.spatial);s.pos.forEach(([l,x,y])=>{l.x=x;l.y=y});c.width=W;c.height=H;outIm=null;fcache=null;cdirty=true;SCR.clear();jit=null;if(CR)CR=cropInit();return cur}}
+function reopenCropCanvas(){if(!base||!cropSrc)return;const s=cropSrc;
+  W=s.W;H=s.H;base=new ImageData(new Uint8ClampedArray(s.base.data),W,H);orig=new ImageData(new Uint8ClampedArray(s.orig.data),W,H);
+  sel=null;layers.forEach(l=>{l.x+=s.x;l.y+=s.y});c.width=W;c.height=H;outIm=null;fcache=null;cdirty=true;SCR.clear();jit=null;
+  if(zoomV&&$('zoom').value!=='0')c.style.width=W*zoomV+'px';
+  film?.rememberPixels();
+  cropSrc=null;updCropRestoreUI();
+  CR={x:s.x,y:s.y,w:s.w,h:s.h};
+  extract();updInfo();refreshLayers();cropInfo()}
+function applyCrop(silent=false){if(!base||!CR)return;const x=Math.round(CR.x),y=Math.round(CR.y),w=Math.max(1,Math.min(W-x,Math.round(CR.w))),h=Math.max(1,Math.min(H-y,Math.round(CR.h)));if(w===W&&h===H)return;pushU(cropSnap());
+  if(!cropSrc){cropSrc={W,H,base:new ImageData(new Uint8ClampedArray(base.data),W,H),orig:new ImageData(new Uint8ClampedArray(orig.data),W,H),x,y,w,h}}else{cropSrc={...cropSrc,x:cropSrc.x+x,y:cropSrc.y+y,w,h}}
+  film?.transformSpace(new DOMMatrix().translate(-x,-y),w,h,null,{kind:'crop',x:x/W,y:y/H,w:w/W,h:h/H});
   const cut=im=>{const o=new ImageData(w,h);for(let j=0;j<h;j++)o.data.set(im.data.subarray(((y+j)*W+x)*4,((y+j)*W+x+w)*4),j*w*4);return o};
   base=cut(base);orig=cut(orig);if(sel){const s2=new Uint8Array(w*h);for(let j=0;j<h;j++)s2.set(sel.subarray((y+j)*W+x,(y+j)*W+x+w),j*w);sel=s2}
   layers.forEach(l=>{l.x-=x;l.y-=y});W=w;H=h;c.width=W;c.height=H;outIm=null;fcache=null;cdirty=true;SCR.clear();jit=null;
   if(zoomV&&$('zoom').value!=='0')c.style.width=W*zoomV+'px';
-  film?.rememberPixels();CR=cropInit();extract();updInfo();refreshLayers();cropInfo();draw()}
-c.addEventListener('pointerdown',e=>{if(tab!=='crop'||!CR||!base||spaceDown||e.button===1)return;e.stopImmediatePropagation();e.preventDefault();c.setPointerCapture(e.pointerId);const p=pos(e),h=cropHit(p);cd=h?{h,p,r:{...CR}}:{h:'new',p,r:null};if(!h)CR={x:p[0],y:p[1],w:0,h:0}},true);
+  film?.rememberPixels();CR=cropInit();updCropRestoreUI();extract();updInfo();refreshLayers();cropInfo();if(!silent)draw()}
+function restoreOriginalCrop(reedit){if(!base||!cropSrc)return;pushU(cropSnap());const s=cropSrc;
+  W=s.W;H=s.H;base=new ImageData(new Uint8ClampedArray(s.base.data),W,H);orig=new ImageData(new Uint8ClampedArray(s.orig.data),W,H);
+  sel=null;layers.forEach(l=>{l.x+=s.x;l.y+=s.y});c.width=W;c.height=H;outIm=null;fcache=null;cdirty=true;SCR.clear();jit=null;
+  if(zoomV&&$('zoom').value!=='0')c.style.width=W*zoomV+'px';
+  film?.rememberPixels();
+  cropSrc=null;updCropRestoreUI();
+  if(reedit&&tab!=='crop')document.querySelector('.tabs [data-t="crop"]')?.click();
+  CR=reedit?{x:s.x,y:s.y,w:s.w,h:s.h}:cropInit();
+  extract();updInfo();refreshLayers();cropInfo();draw();
+  if(typeof showToast==='function')showToast(reedit?'Full photo restored with your previous crop box':'Restored original uncropped image',1800)}
+c.addEventListener('pointerdown',e=>{if(tab!=='crop'||!CR||!base||spaceDown||e.button===1)return;e.stopImmediatePropagation();e.preventDefault();c.setPointerCapture(e.pointerId);const p=pos(e),h=e.shiftKey?null:cropHit(p);cd=h?{h,p,r:{...CR}}:{h:'new',p,r:null};if(!h)CR={x:p[0],y:p[1],w:0,h:0}},true);
 c.addEventListener('pointermove',e=>{if(tab!=='crop'||!CR)return;const p=pos(e);if(!cd){const h=cropHit(p);c.style.cursor=h?CURS[h]:'crosshair';return}e.stopImmediatePropagation();cropDrag(p);cropInfo();draw(true)},true);
 const cropUp=()=>{if(!cd)return;const tiny=cd.h==='new'&&(CR.w<8||CR.h<8);cd=null;if(tiny)CR=cropInit();cropInfo();draw(true)};
 c.addEventListener('pointerup',cropUp,true);c.addEventListener('pointercancel',cropUp,true);
@@ -2842,6 +2903,8 @@ $('cswapr').onclick=()=>{if(!CR)return;let a,b;if(cAsp==='orig'){a=W;b=H}else if
 $('cfull').onclick=()=>{if(CR){CR=fitAsp(cropInit());cropInfo();draw(true)}};
 $('creset').onclick=()=>{cAsp='free';setAspUI();if(base){CR=cropInit();cropInfo();draw(true)}};
 $('cgrid').oninput=()=>draw(true);$('capply').onclick=applyCrop;
+$('c-reedit')?.addEventListener('click',()=>restoreOriginalCrop(true));
+$('c-restore')?.addEventListener('click',()=>restoreOriginalCrop(false));
 document.addEventListener('keydown',e=>{if(tab!=='crop'||!base||isField(e.target))return;if(e.key==='Enter'){e.preventDefault();applyCrop()}else if(e.key==='Escape'){CR=cropInit();cropInfo();draw(true)}});
 // Film Lab shares Totone's working image, selection, layer grading and export pass.
 film=(()=>{

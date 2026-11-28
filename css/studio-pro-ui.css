@@ -1,0 +1,1508 @@
+/* Totone v6.1.0 — "Studio Pro" Matte Flagship UI (Figma / Lightroom / Capture One Craft)
+   Zero neon glows, zero glassmorphic SaaS cards: pure color-accurate matte neutrals,
+   crisp 1px hairlines, tactile controls, and a floating bottom canvas HUD.
+   Removing body.ui-pro restores 100% original "Classic Totone" mode instantly. */
+
+/* === Classic Mode Compatibility (preserve original Classic DOM layout 100%) === */
+body:not(.ui-pro) .hdr-brand,
+body:not(.ui-pro) .hdr-files,
+body:not(.ui-pro) .hdr-hist,
+body:not(.ui-pro) .hdr-view,
+body:not(.ui-pro) .hdr-right{display:contents}
+body:not(.ui-pro) .pro-ico,
+body:not(.ui-pro) .pro-sp,
+body:not(.ui-pro) .cmd-lbl,
+body:not(.ui-pro) .empty-emblem,
+body:not(.ui-pro) .empty-sub,
+body:not(.ui-pro) .empty-presets,
+body:not(.ui-pro) #stage-hud{display:none!important}
+body:not(.ui-pro) .empty-seo-links a+a::before{content:" · ";color:var(--mute);pointer-events:none}
+
+/* === Studio Pro Matte Neutral Design Tokens (Zero Glows) === */
+body.ui-pro{
+ --pro-canvas:#141416;
+ --pro-bg:#19191c;
+ --pro-panel:#202024;
+ --pro-surface:#28282d;
+ --pro-hover:#313138;
+ --pro-active:#3a3a43;
+ --pro-line:#2c2c32;
+ --pro-edge:#3b3b44;
+ --pro-ink:#ececef;
+ --pro-ink-2:#bdbdc6;
+ --pro-mute:#82828e;
+ --pro-accent:#2f7cf6;
+ --pro-accent-h:#256be0;
+ --pro-accent-soft:rgba(47,124,246,.16);
+ --pro-shadow:0 12px 32px rgba(0,0,0,.45);
+ font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+ font-size:12px;
+ line-height:1.4;
+ letter-spacing:-.005em;
+ -webkit-font-smoothing:antialiased;
+ -moz-osx-font-smoothing:grayscale;
+}
+
+/* Color-accurate matte neutral palette when using default theme */
+body.ui-pro.ui-pro-palette{
+ --bg:var(--pro-bg)!important;
+ --panel:var(--pro-panel)!important;
+ --ink:var(--pro-ink)!important;
+ --mute:var(--pro-mute)!important;
+ --line:var(--pro-line)!important;
+ --edge:var(--pro-edge)!important;
+ --acc:var(--pro-accent)!important;
+ --accink:#ffffff!important;
+ --stage-bg:var(--pro-canvas)!important;
+ --ui-radius:5px!important;
+}
+
+/* Hide Classic-only labels in Studio Pro */
+body.ui-pro .lbl-classic,
+body.ui-pro .cmd-classic,
+body.ui-pro .hdr-hist .lbl{display:none!important}
+
+/* Subtle understated red heart Donate icon beside ⋯ in Studio Pro */
+body.ui-pro #donate-btn{
+ display:inline-grid!important;
+ place-items:center;
+ width:28px;height:28px;
+ padding:0!important;
+ margin:0;
+ border-radius:5px;
+ background:transparent;
+ border:1px solid transparent;
+ color:#e5484d;
+ opacity:.85;
+}
+body.ui-pro #donate-btn:hover{
+ opacity:1;
+ background:rgba(229,72,77,.12);
+ border-color:rgba(229,72,77,.28);
+ color:#ff5c61;
+}
+body.ui-pro #donate-btn .pro-ico{width:13px;height:13px}
+.more-menu-link{
+ display:block;width:100%;text-align:left;
+ padding:6px 9px;font-size:12.5px;border-radius:4px;
+ color:#f87171;text-decoration:none;font-weight:500;
+}
+.more-menu-link:hover{background:var(--line);color:#fca5a5}
+
+body.ui-pro .pro-ico{
+ width:14px;height:14px;
+ fill:none;stroke:currentColor;
+ stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+ flex:none;pointer-events:none;
+}
+
+/* === Ultra-Slim Flat Scrollbars === */
+body.ui-pro ::-webkit-scrollbar{width:6px;height:6px}
+body.ui-pro ::-webkit-scrollbar-track{background:transparent}
+body.ui-pro ::-webkit-scrollbar-thumb{background:#35353d;border-radius:3px}
+body.ui-pro ::-webkit-scrollbar-thumb:hover{background:#4a4a55}
+body.ui-pro *{scrollbar-width:thin;scrollbar-color:#35353d transparent}
+
+/* === 1. Matte 3-Zone Desktop App Titlebar === */
+body.ui-pro header{
+ height:42px;
+ min-height:42px;
+ padding:0 10px;
+ gap:6px;
+ background:var(--panel);
+ border-bottom:1px solid var(--pro-line);
+ flex-wrap:nowrap;
+}
+body.ui-pro .hdr-brand,
+body.ui-pro .hdr-files,
+body.ui-pro .hdr-hist,
+body.ui-pro .hdr-view,
+body.ui-pro .hdr-right{
+ display:inline-flex;
+ align-items:center;
+ gap:3px;
+ flex-shrink:0;
+}
+body.ui-pro .hdr-brand{margin-right:2px;padding-right:10px;border-right:1px solid var(--pro-line)}
+body.ui-pro header h1{
+ font-size:15px;
+ font-weight:700;
+ letter-spacing:-.025em;
+ color:var(--ink);
+ display:inline-flex;
+ align-items:center;
+}
+body.ui-pro header h1::before{display:none!important}
+/* De-clutter top bar on desktop: Compare, Split & Zoom live cleanly in the floating bottom Canvas HUD */
+body.ui-pro header #cmp,
+body.ui-pro header .hd,
+body.ui-pro header #zoom{display:none!important}
+body.ui-pro .hdr-files{padding-right:6px;border-right:1px solid var(--pro-line)}
+body.ui-pro .hdr-hist{
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+ border-radius:5px;
+ padding:2px;
+ gap:1px;
+}
+body.ui-pro .hdr-hist button{
+ width:24px;height:22px;
+ padding:0!important;
+ display:inline-grid;
+ place-items:center;
+ border-radius:3px!important;
+ border:0!important;
+ background:transparent!important;
+ color:var(--pro-ink-2);
+}
+body.ui-pro .hdr-hist button:hover:not(:disabled){
+ background:var(--pro-hover)!important;
+ color:var(--ink);
+}
+body.ui-pro .hdr-view{
+ padding-left:4px;
+ gap:4px;
+}
+body.ui-pro header button:not(.pri),
+body.ui-pro header select{
+ background:transparent;
+ border:1px solid transparent;
+ color:var(--pro-ink-2);
+ padding:5px 9px;
+ border-radius:5px;
+ font-size:12px;
+ font-weight:500;
+ min-height:28px;
+ line-height:1.25;
+}
+body.ui-pro header button:not(.pri):hover:not(:disabled),
+body.ui-pro header select:hover{
+ background:var(--pro-hover);
+ color:var(--ink);
+ border-color:transparent;
+}
+body.ui-pro header select{
+ background-color:var(--bg);
+ border-color:var(--pro-line);
+ padding-right:20px;
+}
+body.ui-pro header .hd{
+ display:inline-flex;
+ align-items:center;
+ gap:5px;
+ padding:0 7px;
+ height:26px;
+ border-radius:5px;
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+ font-size:11.5px;
+ color:var(--pro-ink-2);
+}
+body.ui-pro header .hd input[type=range]{width:52px}
+
+/* Matte Centered Command Search Bar */
+body.ui-pro header #cmd-open{
+ display:inline-flex;
+ align-items:center;
+ gap:7px;
+ min-width:200px;
+ max-width:280px;
+ width:21vw;
+ height:28px;
+ padding:0 6px 0 9px;
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+ border-radius:6px;
+ color:var(--mute);
+ font-size:12px;
+ font-weight:400;
+ text-align:left;
+}
+body.ui-pro header #cmd-open:hover{
+ background:var(--pro-surface);
+ border-color:var(--pro-edge);
+ color:var(--ink);
+}
+body.ui-pro header #cmd-open .cmd-lbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.ui-pro header #cmd-open kbd{
+ margin-left:auto;
+ font-size:10px;
+ font-weight:500;
+ color:var(--mute);
+ background:var(--panel);
+ border:1px solid var(--pro-line);
+ border-radius:4px;
+ padding:2px 5px;
+ line-height:1;
+}
+body.ui-pro header #hdr-more-btn,
+body.ui-pro header #settings-open{
+ width:28px;height:28px;
+ padding:0;
+ display:inline-grid;
+ place-items:center;
+ border-radius:5px;
+}
+body.ui-pro header #export{
+ display:inline-flex;
+ align-items:center;
+ gap:5px;
+ height:28px;
+ padding:0 12px;
+ border-radius:5px;
+ font-size:12px;
+ font-weight:600;
+ background:var(--acc);
+ border:0;
+ color:var(--accink);
+ box-shadow:none;
+}
+body.ui-pro header #export:hover{
+ background:var(--pro-accent-h);
+}
+
+@media (max-width:1240px){
+ body.ui-pro header #cmd-open{min-width:140px;width:15vw}
+ body.ui-pro .hdr-view .hd{display:none}
+}
+@media (max-width:1040px){
+ body.ui-pro header{height:auto;padding:6px 10px;flex-wrap:wrap}
+ body.ui-pro .pro-sp{display:none}
+ body.ui-pro header #cmd-open{width:auto;min-width:120px}
+}
+
+/* === 2. Matte Left Studio Tool Rail (12 Core Tools + 3 Utilities) === */
+body.ui-pro #tool-dock{
+ width:44px;
+ background:var(--panel);
+ border-right:1px solid var(--pro-line);
+ padding:6px 5px;
+ gap:3px;
+}
+body.ui-pro #tool-dock button{
+ position:relative;
+ width:32px;height:32px;
+ border-radius:6px;
+ border:0;
+ background:transparent;
+ color:var(--mute);
+}
+body.ui-pro #tool-dock button svg{
+ width:16px;height:16px;
+ stroke-width:1.75;
+}
+body.ui-pro #tool-dock button:hover{
+ background:var(--pro-hover);
+ color:var(--ink);
+}
+body.ui-pro #tool-dock button.on{
+ background:var(--pro-active);
+ color:var(--ink);
+}
+body.ui-pro #tool-dock button.on::before{
+ content:"";
+ position:absolute;
+ left:-5px;top:6px;bottom:6px;
+ width:2px;
+ border-radius:0 2px 2px 0;
+ background:var(--acc);
+}
+body.ui-pro #tool-dock .dock-sep{
+ width:18px;height:1px;
+ background:var(--pro-line);
+ margin:4px 0;
+}
+body.ui-pro #tool-dock button[data-dock="layerfx"],
+body.ui-pro #tool-dock button[data-dock="redact"],
+body.ui-pro #tool-dock button[data-dock="liquify"],
+body.ui-pro #tool-dock button[data-dock="trim"],
+body.ui-pro #tool-dock button[data-dock="upscale"],
+body.ui-pro #tool-dock button[data-dock="pro"],
+body.ui-pro #tool-dock button[data-dock="extras"],
+body.ui-pro #tool-dock button[data-dock="lab10"],
+body.ui-pro #tool-dock button[data-dock="palette"],
+body.ui-pro #tool-dock button[data-dock="ba"],
+body.ui-pro #tool-dock button[data-dock="grid"],
+body.ui-pro #tool-dock button[data-dock="border"],
+body.ui-pro #tool-dock button[data-dock="history"],
+body.ui-pro #tool-dock button[data-dock="auto"]{display:none}
+body.ui-pro #tool-dock button[data-dock="hist"]{margin-top:auto}
+
+/* === 3. Calm Neutral Darkroom Stage, Start Panel & Floating Bottom Canvas HUD === */
+body.ui-pro #stage{
+ background:var(--stage-bg);
+ background-image:none;
+ padding:28px 28px 56px;
+}
+body.ui-pro #c{
+ box-shadow:0 16px 48px rgba(0,0,0,.55);
+ border:1px solid rgba(255,255,255,.06)!important;
+ border-radius:0;
+}
+
+/* Clean Matte Studio Start Panel (Zero Divider Lines, Pure Whitespace Rhythm) */
+body.ui-pro #empty{
+ width:min(520px,92%);
+ max-width:520px;
+ padding:32px 32px 26px;
+ border-radius:10px;
+ background:var(--panel);
+ border:1px solid var(--pro-line);
+ box-shadow:0 8px 28px rgba(0,0,0,.32);
+ gap:0;
+ text-align:left;
+ align-items:stretch;
+}
+body.ui-pro .empty-emblem{display:none!important}
+body.ui-pro #empty .empty-title{
+ font-size:18px;
+ font-weight:650;
+ color:var(--ink);
+ letter-spacing:-.025em;
+ line-height:1.25;
+}
+body.ui-pro #empty .empty-sub{
+ margin:5px 0 20px;
+ font-size:12.5px;
+ color:var(--mute);
+ line-height:1.45;
+}
+body.ui-pro #empty .empty-primary{
+ display:flex;
+ gap:8px;
+ margin:0 0 8px;
+ width:100%;
+ justify-content:flex-start;
+}
+body.ui-pro #empty .empty-primary button{
+ min-height:36px;
+ padding:0 15px;
+ border-radius:6px;
+ font-size:12.5px;
+ font-weight:500;
+}
+body.ui-pro #empty .empty-primary button.pri{
+ font-weight:600;
+ padding:0 18px;
+ box-shadow:none;
+}
+body.ui-pro #empty .empty-secondary{
+ display:flex;
+ gap:6px;
+ margin:0 0 20px;
+ justify-content:flex-start;
+}
+body.ui-pro #empty .empty-secondary button{
+ min-height:28px;
+ padding:4px 10px;
+ font-size:11.5px;
+ background:transparent!important;
+ border:1px solid var(--pro-line)!important;
+ color:var(--pro-ink-2);
+}
+body.ui-pro #empty .empty-secondary button:hover{
+ background:var(--pro-hover)!important;
+ color:var(--ink);
+}
+body.ui-pro .empty-presets{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:6px;
+ width:100%;
+ padding-top:0;
+ margin-bottom:16px;
+ border-top:0;
+}
+body.ui-pro .empty-presets button{
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ gap:2px;
+ padding:9px 10px!important;
+ border-radius:6px!important;
+ background:var(--bg)!important;
+ border:1px solid var(--pro-line)!important;
+ text-align:left;
+}
+body.ui-pro .empty-presets button:hover{
+ background:var(--pro-surface)!important;
+ border-color:var(--pro-edge)!important;
+}
+body.ui-pro .empty-presets button strong{
+ font-size:12px;
+ font-weight:600;
+ color:var(--ink);
+}
+body.ui-pro .empty-presets button small{
+ font-size:10.5px;
+ color:var(--mute);
+}
+body.ui-pro #empty .empty-tip{
+ font-size:11.5px;
+ line-height:1.55;
+ color:var(--mute);
+ margin-top:12px;
+ display:block;
+}
+body.ui-pro #recover-empty{
+ margin:12px 0 4px!important;
+ align-self:flex-start;
+}
+body.ui-pro .empty-custom-dim{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ width:100%;
+ margin-bottom:6px;
+}
+body.ui-pro .empty-custom-dim input[type=number]{
+ width:78px;
+ flex:1 1 68px;
+ min-height:32px;
+ text-align:center;
+ font-variant-numeric:tabular-nums;
+}
+body.ui-pro .empty-custom-dim .ec-x{
+ color:var(--mute);
+ font-size:12px;
+ flex:none;
+}
+body.ui-pro .empty-custom-dim select{
+ flex:1.1 1 92px;
+ min-height:32px;
+}
+body.ui-pro .empty-custom-dim button{
+ min-height:32px;
+ padding:0 14px!important;
+ font-weight:600;
+ flex:none;
+}
+body:not(.ui-pro) .empty-custom-dim{
+ display:flex;
+ align-items:center;
+ gap:5px;
+ margin:6px 0;
+ flex-wrap:wrap;
+ justify-content:center;
+}
+body:not(.ui-pro) .empty-custom-dim input[type=number]{width:70px}
+body.ui-pro #empty .empty-seo-links{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px 14px;
+ margin-top:14px;
+ padding-top:0;
+ border-top:0;
+ width:100%;
+ line-height:1.5;
+}
+/* Polaroid & Disposable Camera Stock Grid */
+.pol-stock-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:5px;
+ margin:8px 0 10px;
+}
+.pol-stock{
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ gap:3px;
+ padding:6px 7px!important;
+ text-align:left;
+ border-radius:6px!important;
+}
+.pol-stock i{
+ display:block;
+ width:100%;
+ height:14px;
+ border-radius:3px;
+ border:1px solid rgba(255,255,255,.12);
+}
+.pol-stock span{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.25}
+.pol-stock small{font-size:10px;color:var(--mute);line-height:1.2}
+.pol-stock.on{
+ border-color:var(--acc)!important;
+ box-shadow:inset 0 0 0 1px var(--acc);
+}
+/* Visual Polaroid Frame Preview Cards */
+.pol-frame-grid{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:5px;
+ margin:6px 0 10px;
+}
+.pol-fcard{
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:5px;
+ padding:7px 4px!important;
+ border-radius:6px!important;
+ text-align:center;
+}
+.pol-fcard small{font-size:10px;color:var(--mute);line-height:1.2}
+.pol-fcard.on{
+ border-color:var(--acc)!important;
+ box-shadow:inset 0 0 0 1px var(--acc);
+}
+.pol-fcard.on small{color:var(--ink);font-weight:600}
+.pf-mini{
+ display:block;
+ width:32px;
+ padding:3px 3px 12px;
+ border-radius:2px;
+ box-shadow:0 2px 6px rgba(0,0,0,.45);
+ border:1px solid rgba(255,255,255,.15);
+}
+.pf-mini.wide{width:42px;padding:3px 3px 8px}
+.pf-mini.none{
+ padding:0!important;
+ width:34px;height:34px;
+ border:1px dashed var(--edge);
+ box-shadow:none;
+ display:grid;
+ place-items:center;
+}
+.pf-mini i{
+ display:block;
+ width:100%;
+ height:22px;
+ border-radius:1px;
+}
+.pf-mini.wide i{height:20px}
+.pf-mini.none i{width:18px;height:18px;border-radius:50%;opacity:.75}
+.pf-mini.strip{border-left:2px dashed rgba(255,255,255,.55);border-right:2px dashed rgba(255,255,255,.55)}
+.pol-ink-row{display:inline-flex;align-items:center;gap:4px}
+.pol-ink-row button{
+ width:18px!important;height:18px!important;min-height:18px!important;
+ padding:0!important;border-radius:50%!important;
+ border:1.5px solid rgba(255,255,255,.35)!important;
+ cursor:pointer;flex:none;
+}
+.pol-ink-row button:hover{transform:scale(1.14)}
+.pol-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.pol-head h4{margin:0!important}
+.pol-head button{padding:3px 9px!important;min-height:24px!important;font-size:11px!important}
+/* Uniform even spacing across top-level categories (AI | Color | Edit | Layers | Design | FX) */
+#cat-tabs{
+ display:flex!important;
+ align-items:center;
+ justify-content:space-between;
+ gap:2px!important;
+}
+#cat-tabs button{
+ flex:1 1 auto!important;
+ text-align:center;
+ white-space:nowrap;
+ padding:5px 4px!important;
+}
+
+/* Per-Letter Studio Tiles */
+.pl-tiles{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.pl-tile{
+ position:relative;
+ min-width:34px;height:36px;
+ padding:0 8px!important;
+ font-size:17px!important;
+ font-weight:800!important;
+ display:inline-grid;place-items:center;
+ border-radius:6px!important;
+}
+.pl-tile.on{border-color:var(--acc)!important;box-shadow:inset 0 0 0 1px var(--acc)}
+.pl-tile i{
+ position:absolute;bottom:1px;right:2px;
+ font-style:normal;font-size:7px;font-weight:700;
+ background:rgba(0,0,0,.65);color:#fff;padding:0 2px;border-radius:2px;
+}
+
+/* Dedicated Pro Borders Grid */
+.brd-style-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:8px 0 10px}
+.brd-card{
+ display:flex;flex-direction:column;align-items:center;gap:4px;
+ padding:6px 4px!important;border-radius:6px!important;text-align:center;
+}
+.brd-card i{
+ display:block;width:36px;height:26px;border-radius:3px;
+ border:1px solid rgba(255,255,255,.18);
+}
+.brd-card span{font-size:10.5px;color:var(--pro-ink-2);line-height:1.2}
+.brd-card.on{border-color:var(--acc)!important;box-shadow:inset 0 0 0 1px var(--acc)}
+.brd-card.on span{color:var(--ink);font-weight:600}
+
+/* Floating Left-Side "All Layers" Button & Full-Height Drawer */
+#all-layers-btn{
+ position:absolute;
+ top:12px;left:12px;
+ z-index:10;
+ display:inline-flex;align-items:center;gap:6px;
+ padding:5px 10px!important;min-height:28px;
+ border-radius:6px!important;
+ background:var(--panel)!important;
+ border:1px solid var(--edge)!important;
+ color:var(--ink)!important;
+ font-size:12px!important;font-weight:600;
+ box-shadow:0 4px 14px rgba(0,0,0,.35);
+}
+#all-layers-btn b{
+ font-size:10.5px;padding:1px 5px;border-radius:999px;
+ background:var(--bg);color:var(--mute);font-variant-numeric:tabular-nums;
+}
+#all-layers-drawer{
+ position:absolute;
+ top:48px;left:12px;bottom:14px;
+ width:264px;max-width:calc(100% - 24px);
+ z-index:15;
+ display:flex;flex-direction:column;
+ background:var(--panel);
+ border:1px solid var(--edge);
+ border-radius:8px;
+ box-shadow:0 12px 32px rgba(0,0,0,.5);
+ overflow:hidden;
+}
+#all-layers-drawer[hidden]{display:none!important}
+.al-head{
+ display:flex;align-items:center;justify-content:space-between;
+ padding:8px 10px;border-bottom:1px solid var(--line);
+}
+.al-head strong{font-size:12.5px;color:var(--ink)}
+#all-layers-list{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:4px}
+.al-row{
+ display:flex;align-items:center;gap:8px;padding:6px;
+ border-radius:6px;background:var(--bg);border:1px solid var(--line);cursor:pointer;
+}
+.al-row:hover{border-color:var(--edge)}
+.al-row.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.al-row.off{opacity:.5}
+.al-row canvas{width:38px;height:38px;border-radius:4px;flex:none;background:repeating-conic-gradient(#26262c 0 25%,#1a1a1f 0 50%) 0 0/8px 8px;display:block;margin:0;border:1px solid var(--line)}
+.al-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.al-info strong{font-size:11.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.al-info small{font-size:10px;color:var(--mute)}
+.al-acts{display:flex;gap:2px;flex:none}
+.al-acts button{padding:2px 5px!important;min-height:22px!important;font-size:10.5px!important}
+@media (max-width:760px){
+ #all-layers-btn{top:8px;left:8px;padding:4px 8px!important;font-size:11px!important}
+ #all-layers-drawer{top:42px;left:8px;bottom:8px;width:calc(100% - 16px)}
+}
+body.ui-pro #empty .empty-seo-links a{
+ font-size:11px;
+ color:var(--mute);
+ text-decoration:none;
+}
+body.ui-pro #empty .empty-seo-links a:hover{
+ color:var(--ink);
+ text-decoration:underline;
+}
+
+/* Floating Bottom Canvas HUD (Figma / Lightroom Quick View Bar) */
+#stage-hud{
+ position:absolute;
+ left:50%;
+ bottom:14px;
+ transform:translateX(-50%);
+ z-index:9;
+ display:inline-flex;
+ align-items:center;
+ gap:2px;
+ padding:3px 5px;
+ background:#202024;
+ border:1px solid #34343c;
+ border-radius:8px;
+ box-shadow:0 6px 20px rgba(0,0,0,.45);
+ user-select:none;
+}
+#stage-hud[hidden]{display:none!important}
+#stage-hud button{
+ height:26px;
+ min-width:26px;
+ padding:0 8px;
+ border:0!important;
+ background:transparent!important;
+ color:var(--pro-ink-2);
+ border-radius:5px!important;
+ font-size:11.5px;
+ font-weight:500;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:4px;
+}
+#stage-hud button:hover{
+ background:var(--pro-hover)!important;
+ color:var(--ink);
+}
+#stage-hud button.on{
+ background:var(--acc)!important;
+ color:#fff!important;
+}
+#stage-hud .hud-sep{
+ width:1px;height:14px;
+ background:#34343c;
+ margin:0 3px;
+}
+#stage-hud #hud-zoom-val{
+ min-width:46px;
+ font-variant-numeric:tabular-nums;
+ font-weight:600;
+ color:var(--ink);
+}
+
+/* === 4. Precision Right Inspector Sidebar (Lightroom / Figma Craft) === */
+body.ui-pro aside{
+ position:relative;
+ overflow:visible!important;
+ width:min(360px,44vw);
+ background:var(--panel);
+ border-left:1px solid var(--pro-line);
+}
+
+/* Flat Segmented Category Switcher */
+body.ui-pro #cat-tabs{
+ margin:8px 10px 0;
+ padding:2px;
+ gap:2px;
+ border-radius:6px;
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+}
+body.ui-pro #cat-tabs button{
+ border-radius:4px!important;
+ padding:5px 4px!important;
+ font-size:11.5px;
+ font-weight:500;
+ color:var(--mute);
+ background:transparent!important;
+ border:0!important;
+}
+body.ui-pro #cat-tabs button:hover{
+ color:var(--ink);
+}
+body.ui-pro #cat-tabs button.on{
+ background:var(--pro-surface)!important;
+ color:var(--ink)!important;
+ font-weight:600;
+ box-shadow:none;
+}
+body.ui-pro #cat-tabs button[data-cat="ai"].on{
+ background:var(--acc)!important;
+ color:var(--accink)!important;
+}
+
+/* Minimalist Underline Sub-Tabs */
+body.ui-pro .tabs{
+ padding:2px 10px 0;
+ gap:2px;
+ border-bottom:1px solid var(--pro-line)!important;
+ background:transparent;
+}
+body.ui-pro .tabs button{
+ border:0!important;
+ border-bottom:2px solid transparent!important;
+ border-radius:0!important;
+ padding:7px 2px 6px!important;
+ font-size:11.5px!important;
+ font-weight:500;
+ background:transparent!important;
+ color:var(--mute);
+ box-shadow:none!important;
+}
+body.ui-pro .tabs button:hover{
+ color:var(--ink)!important;
+}
+body.ui-pro .tabs button.on{
+ color:var(--ink)!important;
+ border-bottom-color:var(--acc)!important;
+ font-weight:600;
+}
+
+/* Inspector Content & Tactile Row Hover */
+body.ui-pro .pn{padding:10px 12px 24px}
+body.ui-pro .pn h3{
+ font-size:10.5px;
+ font-weight:600;
+ text-transform:uppercase;
+ letter-spacing:.06em;
+ color:var(--mute);
+ margin:16px 0 6px;
+ padding:0;
+}
+body.ui-pro .pn>h3:first-child{margin-top:4px}
+body.ui-pro .pn details{
+ background:var(--bg);
+ border:1px solid var(--pro-line)!important;
+ border-radius:6px;
+ padding:8px 10px!important;
+ margin:6px 0!important;
+}
+body.ui-pro .pn details summary{
+ font-size:12px;
+ font-weight:600;
+ color:var(--ink);
+ list-style:none;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ user-select:none;
+}
+body.ui-pro .pn details summary::-webkit-details-marker{display:none}
+body.ui-pro .pn details summary::after{
+ content:"";
+ width:5px;height:5px;
+ border-right:1.5px solid var(--mute);
+ border-bottom:1.5px solid var(--mute);
+ transform:rotate(45deg);
+ transition:transform .12s ease;
+ margin-right:2px;
+}
+body.ui-pro .pn details:not([open]) summary::after{transform:rotate(-45deg)}
+body.ui-pro .bg-rm-box,
+body.ui-pro .rmbg-touchup,
+body.ui-pro .rmbg-bg-studio,
+body.ui-pro .shape-warp-box,
+body.ui-pro .pc-remap-box{
+ background:var(--bg)!important;
+ border:1px solid var(--pro-line)!important;
+ border-radius:6px;
+ padding:10px;
+}
+body.ui-pro .bg-rm-box h4{font-size:12px;font-weight:600;color:var(--ink);margin:0 0 4px}
+body.ui-pro .ai-hero-card{
+ border-color:var(--pro-edge)!important;
+}
+
+/* === 5. Crisp Flat Controls: Switches, Color Wells, Selects, Sliders & Buttons === */
+body.ui-pro button:not(.pri):not(.hsl-dot):not(.y2k-chip):not(.brand-dot):not(.sb-link):not(.sb-chip):not(.ib):not(.theme-chip){
+ background:var(--pro-surface);
+ border:1px solid var(--pro-line);
+ border-radius:5px;
+ color:var(--pro-ink-2);
+ font-weight:500;
+ font-size:12px;
+ line-height:1.3;
+ padding:6px 10px;
+ min-height:28px;
+ white-space:normal;
+ overflow-wrap:break-word;
+}
+body.ui-pro button:not(.pri):not(.hsl-dot):not(.y2k-chip):not(.brand-dot):not(.sb-link):not(.sb-chip):not(.ib):not(.theme-chip):hover:not(:disabled){
+ background:var(--pro-hover);
+ border-color:var(--pro-edge);
+ color:var(--ink);
+}
+body.ui-pro button.pri{
+ background:var(--acc);
+ border:0;
+ color:var(--accink);
+ border-radius:5px;
+ font-weight:600;
+ font-size:12px;
+ line-height:1.3;
+ padding:6px 12px;
+ min-height:28px;
+ box-shadow:none;
+}
+body.ui-pro button.pri:hover:not(:disabled){background:var(--pro-accent-h)}
+body.ui-pro .bar button.on,
+body.ui-pro .chips button.on,
+body.ui-pro .chips7 button.on,
+body.ui-pro .tgrid button.on,
+body.ui-pro .draw-tools button.on,
+body.ui-pro .fx-btn-grid button.on,
+body.ui-pro .lr-wheel-modes button.on,
+body.ui-pro .lr-top-bar button[aria-pressed=true],
+body.ui-pro .grade-zones [aria-pressed=true]{
+ background:var(--acc)!important;
+ color:var(--accink)!important;
+ border-color:transparent!important;
+ font-weight:600;
+}
+
+/* Recessed Matte Inputs & Custom Chevron Selects */
+body.ui-pro select,
+body.ui-pro input[type=text],
+body.ui-pro input[type=search],
+body.ui-pro input[type=number],
+body.ui-pro input[type=url],
+body.ui-pro textarea{
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+ border-radius:5px;
+ color:var(--ink);
+ font-size:12px;
+ padding:4px 8px;
+}
+body.ui-pro select{
+ -webkit-appearance:none;
+ appearance:none;
+ padding-right:22px;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2382828e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+ background-repeat:no-repeat;
+ background-position:right 6px center;
+ background-size:11px;
+}
+body.ui-pro select:hover,
+body.ui-pro input[type=text]:hover,
+body.ui-pro input[type=search]:hover,
+body.ui-pro input[type=number]:hover,
+body.ui-pro textarea:hover{
+ border-color:var(--pro-edge);
+}
+body.ui-pro select:focus,
+body.ui-pro input[type=text]:focus,
+body.ui-pro input[type=search]:focus,
+body.ui-pro input[type=number]:focus,
+body.ui-pro textarea:focus{
+ outline:none;
+ border-color:var(--acc);
+}
+
+/* Matte Pill Toggle Switches */
+body.ui-pro input[type=checkbox]{
+ -webkit-appearance:none;
+ appearance:none;
+ width:26px;height:15px;
+ border-radius:999px;
+ background:#34343c;
+ border:0;
+ position:relative;
+ cursor:pointer;
+ flex:none;
+ vertical-align:middle;
+ margin:0 4px 0 0;
+ transition:background-color .14s ease;
+}
+body.ui-pro input[type=checkbox]::after{
+ content:"";
+ position:absolute;
+ top:2px;left:2px;
+ width:11px;height:11px;
+ border-radius:50%;
+ background:#d4d4dc;
+ transition:transform .14s ease,background-color .14s ease;
+}
+body.ui-pro input[type=checkbox]:checked{background:var(--acc)}
+body.ui-pro input[type=checkbox]:checked::after{transform:translateX(11px);background:#ffffff}
+
+/* Flat Color Swatch Wells */
+body.ui-pro input[type=color]{
+ -webkit-appearance:none;
+ appearance:none;
+ width:24px;height:24px;
+ padding:0;
+ border:1px solid var(--pro-edge);
+ border-radius:5px;
+ background:transparent;
+ overflow:hidden;
+ cursor:pointer;
+ flex:none;
+}
+body.ui-pro input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+body.ui-pro input[type=color]::-webkit-color-swatch{border:0;border-radius:4px}
+body.ui-pro input[type=color]::-moz-color-swatch{border:0;border-radius:4px}
+
+/* Lightroom-Exact Flat Precision Sliders (Zero Glow) */
+body.ui-pro input[type=range]:not(.lr-track){
+ -webkit-appearance:none;
+ appearance:none;
+ height:3px;
+ border-radius:999px;
+ background:#35353d;
+ outline:none;
+ cursor:pointer;
+}
+body.ui-pro input[type=range]:not(.lr-track)::-webkit-slider-thumb{
+ -webkit-appearance:none;
+ width:11px;height:11px;
+ border-radius:50%;
+ background:#ececef;
+ border:1.5px solid #141416;
+ transition:transform .1s ease;
+}
+body.ui-pro input[type=range]:not(.lr-track):hover::-webkit-slider-thumb{
+ transform:scale(1.15);
+ background:#ffffff;
+}
+body.ui-pro input[type=range].lr-track{
+ height:3px;
+ border:0;
+}
+body.ui-pro input[type=range].lr-track::-webkit-slider-thumb{
+ width:11px;height:11px;
+ background:#ececef;
+ border:1.5px solid #141416;
+ box-shadow:none;
+}
+body.ui-pro label{
+ font-size:12px;
+ color:var(--pro-ink-2);
+ gap:8px;
+ margin:5px 0;
+ padding:2px 4px;
+ border-radius:4px;
+ transition:background-color .1s;
+}
+body.ui-pro .pn label:hover{
+ background:rgba(255,255,255,.03);
+ color:var(--ink);
+}
+body.ui-pro label>span{display:inline-flex;align-items:center;gap:6px}
+body.ui-pro output{
+ font-size:11px;
+ font-variant-numeric:tabular-nums;
+ color:var(--mute);
+ min-width:34px;
+}
+
+/* === 6. Flat Preset Lists, Cards, Layers, Status Bar & Modals === */
+body.ui-pro #plist,
+body.ui-pro #flist,
+body.ui-pro #pxlist{
+ border:1px solid var(--pro-line);
+ border-radius:6px;
+ background:var(--bg);
+ padding:3px;
+}
+body.ui-pro .p,
+body.ui-pro .fi{
+ border:0!important;
+ border-radius:4px!important;
+ margin:1px 0;
+ padding:5px 7px;
+ background:transparent!important;
+ color:var(--pro-ink-2);
+}
+body.ui-pro .p:hover:not(.on),
+body.ui-pro .fi:hover:not(.on){
+ background:var(--pro-hover)!important;
+ color:var(--ink);
+}
+body.ui-pro .p.on,
+body.ui-pro .fi.on{
+ background:var(--pro-accent-soft)!important;
+ color:var(--ink)!important;
+}
+body.ui-pro .p i{border-radius:3px;border-color:var(--pro-edge)}
+body.ui-pro .preset-heading{
+ background:var(--bg);
+ font-size:10px;
+ letter-spacing:.07em;
+ padding:6px 7px 3px;
+}
+body.ui-pro .studio-card,
+body.ui-pro .tpl-card,
+body.ui-pro .sov-card,
+body.ui-pro .gp-card,
+body.ui-pro .pair-btn,
+body.ui-pro .lrow,
+body.ui-pro .page-card{
+ background:var(--pro-surface)!important;
+ border:1px solid var(--pro-line)!important;
+ border-radius:6px!important;
+}
+body.ui-pro .studio-card:hover,
+body.ui-pro .tpl-card:hover,
+body.ui-pro .sov-card:hover,
+body.ui-pro .gp-card:hover,
+body.ui-pro .lrow:hover{
+ background:var(--pro-hover)!important;
+ border-color:var(--pro-edge)!important;
+}
+body.ui-pro .lrow.on,
+body.ui-pro .gp-card.on,
+body.ui-pro .page-card.on{
+ border-color:var(--acc)!important;
+ box-shadow:inset 0 0 0 1px var(--acc);
+}
+body.ui-pro .lr-wheel-cell{
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+ border-radius:6px;
+}
+body.ui-pro #status-bar{
+ background:var(--panel);
+ border-top:1px solid var(--pro-line);
+ font-size:11px;
+ min-height:24px;
+ padding:2px 12px;
+ color:var(--mute);
+}
+body.ui-pro #status-bar .sb-pill{
+ background:var(--bg);
+ border:1px solid var(--pro-line);
+ color:var(--pro-ink-2);
+}
+body.ui-pro #pages-bar{
+ background:var(--bg);
+ border-top:1px solid var(--pro-line);
+}
+body.ui-pro dialog.studio-dialog,
+body.ui-pro #exp .hbox,
+body.ui-pro #help .hbox,
+body.ui-pro #hdr-more-menu,
+body.ui-pro #canvas-menu,
+body.ui-pro #layer-float-bar,
+body.ui-pro #hist-hud,
+body.ui-pro #dock-tooltip{
+ background:var(--panel);
+ border:1px solid var(--pro-edge);
+ border-radius:8px;
+ box-shadow:var(--pro-shadow);
+ backdrop-filter:none;
+}
+body.ui-pro dialog.studio-dialog::backdrop{
+ background:rgba(0,0,0,.62);
+ backdrop-filter:none;
+}
+body.ui-pro dialog.studio-dialog h2{
+ font-size:15px;
+ font-weight:650;
+ letter-spacing:-.015em;
+ margin:0 0 10px;
+}
+body.ui-pro .el-chips button{
+ border-radius:999px!important;
+ padding:4px 10px;
+ font-size:11.5px;
+}
+body.ui-pro .el-chips button.on{
+ background:var(--acc)!important;
+ color:var(--accink)!important;
+ border-color:transparent!important;
+ font-weight:600;
+}
+
+/* UI Style Segmented Switcher in Settings */
+.ui-mode-seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:6px 0 12px}
+.ui-mode-seg button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 11px!important;text-align:left;border-radius:6px!important}
+.ui-mode-seg button strong{font-size:12.5px}
+.ui-mode-seg button small{font-size:11px;color:var(--mute);font-weight:400}
+.ui-mode-seg button.on{background:var(--acc)!important;color:var(--accink)!important;border-color:transparent!important}
+.ui-mode-seg button.on small{color:var(--accink);opacity:.85}
+
+/* Streamlined Presets Quick Action Bar & Zero-Overflow Grids */
+.tone-quick-bar{
+ margin:8px 0 10px;
+ padding:8px;
+ border-radius:6px;
+ background:var(--bg);
+ border:1px solid var(--line);
+}
+.tone-actions{
+ display:flex!important;
+ flex-wrap:wrap!important;
+ gap:5px!important;
+ margin:0 0 8px!important;
+}
+.tone-actions button{
+ flex:1 1 auto;
+ min-width:58px;
+ padding:6px 10px!important;
+ font-size:12px!important;
+ line-height:1.25!important;
+ text-align:center;
+ white-space:nowrap!important;
+}
+.tone-quick-bar label{margin:2px 0 0!important}
+.tone-adv{margin:6px 0}
+
+/* Prevent text clipping in chips, cards, inputs & selects across all panels */
+body.ui-pro .chips{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(52px,1fr));
+ gap:4px;
+}
+body.ui-pro .chips button,
+body.ui-pro .chips7 button,
+body.ui-pro .tgrid button{
+ padding:5px 6px!important;
+ font-size:11.5px!important;
+ line-height:1.25!important;
+ min-height:28px;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+body.ui-pro .studio-card,
+body.ui-pro .tpl-card,
+body.ui-pro .pair-btn{
+ padding:8px 8px!important;
+ min-width:0;
+}
+body.ui-pro .studio-card span,
+body.ui-pro .studio-card small,
+body.ui-pro .tpl-card span{
+ white-space:normal!important;
+ overflow-wrap:break-word;
+ line-height:1.3;
+ max-width:100%;
+}
+body.ui-pro .pn select,
+body.ui-pro .pn input[type=text],
+body.ui-pro .pn input[type=search],
+body.ui-pro .pn input[type=number]{
+ min-height:28px;
+ line-height:1.3;
+ min-width:0;
+}
+body.ui-pro .pn label{
+ min-width:0;
+ flex-wrap:nowrap;
+}
+body.ui-pro .pn label input[type=range]{min-width:60px}
+body.ui-pro .bar{gap:5px}
+body.ui-pro .bar button{flex-shrink:0}
+body.ui-pro .empty-presets{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:560px){body.ui-pro .empty-presets{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* === 6B. Integrated 1-Click Feature Jump Strip (All Tab Features Visible at a Glance) === */
+#panel-jump-bar{
+ flex:none;
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:4px;
+ padding:7px 10px;
+ background:var(--bg);
+ border-bottom:1px solid var(--line);
+}
+#panel-jump-bar[hidden]{display:none!important}
+.pj-pill{
+ flex:0 1 auto;
+ padding:4px 8px!important;
+ min-height:24px!important;
+ border-radius:5px!important;
+ border:1px solid var(--line)!important;
+ background:var(--panel)!important;
+ color:var(--mute)!important;
+ font-size:11px!important;
+ font-weight:500!important;
+ line-height:1.2!important;
+ white-space:nowrap!important;
+ cursor:pointer;
+ transition:background-color .12s,color .12s,border-color .12s;
+}
+.pj-pill:hover{
+ color:var(--ink)!important;
+ border-color:var(--edge)!important;
+ background:var(--line)!important;
+}
+.pj-pill.on{
+ background:var(--acc)!important;
+ color:var(--accink)!important;
+ border-color:transparent!important;
+ font-weight:600!important;
+}
+body.ui-pro #panel-jump-bar{
+ background:var(--pro-bg);
+ border-bottom:1px solid var(--pro-line);
+}
+body.ui-pro .pj-pill{
+ background:var(--pro-surface)!important;
+ border-color:var(--pro-line)!important;
+ color:var(--pro-ink-2)!important;
+}
+body.ui-pro .pj-pill:hover{
+ background:var(--pro-hover)!important;
+ border-color:var(--pro-edge)!important;
+ color:var(--ink)!important;
+}
+@media (max-width:760px){
+ body.mob-mode-presets #panel-jump-bar,
+ body.mob-mode-color #panel-jump-bar,
+ body.mob-mode-grain #panel-jump-bar{display:none!important}
+}
+
+/* === 6C. Unified Smooth Scrolling (No Nested Scroll Traps on Overlays, Filters & Lists) === */
+#sov-grid,
+#gp-grid,
+#psfx-grid,
+#ovg,
+#type-shapes,
+#film-list{
+ max-height:none!important;
+ overflow-y:visible!important;
+}
+#plist,
+#flist,
+#pxlist,
+#llist{
+ overscroll-behavior:auto!important;
+}
+@media (max-width:760px){
+ #plist,#flist,#pxlist,#llist{
+  max-height:220px;
+  overscroll-behavior:auto!important;
+ }
+}
+
+/* === 7. Dedicated Mobile Studio UI (<= 760px: Presets + Flip, Basic Color, Grain, All Tools) === */
+#mob-nav,#mob-quick{display:none}
+@media (max-width:760px){
+ body.ui-pro header{
+  height:46px!important;
+  min-height:46px!important;
+  padding:0 10px!important;
+  gap:6px!important;
+  flex-wrap:nowrap!important;
+ }
+ body.ui-pro .hdr-brand{border-right:0;padding-right:4px;margin-right:0}
+ body.ui-pro .hdr-files{border-right:0;padding-right:0}
+ body.ui-pro .hdr-view,
+ body.ui-pro .pro-sp,
+ body.ui-pro #stage-hud,
+ body.ui-pro #status-bar{display:none!important}
+ body.ui-pro header #open{
+  background:var(--pro-surface)!important;
+  border:1px solid var(--pro-line)!important;
+  color:var(--ink)!important;
+  height:32px;
+  padding:0 11px;
+  font-size:12.5px;
+ }
+ body.ui-pro header .hdr-hist{height:32px;padding:2px}
+ body.ui-pro header .hdr-hist button{width:30px;height:28px}
+ body.ui-pro header #export{width:34px;height:32px;padding:0!important;display:inline-grid;place-items:center}
+ body.ui-pro header #export .exp-lbl{display:none!important}
+ body.ui-pro header #hdr-more-btn,
+ body.ui-pro header #settings-open,
+ body.ui-pro header #donate-btn{width:32px;height:32px}
+
+ /* Maximized Photo Stage on Phone */
+ body.ui-pro #stage{padding:10px!important;min-height:0}
+ body.ui-pro #empty{
+  width:100%;
+  padding:18px 16px 14px;
+  border-radius:10px;
+ }
+ body.ui-pro .empty-emblem,
+ body.ui-pro .empty-presets,
+ body.ui-pro #empty .empty-seo-links{display:none!important}
+ body.ui-pro #empty .empty-title{font-size:16px}
+ body.ui-pro #empty .empty-sub{margin:4px 0 12px;font-size:12px}
+ body.ui-pro #empty .empty-primary{flex-wrap:wrap}
+ body.ui-pro #empty .empty-primary button{flex:1 1 auto;height:38px;font-size:13px}
+ body.ui-pro #empty .empty-secondary{margin-bottom:8px}
+
+ /* Native Bottom Editor Sheet */
+ body.ui-pro aside{
+  width:100%!important;
+  flex:0 0 var(--panel-height,44%)!important;
+  border-radius:14px 14px 0 0;
+  background:var(--panel);
+  border-top:1px solid var(--pro-edge)!important;
+  box-shadow:0 -8px 24px rgba(0,0,0,.45);
+  display:flex;
+  flex-direction:column;
+ }
+
+ /* In quick modes (Presets / Color / Crop), hide desktop 2-row category tabs for clean mobile flow */
+ body.mob-mode-presets #cat-tabs,
+ body.mob-mode-presets .tabs,
+ body.mob-mode-color #cat-tabs,
+ body.mob-mode-color .tabs,
+ body.mob-mode-color .pn,
+ body.mob-mode-crop #cat-tabs,
+ body.mob-mode-crop .tabs,
+ body.mob-mode-crop #panel-jump-bar{display:none!important}
+ body.mob-mode-crop #p-crop{display:block!important;padding:6px 12px 12px!important}
+
+ /* Mobile Presets Mode: keep Flip + Strength pinned cleanly & presets easy to tap */
+ body.mob-mode-presets #p-tone{
+  display:flex!important;
+  flex-direction:column;
+  gap:6px;
+  padding:4px 12px 10px!important;
+ }
+ body.mob-mode-presets #p-tone>h3,
+ body.mob-mode-presets #p-tone #q,
+ body.mob-mode-presets #p-tone .tone-adv{display:none!important}
+ body.mob-mode-presets #p-tone .tone-quick-bar{
+  order:-2;
+  margin:0!important;
+  padding:8px 10px;
+ }
+ body.mob-mode-presets #p-tone #pcat{
+  order:-1;
+  display:flex;
+  overflow-x:auto;
+  gap:4px;
+  margin:0!important;
+  scrollbar-width:none;
+ }
+ body.mob-mode-presets #p-tone #pcat::-webkit-scrollbar{display:none}
+ body.mob-mode-presets #p-tone #pcat button{flex:none;padding:6px 12px!important;min-height:32px;font-size:12px}
+ body.mob-mode-presets #p-tone #plist{
+  flex:1;
+  min-height:96px;
+  max-height:none!important;
+ }
+ body.mob-mode-presets #p-tone .p{padding:9px 10px!important;font-size:13.5px}
+ body.mob-mode-presets .tone-actions button{min-height:36px!important;font-size:12.5px!important}
+
+ /* Mobile Quick Sliders Drawer (Basic Color & Grain) */
+ #mob-quick{
+  display:block;
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  padding:4px 14px 10px;
+ }
+ #mob-quick[hidden]{display:none!important}
+ .mob-quick-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+ }
+ .mob-quick-head strong{font-size:13px;font-weight:600;color:var(--ink)}
+ .mob-quick-acts{display:flex;gap:6px}
+ .mob-quick-acts button{min-height:30px!important;padding:4px 10px!important;font-size:12px!important}
+ #mob-quick label{
+  display:grid;
+  grid-template-columns:86px 1fr 40px;
+  align-items:center;
+  gap:10px;
+  margin:10px 0;
+  font-size:13px;
+  color:var(--pro-ink-2);
+ }
+ #mob-quick input[type=range]{height:4px!important;width:100%}
+ #mob-quick input[type=range]::-webkit-slider-thumb{width:18px;height:18px}
+ #mob-quick output{text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--mute)}
+
+ /* Mobile 4-Tab Thumb Bar pinned to bottom */
+ #mob-nav{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:4px;
+  padding:6px 8px calc(8px + env(safe-area-inset-bottom,0px));
+  background:var(--bg);
+  border-top:1px solid var(--pro-line);
+  flex:none;
+ }
+ #mob-nav button{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-height:42px;
+  padding:5px 2px!important;
+  border:0!important;
+  border-radius:7px!important;
+  background:transparent!important;
+  color:var(--mute)!important;
+  font-size:11px!important;
+  font-weight:600;
+ }
+ #mob-nav button svg{
+  width:16px;height:16px;
+  fill:none;stroke:currentColor;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+ }
+ #mob-nav button.on{
+  background:var(--pro-surface)!important;
+  color:var(--ink)!important;
+ }
+}
+

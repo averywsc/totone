@@ -228,8 +228,19 @@ function syncProExportUI(){
    const under=!maxB||r.blob.size<=maxB;
    exEst.textContent=`~${fmtBytes(r.blob.size)}${r.w!==w?` (${r.w}×${r.h})`:''}${maxB?(under?' ✓':' !'):''}`;
    exEst.className='exp-est-pill '+(under?'ok':'warn');
+   const prev=$('exprev');
+   if(prev&&r.blob&&fmt!=='ico'){
+    if(prev._liveUrl)URL.revokeObjectURL(prev._liveUrl);
+    prev._liveUrl=URL.createObjectURL(r.blob);
+    prev.src=prev._liveUrl;
+    prev.hidden=false;
+    prev.style.maxHeight='210px';
+    prev.style.objectFit='contain';
+    prev.style.display='block';
+    prev.style.margin='8px auto 0';
+   }
   }catch{if(exEst)exEst.textContent='Ready'}
- },220);
+ },180);
 }
 
 exCw?.addEventListener('input',()=>{
