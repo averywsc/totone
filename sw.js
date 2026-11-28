@@ -1,5 +1,5 @@
 /* Totone PWA Offline Service Worker (Stale-While-Revalidate for Core Static Assets) */
-const CACHE='totone-app-v7.8.5';
+const CACHE='totone-app-v7.8.6';
 const CORE=[
  './','./index.html','./manifest.json','./og-preview.png',
  './css/core.css?v=4','./css/studio.css?v=4','./css/studio-pro-ui.css?v=22','./css/seo-landing.css',
